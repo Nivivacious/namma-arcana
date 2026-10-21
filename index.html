@@ -812,6 +812,30 @@ footer .now{font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:reduce){.journey .fig{transition:none}.met .mgrid i.new{animation:none}}
 .narr .aicon{width:26px;height:26px;padding:3px;background:rgba(246,238,220,.08)}.narr .aicon svg{width:100%;height:auto}
 
+/* about sheet */
+.about-btn{margin-left:auto;background:rgba(246,238,220,.05);color:var(--ink);border:0;border-radius:999px;padding:9px 14px;font:500 14px var(--body);cursor:pointer;box-shadow:inset 0 0 0 1px var(--line)}
+.about-btn:hover{background:rgba(246,238,220,.09)}
+.bar .snd{margin-left:0}
+@media (max-width:640px){.about-btn{order:2}}
+.sheet.about{max-width:760px}
+.ab-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px}
+.ab-in h2{margin:0;font-family:var(--mark);font-weight:400;font-size:clamp(34px,5vw,48px);line-height:1}
+.ab-in h3{margin:18px 0 0;font-family:var(--display);font-weight:400;font-size:24px;color:var(--ink)}
+.ab-in p{margin:0;color:var(--muted);font-size:16px;line-height:1.55}
+.ab-in .ab-lede{font-family:var(--display);font-size:22px;color:var(--ink);line-height:1.3}
+.ab-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.ab-list li{color:var(--muted);font-size:15px;line-height:1.5;padding-left:16px;position:relative}
+.ab-list li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.ab-list b{color:var(--ink);font-weight:600}
+.ab-cards{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px 18px}
+.ab-card{display:grid;grid-template-columns:74px 1fr;gap:12px;align-items:start}
+.ab-art svg{width:74px;height:auto;display:block;border-radius:5px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.ab-txt h4{margin:0;font-family:var(--display);font-weight:400;font-size:19px;color:var(--ink);line-height:1.1}
+.ab-txt .ab-tarot{font:600 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:4px 0 4px}
+.ab-txt p{font-size:14px;line-height:1.45}
+.ab-credit{margin-top:8px!important;font-size:14px!important;color:rgba(182,174,208,.7)!important}
+@media (max-width:640px){.sheet.about{max-height:92%}.ab-cards{grid-template-columns:1fr}.ab-in{padding-top:34px}}
+
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
 </head>
@@ -1351,27 +1375,46 @@ const PAIRS=[
 const ROWS=[[1,7,"about you"],[8,14,"about you and other people"],[15,21,"about big change"]];
 
 function readQuestion(raw){
-  const q=(raw||"").trim(),t=" "+q.toLowerCase().replace(/[^a-z0-9' ]/g," ")+" ",has=re=>re.test(t);
+  const q=(raw||"").trim(),t=" "+q.toLowerCase().replace(/n['’]t\b/g," not").replace(/[^a-z0-9' ]/g," ").replace(/\s+/g," ")+" ",has=re=>re.test(t);
   const topics={
-    love:has(/ (love|date|dating|crush|boyfriend|girlfriend|bf|gf|partner|ex|marry|marriage|wedding|relationship|text him|text her|situationship|single|hinge|bumble|tinder|propose|breakup|break up) /),
-    work:has(/ (job|work|boss|manager|office|promotion|appraisal|interview|offer|startup|career|client|freelance|project|resign|quit|hire|hired|team|business|pitch|founder|layoff) /),
-    money:has(/ (money|salary|rent|deposit|flat|house|apartment|landlord|invest|loan|emi|buy|save|savings|pg|move|shift|home|stocks|debt|spend) /),
-    family:has(/ (mom|mum|amma|dad|appa|parents|family|sister|brother|friend|friends|roommate|flatmate|cousin) /),
-    self:has(/ (happy|health|gym|run|weight|anxious|anxiety|stress|burnout|sleep|myself|confidence|lonely|purpose) /)};
-  const order=["love","work","money","family","self"];let topic=order.find(k=>topics[k]);
+    love:has(/ (love|date|dating|crush|boyfriend|girlfriend|bf|gf|partner|ex|marry|marriage|relationship|text him|text her|situationship|single|hinge|bumble|tinder|propose|breakup|break up|dm|dms|ghosted|ghosting|someone|soulmate|the one|first date) /),
+    work:has(/ (job|work|boss|manager|office|promotion|promoted|appraisal|interview|offer|startup|career|client|freelance|project|resign|quit|hire|hired|team|business|pitch|founder|layoff|laid off|funded|funding|raise|hike|notice period|colleague|deadline) /),
+    money:has(/ (money|salary|rent|deposit|flat|house|apartment|landlord|invest|loan|emi|buy|save|savings|pg|move|shift|home|stocks|debt|spend|afford|broker|1bhk|2bhk|3bhk|car|bike|crypto|sip) /),
+    study:has(/ (exam|exams|gre|gmat|cat|neet|jee|college|masters|mba|study|studies|course|semester|results|thesis|phd|degree|placement) /),
+    city:has(/ (rain|raining|traffic|metro|cab|auto|bus|airport|flight|on time|reach|signal|orr|silk board|commute|pothole|jam|namma metro|bmtc) /),
+    food:has(/ (biryani|dosa|order|eat|dinner|lunch|breakfast|coffee|drink|drinks|brunch|swiggy|zomato|cook|diet|snack|cake|beer) /),
+    social:has(/ (wedding|party|plans|event|meet up|hang out|hangout|catch up|weekend|trip|travel|goa|vacation|holiday|visa|concert|invite) /),
+    family:has(/ (mom|mum|amma|dad|appa|parents|family|sister|brother|cousin|in laws|relatives) /),
+    people:has(/ (friend|friends|roommate|flatmate|flatmates|neighbour|neighbor|colleague|bestie|group chat) /),
+    self:has(/ (happy|health|healthy|gym|run|running|weight|anxious|anxiety|stress|burnout|sleep|myself|confidence|lonely|purpose|okay|ok|fine|doctor|sick|therapy|better) /)};
+  const order=["love","work","money","study","family","people","city","food","social","self"];let topic=order.find(k=>topics[k]);
   const first=t.trim().split(" ")[0]||"";
+  const when=first==="when";
   const yn=/^(will|should|is|are|am|do|does|did|can|could|would|shall|has|have|was)$/.test(first);
   const should=/^(should|shall)$/.test(first)||has(/ should i /);
   const willq=/^(will|when)$/.test(first);
+  const negated=yn&&has(/ (not|never) /);
   const either=yn&&has(/ or /);
-  const other=has(/ (he|she|they|him|her|them|his|their|my ex|my boss|my manager|my landlord) /)&&has(/ (think|feel|feels|like|likes|love|loves|miss|misses|text|call|come back|want|wants|reply|care|cheat|notice) /);
+  const other=has(/ (he|she|they|him|her|them|his|their|my ex|my boss|my manager|my landlord) /)&&has(/ (think|feel|feels|like|likes|love|loves|miss|misses|text|call|come back|want|wants|reply|care|cheat|notice|forgive|forgiven|mean|meant) /);
   const anxious=has(/ (worried|worry|scared|nervous|anxious|afraid|panic|stress|stressed|overthinking|scary) /);
   const absolute=has(/ (ever|never|always|nothing|nobody|no one|everything) /);
-  const longing=has(/ (miss|back|again|come back|return|still) /);
-  const fed=has(/ (sick of|tired|hate|fed up|done with|annoyed|frustrated) /);
+  const longing=has(/ (miss|misses|missing|come back|get back with|get back together|still love|still think|still like) /);
+  const fed=has(/ (sick of|tired of|hate|fed up|done with|annoyed|frustrated|over it) /);
   if(!topic) topic=other||has(/ (he|she|him|her|text|call|reply) /)?"love":(q?"self":"week");
-  return {q,topic,yn,should,willq,either,other,anxious,absolute,longing,fed};
+  let options=null;
+  if(either){const body=q.replace(/\?+\s*$/,"").replace(/^(should|shall|do|will|would|could|can|is|are|am)\s+(i|we|it)\s+(not\s+)?/i,"");
+    const o=body.split(/\s+or\s+/i).map(s=>s.trim().replace(/^(to|just|rather)\s+/i,"").replace(/[.,;]+$/,"")).filter(Boolean);if(o.length===2&&o.every(s=>s.length<=48))options=o;}
+  return {q,topic,yn,should,willq,when,either,other,anxious,absolute,longing,fed,negated,options};
 }
+function tkeyOf(topic){return {love:"love",work:"work",money:"money",study:"work",city:"self",food:"self",social:"self",family:"love",people:"self",self:"self",week:"self"}[topic]||"self";}
+// advice for the questions the card lines weren't written for, by lean
+const TADV={
+ food:{1:"Order it. Extra raita. Tip the delivery guy, it's raining somewhere.",0:"Order for two. Decide later who the second one is.","-1":"Cook tonight. Even if it's Maggi with onions. Especially then."},
+ rain:{1:"Yes. It's Bengaluru. Leave before 4pm or after 7.",0:"Clear at 3:55, lake by 4:05. Keep the umbrella in the bag.","-1":"Carry the umbrella anyway. The sky here changes its mind."},
+ city:{1:"Leave now. Whatever time it is, leave now.",0:"Check the ORR before you check the time.","-1":"Add forty minutes. Then twenty more. Then book the earlier cab."},
+ social:{1:"Go. Stay for the food, leave before the DJ repeats a song.",0:"Go for an hour. Park where you can leave.","-1":"Skip it. Send a long voice note and a longer gift."},
+ family:{1:"Call home. Before they call you. Before 9pm.",0:"Tell Amma first. Amma tells everyone else anyway.","-1":"Not over the phone. Wait for a Sunday lunch."},
+ people:{1:"Say it today, to their face, before the group chat does.",0:"Bring it up over food. Nobody fights over dosa.","-1":"Let this one go. Save it for the fight that matters."}};
 const PLACES={
  "Koramangala":{c:"stuck at the 80 Feet Road signal",h:"in a café full of pitch decks",he:"on a late walk to the 5th Block bakery"},
  "Indiranagar":{c:"down 100 Feet Road",h:"over a laptop at a brewery",he:"on a slow walk down 12th Main"},
@@ -1385,11 +1428,11 @@ const PLACES={
 const ADV={"fool": {"love": "Say yes to the date. Pick a café with parking. You're new here.", "work": "Take the leap. Keep your laptop charger and a backup plan.", "money": "Before you sign, ask the landlord about the deposit. Twice.", "self": "Explore a new area this weekend. Silk Board does not count.", "rev": "You're not new anymore. Plan the leap before you take it."}, "magician": {"love": "Text first. Clearly. Not 'hey' followed by nothing.", "work": "Ship it by Friday, before your idea becomes someone else's startup.", "money": "Use what you have. You don't need a fourth kurta from Commercial Street.", "self": "Pick one project. Finish it before the next brewery opens.", "rev": "Close nine tabs. Open one. Finish it."}, "priestess": {"love": "Don't send the paragraph. Watch what they do this week.", "work": "Say less in standup. Notice who's quietly panicking.", "money": "Wait. The flat with 'very good ventilation' has no windows.", "self": "Trust your gut. It found the best darshini. It can handle this.", "rev": "Stop polling the group chat. Ask yourself, over filter coffee."}, "empress": {"love": "Cook for them. Or order from the place everyone pretends they discovered.", "work": "Let the idea grow. Don't pitch it at the next networking mixer.", "money": "Spend a little on home. Plants count. Seventeen plants do not.", "self": "Sunday in Cubbon Park. Bring a mat. Leave the laptop.", "rev": "When did you last touch grass? Lalbagh is open."}, "emperor": {"love": "Talk about where this is going. With words, not Instagram stories.", "work": "Find who actually decides. It's never the loudest person in the meeting.", "money": "Get the rent agreement on stamp paper. Read clause 14.", "self": "Set three rules. Rule one: leave before the traffic does.", "rev": "Your deposit's coming back. Frame the receipt."}, "hierophant": {"love": "Introduce them to one relative. Start with the cool cousin.", "work": "Follow the process. Fill the form. Then follow up in person, with snacks.", "money": "Pick the boring, safe option. Appa will be thrilled.", "self": "Ask someone older how they did it. Sit through all 40 minutes of the answer.", "rev": "Mute the society group. The water tank will survive without you."}, "lovers": {"love": "Choose. Then tell them before they see it on your status.", "work": "Two offers? Pick the better commute. Month three you will thank you.", "money": "Pick the flat near the metro over the flat with a view of the metro.", "self": "Be the same person at the brewery and at your parents' house.", "rev": "Waiting for a perfect sign? This is it. Decide."}, "chariot": {"love": "They're busy. Be busy too. Meet halfway, ideally near a metro station.", "work": "Book the 7am cab and push through the week. You'll make it.", "money": "Move fast on the flat. Good ones vanish like autos at Majestic.", "self": "Set a deadline. Tell your most annoying friend so they keep asking.", "rev": "Stop revving. Honking won't get you through Silk Board faster."}, "strength": {"love": "Be patient. No triple texts. Even the gate dog waits for his biscuit.", "work": "Handle the difficult colleague kindly and firmly, filter coffee in hand.", "money": "Save slowly. Skip one brunch a week. One. Not all of them.", "self": "Before you reply, wait one full Silk Board signal.", "rev": "Stop adjusting for everyone. Keep the window seat."}, "hermit": {"love": "Take a weekend alone before you decide. Nandi Hills, solo.", "work": "Block two hours. Status: in a meeting. You're not.", "money": "Skip the splurge. The mall sale comes back. It always does.", "self": "Log off for one evening. The internet won't notice. Promise.", "rev": "Leave the flat. The delivery guy is not your friend group."}, "wheel": {"love": "Timing's off. Wait for the green. It comes, like the Silk Board signal. Eventually.", "work": "Change is coming. Update your CV quietly. Just in case.", "money": "No big money moves on a bad week. Wait for payday.", "self": "This phase will pass. So will the bus. Catch the next one.", "rev": "Stuck in a loop? Take the U-turn. There's always one. Eventually."}, "justice": {"love": "Check if the effort's equal. Who's always crossing the city to meet?", "work": "Make your case with numbers. Screenshots of wins, not vibes.", "money": "Read the fine print. Then ask about maintenance charges. Then ask again.", "self": "Own your part. Then let it go. Unlike your landlord with the deposit.", "rev": "You agreed to meter plus fifty. Next time, walk to the next auto."}, "hanged": {"love": "Wait. See it from their side. Maybe their Wi-Fi really was down.", "work": "Stuck? Pause and rethink. The metro took years too.", "money": "Hold off. The price will be the same next month.", "self": "Drop the plan. Take a random bus. See where it goes.", "rev": "Stop waiting for the metro line to open. Take the bus today."}, "death": {"love": "If it's over, let it be over. Mute. Don't stalk.", "work": "Draft the resignation. You don't have to send it. Yet.", "money": "Cancel three subscriptions you forgot you pay for.", "self": "Clear one shelf. Donate the jackets you bought for 'Bangalore winter'.", "rev": "It already had its last working day. Return the laptop. Move on."}, "temperance": {"love": "Meet in the middle. Literally. Halfway between your two layouts.", "work": "Blend both ideas. Pour slowly, like good filter coffee.", "money": "Spend half, save half. Not too tight. Not too loose.", "self": "Work on weekdays. Rest on weekends. Revolutionary, we know.", "rev": "Too much decoction. Cut one thing down by half."}, "devil": {"love": "Is it love, or just very good Instagram stories? Check.", "work": "Golden handcuffs? Price out freedom. Probably one less brunch.", "money": "Delete the food delivery app for a week. You will survive. Probably.", "self": "Log off LinkedIn for a week. Nobody needs to be humbled that often.", "rev": "You logged off and nothing broke. Stay logged off."}, "tower": {"love": "Have the honest talk. Better a storm now than a flood later.", "work": "Something will break. Back up your files before 4pm.", "money": "Build an emergency fund. Bengaluru rain doesn't send a calendar invite.", "self": "Fix the thing you keep patching. You know the one.", "rev": "The storm missed you. Go out before 4pm anyway."}, "star": {"love": "Open up again. Gently. Like a Nandi Hills sunrise, worth the early alarm.", "work": "Keep going. Someone important is noticing, even on mute.", "money": "It's recovering. Stick to the plan. Skip the impulse buy.", "self": "Write down the dream. Then the first step. Then do the step.", "rev": "Fogged out? Go back next weekend. The view isn't going anywhere."}, "moon": {"love": "Don't decode the 'k'. Ask what they meant.", "work": "Ask before you assume. That email probably wasn't passive-aggressive.", "money": "Too good to be true? It's Bellandur foam. Check twice.", "self": "For every worry, write one fact. Facts win.", "rev": "The foam's clearing. Now look at what's really there."}, "sun": {"love": "Plan a sunny date. Cubbon Park, ice cream, phones away.", "work": "Show your work. Post the win. Humbly. Ish.", "money": "Treat yourself a little. The good dosa, not a new car.", "self": "An hour outside, no phone. December weather is the city's apology.", "rev": "It's lovely out. Close the laptop. Go."}, "judgement": {"love": "Old pattern showing up? Do the opposite this time.", "work": "Write your own appraisal summary before your manager does.", "money": "Check where last month's money went. Yes, all those midnight biryanis.", "self": "List what you're proud of. Read it before your next overthinking session.", "rev": "Go easy on yourself. Your manager already forgot."}, "world": {"love": "It's coming together. Say the thing. Book the trip.", "work": "Finish strong. Take the win. Then take leave.", "money": "The goal's close. Mark it. Small party, big savings.", "self": "Celebrate something you finished. Out loud. In Kannada if you can.", "rev": "Nearly there. One last push, like the final stretch to Electronic City."}};
 const ASKED={};
 const POSKEY=["commute","hustle","heart"];
-function topicCardIndex(topic){return topic==="love"||topic==="family"?2:topic==="work"||topic==="money"?1:topic==="self"?2:1;}
+function topicCardIndex(topic){return topic==="city"?0:(topic==="work"||topic==="money"||topic==="study"||topic==="week")?1:2;}
 function lean(v,rev){if(!rev)return v;return v==="yes"?"maybe":v==="maybe"?"no":"no";}
 function interpret(cards,area,raw){
   const Q=readQuestion(raw),L=cards.map(c=>c.card.kind==="rare"?null:LORE[c.card.scene]);
-  const tkey=Q.topic==="week"||Q.topic==="family"?(Q.topic==="family"?"love":"self"):Q.topic;
+  const tkey=tkeyOf(Q.topic);
   const out={open:[],story:[],patterns:[],answer:null,hidden:null,close:[]};
   const norm=Q.q.toLowerCase().replace(/[^a-z ]/g,"").trim();
   const repeat=norm&&ASKED[norm];if(norm)ASKED[norm]=(ASKED[norm]||0)+1;
@@ -1402,8 +1445,10 @@ function interpret(cards,area,raw){
     if(Q.anxious) out.open.push("Breathe. The cards show a lean. That's all.");
     else if(Q.fed) out.open.push("You sound fed up. You probably know what has to change.");
     else if(Q.longing) out.open.push("Sounds like you miss someone. Read with that in mind.");
-    if(Q.willq&&!Q.other) out.open.push("You get a lean. What you do can still change it.");
-    if(Q.either) out.open.push("The cards won't pick. They'll show which way you lean.");
+    if(Q.negated&&Q.yn) out.open.push("Asked in the negative. Read the answer for the plain version of your question.");
+    if(Q.when) out.open.push("Cards are bad at dates. They're good at direction.");
+    if(Q.options) out.open.push("Two options. Yes-cards pick the first thing you said, no-cards the second.");
+    else if(Q.either) out.open.push("The cards won't pick. They'll show which way you lean.");
     if(Q.absolute) out.open.push("Never and always are big words. This is one week.");
   }
 
@@ -1450,15 +1495,23 @@ function interpret(cards,area,raw){
     const scene=Object.keys(LORE).find(k=>LORE[k].n===s);const hc=DECK.find(d=>d.scene===scene);
     out.hidden={card:hc,steps,line:LORE[scene][tkey]||LORE[scene].self};}
 
-  // 5. a weighted yes/no when the question asks for one
-  if(Q.yn&&!Q.either){const ti=topicCardIndex(Q.topic);let sc=0,w=0,decider=null,dw=0;
-    cards.forEach((c,i)=>{const l=L[i];const v=l?lean(l.yn,c.rev):"yes";const wt=(i===ti?2:1)+(i===2?.5:0);sc+=wt*(v==="yes"?1:v==="no"?-1:0);w+=wt;if(wt>dw){dw=wt;decider={c,v};}});
-    const r=sc/w;const label=r>.45?"Yes":r>.12?"Leaning yes":r>-.12?"Unclear for now":r>-.45?"Leaning no":"Not right now";
-    const others=cards.filter((c,i)=>i!==ti).map((c,i)=>{const l=L[cards.indexOf(c)];return l?lean(l.yn,c.rev):"yes";});
-    const against=others.filter(v=>(decider.v==="yes"&&v==="no")||(decider.v==="no"&&v==="yes")||v==="maybe").length;
-    const topicWord={love:"a love",work:"a work",money:"a money or home",family:"a people",self:"a personal",week:"a general"}[Q.topic];
-    const why=`${POS[ti][0]} counts most here. ${esc(decider.c.card.name)}${decider.c.rev?" reversed":""} says ${decider.v}`+(against===2?". The other two disagree.":against===1?". One card disagrees.":". The others agree.");
-    out.answer={label,why,decider:decider.c,against,soft:Q.anxious&&r<0?"Not what you wanted? It's one week. It can shift.":r>.45?"Good news. Still do your bit.":""};}
+  // 5. a yes/no read the way a reader does it: the card in the question's position decides, the other two confirm or soften
+  const leans=cards.map((c,i)=>L[i]?lean(L[i].yn,c.rev):"yes"),net=v=>v==="yes"?1:v==="no"?-1:0;
+  const topicWord={love:"a love",work:"a work",money:"a money or home",study:"a study",city:"a getting-there",food:"a food",social:"a plans",family:"a family",people:"a people",self:"a personal",week:"a general"}[Q.topic]||"your";
+  if((Q.yn||Q.when)&&!(Q.either&&!Q.options)){const ti=topicCardIndex(Q.topic);
+    const d=leans[ti],others=[0,1,2].filter(i=>i!==ti).map(i=>leans[i]),on=others.reduce((s,v)=>s+net(v),0);
+    let label;
+    if(d==="yes") label=on>=0?"Yes":on===-1?"Leaning yes":"Unclear for now";
+    else if(d==="no") label=on<=0?"Not right now":on===1?"Leaning no":"Unclear for now";
+    else label=on>=1?"Leaning yes":on<=-1?"Leaning no":"Unclear for now";
+    const dc=cards[ti],agree=others.filter(v=>v===d).length,opp=others.filter(v=>d!=="maybe"&&net(v)===-net(d)).length;
+    let why=`${POS[ti][0]} counts most for ${topicWord} question. ${esc(dc.card.name)}${dc.rev?" reversed":""} says ${d}`;
+    if(d==="maybe") why+=on>0?". The other two lean yes.":on<0?". The other two lean no.":". The other two can't agree either.";
+    else why+=agree===2?". The other two agree.":opp===2?". The other two disagree.":opp===1?". One card disagrees.":". The others sit on the fence.";
+    const sign=label==="Yes"||label==="Leaning yes"?1:label==="Not right now"||label==="Leaning no"?-1:0;
+    if(Q.options){const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);label=sign>0?cap(Q.options[0]):sign<0?cap(Q.options[1]):"Neither, yet";}
+    if(Q.when){label=d==="yes"?"Soon. Weeks, not months":d==="maybe"?"Not this week. Watch for a sign":"Not until something changes";}
+    out.answer={label,why,decider:dc,against:opp,sign,soft:Q.anxious&&sign<0?"Not what you wanted? It's one week. It can shift.":sign>0&&!Q.options&&!Q.when?"Good news. Still do your bit.":""};}
 
   // 5b. tie it all back to the question
   {const tone=cards.reduce((t,c,i)=>t+(L[i]?(c.rev?c.card.tr:c.card.tu):3),0);
@@ -1469,12 +1522,14 @@ function interpret(cards,area,raw){
    else out.synth=`${esc(area)} is giving you ${mood}.`;}
 
   // 6. close like a person would: one thing to do, one thing to think about
-  {const ai=Q.q?ti:2,c=cards[ai],A=c.card.kind==="rare"?null:ADV[c.card.scene];
-   const pre=out.answer?({"Yes":"Go for it.","Leaning yes":"Lean in.","Unclear for now":"Give it a week.","Leaning no":"Not yet.","Not right now":"Not right now."}[out.answer.label]+" "):"";
-   const tip=A?(c.rev?A.rev:(A[tkey]||A.self)):"Screenshot the empty road. Nobody will believe you.";
+  {let ai=Q.q?ti:2;const sign=out.answer?out.answer.sign:0;
+   if(out.answer&&sign&&net(leans[ai])!==sign){const order=[ai,0,1,2];let alt=order.find(i=>L[i]&&!cards[i].rev&&net(L[i].yn)===sign);if(alt===undefined)alt=order.find(i=>L[i]&&net(leans[i])===sign);if(alt!==undefined)ai=alt;}
+   const c=cards[ai],A=c.card.kind==="rare"?null:ADV[c.card.scene];
+   const special=Q.q&&(Q.topic==="city"?(/ rain/.test(" "+Q.q.toLowerCase())?"rain":"city"):TADV[Q.topic]?Q.topic:null);
+   const tip=special?TADV[special][String(sign)]:A?((c.rev&&(!out.answer||net(L[ai].yn)!==sign))?A.rev:(A[tkey]||A.self)):"Screenshot the empty road. Nobody will believe you.";
    out.close.push(`<b>Do this:</b> ${esc(tip)}`);}
-  const prompts={love:"What would you do if nobody was watching?",work:"What would you ask for if you weren't scared?",money:"What are you paying for that you don't want?",self:"What would make this week lighter?",week:"What do you want true by Sunday?"};
-  const ask=Q.other?"What do you want, whatever they do?":Q.anxious?"What's one thing you know for sure?":Q.should?"What would you pick if nobody would ever find out?":(prompts[tkey]||prompts.week);
+  const prompts={love:"What would you do if nobody was watching?",work:"What would you ask for if you weren't scared?",money:"What are you paying for that you don't want?",self:"What would make this week lighter?",week:"What do you want true by Sunday?",city:"What's the earliest you could actually leave?",food:"Who would you share it with?",social:"Who do you want to see, and who do you feel you should?",study:"What would you study if nobody was grading you?"};
+  const ask=Q.topic==="people"?"What would you say if you knew they'd take it well?":Q.other?"What do you want, whatever they do?":Q.anxious?"What's one thing you know for sure?":Q.options?"Which option would you be sad to lose?":Q.should?"What would you pick if nobody would ever find out?":(prompts[Q.topic]||prompts[tkey]||prompts.week);
   out.close.push(`<b>Ask yourself:</b> ${ask}`);
   return {Q,out};
 }
@@ -1492,7 +1547,7 @@ function interpretHTML(r){const o=r.out;let h=`<div class="interp">`;
 function cardLine(k,card,rev){const Q=readQuestion(document.getElementById("q").value),PL=PLACES[area]||PLACES.Koramangala;
   const place=[PL.c,PL.h,PL.he][k],ti=topicCardIndex(Q.topic),answers=!!Q.q&&k===ti;
   if(card.kind==="rare")return {place,text:card.up,answers};
-  const l=LORE[card.scene],tk=Q.topic==="week"||Q.topic==="family"?(Q.topic==="family"?"love":"self"):Q.topic;
+  const l=LORE[card.scene],tk=tkeyOf(Q.topic);
   let text=answers?(l[tk]||l.self):(rev?card.rev:card.up);
   if(answers&&rev)text+=" Reversed: mostly in your head.";
   return {place:place.charAt(0).toUpperCase()+place.slice(1),text,answers};}
@@ -1543,11 +1598,7 @@ async function deal(){busy=true;sb.disabled=true;current=[];picked=0;order=shuff
   setTimeout(()=>{sb.disabled=false;busy=false;},REDUCED?0:700);}
 
 let cineBusy=false;
-function pick(i,el){if(picked>=3||el.dataset.used||cineBusy)return;el.dataset.used="1";const k=picked++;
-  const card=order[i],rev=card.kind!=="rare"&&Math.random()<.3;current[k]={card,rev};met.add(card);journey.update(current.filter(Boolean));
-  const slot=spreadEl.children[k].querySelector(".card");const from=el.getBoundingClientRect(),to=slot.getBoundingClientRect();
-  el.classList.add("taken");
-  const land=()=>{slot.classList.remove("placeholder");const f=slot.querySelector(".front");f.innerHTML=cardSVG(card);if(rev)f.classList.add("rev");
+function landCard(k,card,rev){const slot=spreadEl.children[k].querySelector(".card");slot.classList.remove("placeholder");const f=slot.querySelector(".front");f.innerHTML=cardSVG(card);if(rev)f.classList.add("rev");
     slot.setAttribute("aria-label",`${POS[k][0]}: ${card.name}${rev?", reversed":""}`);slot.dataset.idx=k;
     const inr=slot.querySelector(".inner");inr.style.transition="none";slot.classList.add("flipped");void inr.offsetWidth;inr.style.transition="";
     const r=readingsEl.children[k];r.className="reading";const cl=cardLine(k,card,rev);r.dataset.idx=k;
@@ -1556,7 +1607,13 @@ function pick(i,el){if(picked>=3||el.dataset.used||cineBusy)return;el.dataset.us
       <p class="cline">${esc(cl.text)}</p>${cl.answers?`<span class="tie">Answers your question</span>`:""}
       <details class="tl"><summary>Tarot link</summary><p>${esc(card.link)}</p></details>`;
     maskLines(r);
-    if(picked===3)finish();};
+    if(picked===3)finish();}
+
+function pick(i,el){if(picked>=3||el.dataset.used||cineBusy)return;el.dataset.used="1";const k=picked++;
+  const card=order[i],rev=card.kind!=="rare"&&Math.random()<.3;current[k]={card,rev};met.add(card);journey.update(current.filter(Boolean));
+  const slot=spreadEl.children[k].querySelector(".card");const from=el.getBoundingClientRect(),to=slot.getBoundingClientRect();
+  el.classList.add("taken");
+  const land=()=>landCard(k,card,rev);
   if(REDUCED){land();return;}
   cineBusy=true;cine(el,card,rev,slot).then(()=>{cineBusy=false;land();});}
 
@@ -1593,24 +1650,27 @@ function verdictFor(cs){const tone=cs.reduce((s,c)=>s+(c.rev?c.card.tr:c.card.tu
   const line=rare?"An empty road showed up. Nobody will believe you.":tone>=4?"December energy. The city's on your side.":tone>=1?"Mostly green signals. A few auto refusals.":tone===0?"Classic Bengaluru. Sunny at nine, flooded by four.":tone>=-3?"Carry an umbrella. It gets better by Sunday.":"Silk Board energy. Stay in. Order dosa.";
   const lab=sc<=3?"suspiciously calm":sc<=6?"a standard Tuesday":sc<=8?"very Peak Bengaluru":"maximum Peak Bengaluru";return {line,sc,lab};}
 function showVerdict(){const v=verdictFor(current),q=document.getElementById("q").value.trim();verdictEl.hidden=false;
-  const R=interpret(current,area,q),ans=R.out.answer,big=ans?ans.label+".":v.line,sub=ans?v.line:`${area}, ${AREAS[area]}.`;
+  const R=interpret(current,area,q),ans=R.out.answer,big=ans?ans.label.replace(/[.?]$/,"")+".":v.line,sub=ans?v.line:`${area}, ${AREAS[area]}.`;
   verdictEl.innerHTML=`<div class="verdict"><div class="label">IV · You've arrived. Your week in ${esc(area)}</div>${q?`<p class="sub qline">"${esc(q)}"</p>`:""}
    <div class="line" aria-label="${esc(big)}"><span class="w dec" aria-hidden="true">${esc(big)}</span></div><p class="sub">${esc(sub)}</p>
    <div class="gauge" aria-label="Peak Bengaluru score ${v.sc} out of 10"><div class="bar2"><i style="width:${v.sc*10}%"></i></div><div class="lab">Peak Bengaluru score <b><span id="scoreN">${REDUCED?v.sc:0}</span>/10</b>, ${v.lab}</div></div>
    ${interpretHTML(R)}
    <div class="share"><button class="btn sharebtn" id="shareBtn" aria-expanded="false" aria-controls="sharePanel"><span aria-hidden="true">↗</span> Share my reading</button>
-   <div class="sharepanel" id="sharePanel" hidden><div id="shareOut"></div><div class="shareopts"><a class="sopt" id="sWa" target="_blank" rel="noopener">WhatsApp</a><a class="sopt" id="sX" target="_blank" rel="noopener">X</a><button class="sopt" id="cp" type="button">Copy text</button></div><p class="note" id="cpMsg" aria-live="polite"></p></div></div></div>`;
-  {const sb2=document.getElementById("shareBtn"),panel=document.getElementById("sharePanel");
-   const txt=`My Namma Arcana week in ${area}${q?` ("${q}")`:""}: `+current.map(c=>c.card.name).join(", ")+`. ${R.out.answer?R.out.answer.label+". ":""}Peak Bengaluru score ${v.sc}/10.`;
-   document.getElementById("sWa").href="https://wa.me/?text="+encodeURIComponent(txt);
-   document.getElementById("sX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(txt);
+   <div class="sharepanel" id="sharePanel" hidden><div id="shareOut"></div><div class="shareopts"><a class="sopt" id="sWa" target="_blank" rel="noopener">WhatsApp</a><a class="sopt" id="sX" target="_blank" rel="noopener">X</a><button class="sopt" id="cpl" type="button">Copy link</button><button class="sopt" id="cp" type="button">Copy text</button></div><p class="note" id="cpMsg" aria-live="polite"></p></div></div></div>`;
+  {const sb2=document.getElementById("shareBtn"),panel=document.getElementById("sharePanel");v.big=big;v.hasAns=!!ans;
+   const link=permalink();try{history.replaceState(null,"",link);}catch(_){ }
+   const txt=`My Namma Arcana week in ${area}${q?` ("${q}")`:""}: `+current.map(c=>c.card.name).join(", ")+`. ${big} Peak Bengaluru score ${v.sc}/10.`;
+   document.getElementById("sWa").href="https://wa.me/?text="+encodeURIComponent(txt+" "+link);
+   document.getElementById("sX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(txt)+"&url="+encodeURIComponent(link);
    document.getElementById("cp").onclick=()=>copyText(v,q);
-   let made=false;
-   sb2.onclick=async()=>{if(navigator.share){try{await navigator.share({title:"Namma Arcana",text:txt});return;}catch(e){if(e&&e.name==="AbortError")return;}}
-     const open=panel.hidden;panel.hidden=!open;sb2.setAttribute("aria-expanded",String(open));if(open&&!made){made=true;makeShare(v,q);}};}
+   const cl=document.getElementById("cpl"),m=document.getElementById("cpMsg");cl.onclick=()=>{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(link).then(()=>m.textContent="Link copied. It opens this exact spread.",()=>m.textContent=link);else m.textContent=link;};
+   let made=false;const openPanel=()=>{const open=panel.hidden;panel.hidden=!open;sb2.setAttribute("aria-expanded",String(open));if(open&&!made){made=true;makeShare(v,q);}};
+   sb2.onclick=async()=>{if(navigator.share){let file=null;try{const cv=await storyCard(v,q);const bl=await canvasBlob(cv);if(bl)file=new File([bl],"namma-arcana.png",{type:"image/png"});}catch(e){}
+       try{if(file&&navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({title:"Namma Arcana",text:txt,files:[file]});else await navigator.share({title:"Namma Arcana",text:txt,url:link});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+     openPanel();};}
   verdictEl.querySelectorAll(".btn").forEach(addMagnet);
   maskLines(verdictEl);rackFocus();
-  verdictGrade(ans?ans.label:"");
+  verdictGrade(ans?(ans.sign>0?"yes":ans.sign<0?"no":"maybe"):"");
   {const dl=verdictEl.querySelector(".dec");if(dl)setTimeout(()=>decode(dl,big,1000),250);}
   if(!REDUCED){const el=document.getElementById("scoreN");let n=0;const t=setInterval(()=>{n++;el.textContent=n;if(n>=v.sc)clearInterval(t);},90);}
   // hovering a pattern lights up the cards it is about
@@ -1629,22 +1689,51 @@ function copyText(v,q){const t=`My Namma Arcana week in ${area}${q?` ("${q}")`:"
 function svgImg(svg){return new Promise(res=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>res(null);
   im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="400" height="680" '));});}
 function wrapT(x,t,cx,y,mw,lh){const ws=t.split(" ");let l="",ls=[];ws.forEach(w=>{const tt=l?l+" "+w:w;if(x.measureText(tt).width>mw&&l){ls.push(l);l=w;}else l=tt;});if(l)ls.push(l);ls.forEach((s,i)=>x.fillText(s,cx,y+i*lh));return ls.length;}
-async function makeShare(v,q){const out=document.getElementById("shareOut");out.innerHTML=`<p class="note">Preparing your card…</p>`;
-  try{await Promise.all([document.fonts.load('80px "Instrument Serif"'),document.fonts.load('500 30px Figtree'),document.fonts.load('40px "Noto Sans Kannada"','ನಮ್ಮ')]);}catch(e){}
+// ===== permalinks: a reading lives in the URL hash =====
+const b64u={enc:s=>btoa(unescape(encodeURIComponent(s))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""),dec:s=>{try{return decodeURIComponent(escape(atob(s.replace(/-/g,"+").replace(/_/g,"/"))));}catch(_){return "";}}};
+function permalink(){if(current.filter(Boolean).length<3)return location.href.split("#")[0];
+  const ai=Object.keys(AREAS).indexOf(area),cs=current.map(c=>(c.card.kind==="rare"?"x":DECK.indexOf(c.card))+(c.rev?"d":"u")).join("."),q=document.getElementById("q").value.trim();
+  return location.href.split("#")[0]+"#r="+[ai,cs,q?b64u.enc(q):""].join("~");}
+function parsePermalink(){const m=/#r=([^&]+)/.exec(location.hash);if(!m)return null;const [ai,cs,qb]=m[1].split("~");const names=Object.keys(AREAS);
+  const cards=(cs||"").split(".").map(t=>{const mm=/^(x|\d+)([ud])$/.exec(t);if(!mm)return null;const card=mm[1]==="x"?RARE:DECK[+mm[1]];return card?{card,rev:mm[2]==="d"}:null;});
+  if(cards.length!==3||cards.some(c=>!c))return null;return {area:names[+ai]||names[0],cards,q:qb?b64u.dec(qb).slice(0,80):""};}
+function restoreReading(spec){const chip=[...document.querySelectorAll("#areas .chip")].find(c=>(c.dataset.name||c.textContent.trim())===spec.area);if(chip)chip.click();
+  document.getElementById("q").value=spec.q;current=[];picked=0;order=[];renderSlots();emptyReadings();verdictEl.hidden=true;verdictEl.innerHTML="";journey.reset();
+  spec.cards.forEach((c,k)=>{current[k]=c;picked++;met.add(c.card);journey.update(current.filter(Boolean));landCard(k,c.card,c.rev);});
+  hint.textContent="A reading someone shared with you. Hold the deck for your own.";
+  setTimeout(()=>document.getElementById("spread").scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"start"}),400);}
+setTimeout(()=>{const spec=parsePermalink();if(spec)try{restoreReading(spec);}catch(e){console.warn(e);}},900);
+
+// ===== the story card: 1080×1920, shared as an image where the browser allows =====
+let shareCache={key:"",cv:null};
+async function storyCard(v,q){const ans=v.hasAns;const key=permalink();if(shareCache.key===key&&shareCache.cv)return shareCache.cv;
+  try{await Promise.all([document.fonts.load('80px "Instrument Serif"'),document.fonts.load('500 30px Figtree'),document.fonts.load('40px "Noto Sans Kannada"','ನಮ್ಮ'),document.fonts.load('130px "Tiro Kannada"')]);}catch(e){}
   const W=1080,H=1920,cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d");
-  {const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"#191539");g.addColorStop(.55,"#2a2257");g.addColorStop(1,"#5b3d72");x.fillStyle=g;x.fillRect(0,0,W,H);}x.strokeStyle="#d8b26a";x.lineWidth=2;x.strokeRect(48,48,W-96,H-96);
-  x.textAlign="center";x.fillStyle="#d8b26a";x.font='36px "Noto Sans Kannada",sans-serif';x.fillText("ನಮ್ಮ ಆರ್ಕಾನ",W/2,190);
-  x.fillStyle="#f6eedc";x.font='130px "Tiro Kannada","Instrument Serif",Georgia,serif';x.fillText("Namma Arcana",W/2,330);
-  x.fillStyle="#b6aed0";x.font='500 30px Figtree,sans-serif';x.fillText(("My week in "+area).toUpperCase().split("").join(" "),W/2,410);
+  {const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"#191539");g.addColorStop(.55,"#2a2257");g.addColorStop(1,"#5b3d72");x.fillStyle=g;x.fillRect(0,0,W,H);}
+  // skyline silhouettes
+  x.fillStyle="rgba(120,100,180,.18)";[[0,1500,120,420],[140,1560,90,360],[250,1480,160,440],[430,1540,110,380],[560,1500,140,420],[720,1570,100,350],[840,1490,150,430],[1010,1550,70,370]].forEach(([a,b,w,hh])=>x.fillRect(a,b,w,hh));
+  x.strokeStyle="#d8b26a";x.lineWidth=2;x.strokeRect(48,48,W-96,H-96);x.strokeStyle="rgba(216,178,106,.35)";x.strokeRect(60,60,W-120,H-120);
+  x.textAlign="center";x.fillStyle="#d8b26a";x.font='34px "Noto Sans Kannada",sans-serif';x.fillText("ನಮ್ಮ ಆರ್ಕಾನ",W/2,170);
+  x.fillStyle="#f6eedc";x.font='124px "Tiro Kannada","Instrument Serif",Georgia,serif';x.fillText("Namma Arcana",W/2,300);
+  x.fillStyle="#b6aed0";x.font='500 28px Figtree,sans-serif';x.fillText(("My week in "+area).toUpperCase().split("").join(" "),W/2,372);
+  let cy=840;if(q){x.fillStyle="#d8c9ef";x.font='italic 40px "Instrument Serif",Georgia,serif';wrapT(x,"“"+q+"”",W/2,450,W-260,48);cy=870;}
   const ims=await Promise.all(current.map(c=>svgImg(cardSVG(c.card))));const cw=290,chh=493;
-  current.forEach((c,i)=>{const cx=W/2+(i-1)*318,cy=780;if(ims[i]){x.save();x.translate(cx,cy);if(c.rev)x.rotate(Math.PI);x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=40;x.shadowOffsetY=16;x.drawImage(ims[i],-cw/2,-chh/2,cw,chh);x.restore();}
-    x.fillStyle="#b6aed0";x.font='600 22px Figtree,sans-serif';x.fillText(POS[i][0].toUpperCase(),cx,cy+300);
-    x.fillStyle=c.rev?"#eca59b":"#b6aed0";x.font='italic 30px "Instrument Serif",Georgia,serif';x.fillText(c.card.kind==="rare"?"rare card":c.rev?"reversed":"upright",cx,cy+340);});
-  x.fillStyle="#f6eedc";x.font='70px "Instrument Serif",Georgia,serif';wrapT(x,v.line,W/2,1290,W-240,80);
-  x.fillStyle="rgba(246,238,220,.18)";x.fillRect(W/2-220,1620,440,6);x.fillStyle="#eca59b";x.fillRect(W/2-220,1620,44*v.sc,6);
-  x.fillStyle="#b6aed0";x.font='500 30px Figtree,sans-serif';x.fillText(`Peak Bengaluru score ${v.sc}/10 · ${v.lab}`,W/2,1690);
-  let url;try{url=cv.toDataURL("image/png");}catch(e){url=null;}
-  out.innerHTML=url?`<img src="${url}" alt="Your Namma Arcana story card"><p class="note">Long-press or right-click the image to save it.</p>`:`<p class="note">This browser couldn't make the image. Use "Copy as text" instead.</p>`;}
+  current.forEach((c,i)=>{const cx=W/2+(i-1)*330;if(ims[i]){x.save();x.translate(cx,cy);x.rotate((i-1)*0.04+(c.rev?Math.PI:0));x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=40;x.shadowOffsetY=16;x.drawImage(ims[i],-cw/2,-chh/2,cw,chh);x.restore();}
+    x.fillStyle="#b6aed0";x.font='600 20px Figtree,sans-serif';x.fillText(POS[i][0].toUpperCase().split("").join(" "),cx,cy+300);
+    x.fillStyle=c.rev?"#eca59b":"rgba(182,174,208,.8)";x.font='italic 26px "Instrument Serif",Georgia,serif';x.fillText(c.card.kind==="rare"?"rare card":c.rev?"reversed":"upright",cx,cy+338);});
+  const big=v.big||v.line;
+  x.fillStyle="#f6eedc";x.font=(big.length>22?'64px':'86px')+' "Tiro Kannada","Instrument Serif",Georgia,serif';wrapT(x,big,W/2,1400,W-220,big.length>22?72:94);
+  if(ans){x.fillStyle="#b6aed0";x.font='italic 32px "Instrument Serif",Georgia,serif';wrapT(x,v.line,W/2,1540,W-260,40);}
+  x.fillStyle="rgba(246,238,220,.18)";x.fillRect(W/2-220,1660,440,6);x.fillStyle="#eca59b";x.fillRect(W/2-220,1660,44*v.sc,6);
+  x.fillStyle="#b6aed0";x.font='500 28px Figtree,sans-serif';x.fillText(`Peak Bengaluru score ${v.sc}/10 · ${v.lab}`,W/2,1722);
+  x.fillStyle="rgba(216,178,106,.85)";x.font='500 26px Figtree,sans-serif';x.fillText(SHARE_HOST+"  ·  draw your own week",W/2,1818);
+  shareCache={key,cv};return cv;}
+const SHARE_HOST=/vercel\.app|localhost|127\.0\.0\.1/.test(location.host)?location.host:"namma-arcana.vercel.app";
+function canvasBlob(cv){return new Promise(r=>{try{cv.toBlob(b=>r(b),"image/png");}catch(e){r(null);}});}
+async function makeShare(v,q){const out=document.getElementById("shareOut");out.innerHTML=`<p class="note">Preparing your card…</p>`;
+  try{const cv=await storyCard(v,q);let url=null;try{url=cv.toDataURL("image/png");}catch(e){}
+    out.innerHTML=url?`<img src="${url}" alt="Your Namma Arcana story card"><div class="shareopts"><a class="sopt" id="sSave" download="namma-arcana-${area.toLowerCase().replace(/\s+/g,"-")}.png" href="${url}">Save image</a></div><p class="note">Or long-press the picture to save it.</p>`:`<p class="note">This browser couldn't make the image. The link below still works.</p>`;}
+  catch(e){out.innerHTML=`<p class="note">Couldn't draw the card here. The link below still works.</p>`;}}
 
 document.querySelectorAll(".btn").forEach(addMagnet);
 
@@ -2285,8 +2374,47 @@ autoBtn.onclick=()=>{const raw=document.getElementById("aq").value.trim();
   const note=Q.other?"He can't read their mind. Only your road.":Q.anxious?"Breathe. It's only a lean.":"";
   const car=autoBtn.querySelector("svg");if(!REDUCED&&car)car.animate([{transform:"translateX(0)"},{transform:"translateX(-170%) rotate(-4deg)"}],{duration:420,easing:"cubic-bezier(.6,0,.9,.4)",fill:"forwards"});
   setTimeout(()=>{if(!REDUCED&&car)car.animate([{transform:"translateX(170%) rotate(3deg)"},{transform:"translateX(-6%)",offset:.8},{transform:"translateX(0)"}],{duration:560,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"});ans.classList.remove("in","thinking");void ans.offsetWidth;ans.classList.add("in");ans.innerHTML=`<div class="kan" lang="kn">${a[0]}</div><div class="say">${a[1]}</div><div class="means">${a[2]}</div>
-    <p class="drew">He drew <b>${esc(c.name)}</b> (${esc(c.tarot)}${rev?", reversed":""}), which leans ${v}. ${esc(LORE[c.scene][Q.topic==="week"||Q.topic==="family"?"self":Q.topic])} ${note}</p>`;},650);};
+    <p class="drew">He drew <b>${esc(c.name)}</b> (${esc(c.tarot)}${rev?", reversed":""}), which leans ${v}. ${esc(LORE[c.scene][tkeyOf(Q.topic)]||LORE[c.scene].self)} ${note}</p>`;},650);};
+// ===== About, as its own sheet (not on the page) =====
+(function(){const bar=document.querySelector(".bar"),snd=bar&&bar.querySelector(".snd"),scrim=document.getElementById("scrim");if(!bar||!scrim)return;
+  const btn=document.createElement("button");btn.type="button";btn.className="about-btn";btn.textContent="About";btn.setAttribute("aria-haspopup","dialog");btn.setAttribute("aria-controls","about");
+  bar.insertBefore(btn,snd||bar.lastElementChild);
+  const sh=document.createElement("section");sh.id="about";sh.className="sheet about";sh.setAttribute("role","dialog");sh.setAttribute("aria-modal","true");sh.setAttribute("aria-labelledby","abTitle");sh.hidden=true;
+  document.body.appendChild(sh);let built=false,last=null;
+  function build(){if(built)return;built=true;
+    const cards=DECK.map(c=>`<li class="ab-card"><div class="ab-art">${cardSVG(c)}</div><div class="ab-txt"><h4>${esc(c.name)}</h4><p class="ab-tarot">${esc(c.tarot)} · ${esc(c.num)}</p><p>${esc(c.link)}</p></div></li>`).join("");
+    sh.innerHTML=`<button class="close" id="closeAbout" aria-label="Close">×</button>
+      <div class="ab-in">
+        <div class="label">About</div>
+        <h2 id="abTitle">Namma Arcana</h2>
+        <p class="ab-lede">Tarot's 22 major arcana tell one story. The Fool leaves home, meets everyone, and comes back changed. So does anyone who moves to Bengaluru.</p>
+        <p>This deck keeps every Rider-Waite composition and swaps the cast. The Fool steps off the airport bus into a pothole. The Hermit works from a terrace at 2am. The Moon is Bellandur foam. The Chariot is an auto with two cows in the way.</p>
+        <h3>How a reading works</h3>
+        <ul class="ab-list">
+          <li><b>Three positions.</b> The Commute is what's slowing you down. The Hustle is work and money. The Heart is love and your people.</li>
+          <li><b>Your question picks the judge.</b> The card in your question's position decides the answer. The other two confirm it or soften it.</li>
+          <li><b>Reversed cards</b> play out more in your head than around you. A yes becomes a maybe. A maybe becomes a no.</li>
+          <li><b>Elements.</b> Each card is Fire, Water, Air or Earth. Two of a kind set the week's mood. Opposites pull you both ways.</li>
+          <li><b>The Fool's Journey.</b> Cards 1 to 7 are about you, 8 to 14 about you and other people, 15 to 21 about big change. The road under your reading shows how far along you are.</li>
+          <li><b>The hidden card.</b> Add your three card numbers, reduce to 21 or less. That card has the last word. Scratch it open.</li>
+          <li><b>Your neighbourhood</b> sets the scene for all three cards, and the city jokes.</li>
+        </ul>
+        <h3>The 22 cards</h3>
+        <ul class="ab-cards">${cards}</ul>
+        <h3>What it isn't</h3>
+        <p>Advice. It's a deck of cards drawn in code, for fun. Nothing leaves your phone unless you share it. The cards you've met are kept in your browser.</p>
+        <p class="ab-credit">Personal project by Nivivacious. Compositions after the Rider-Waite deck of 1909. Every illustration is code.</p>
+      </div>`;
+    sh.querySelector("#closeAbout").onclick=close;}
+  function open(){build();last=document.activeElement;sh.hidden=false;scrim.hidden=false;document.body.style.overflow="hidden";sh.scrollTop=0;setTimeout(()=>sh.querySelector(".close").focus(),50);}
+  function close(){if(sh.hidden)return;sh.hidden=true;scrim.hidden=true;document.body.style.overflow="";(last||btn).focus();}
+  btn.onclick=open;scrim.addEventListener("click",close);document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+  if(location.hash==="#about")setTimeout(open,600);
+  btn.addEventListener("click",()=>{try{history.replaceState(null,"",location.href.split("#")[0]+"#about");}catch(_){ }});
+  sh.addEventListener("click",e=>{if(e.target.closest("#closeAbout")){try{history.replaceState(null,"",current.filter(Boolean).length===3?permalink():location.href.split("#")[0]);}catch(_){ }}});})();
+
 })();
+
 </script>
 
 </body>
