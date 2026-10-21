@@ -642,6 +642,18 @@ footer{color:var(--muted)}
 .herorow .lede{text-align:left;margin:0;flex:1 1 0;min-width:0;max-width:40ch}
 .herorow .seal{width:clamp(170px,22vw,230px);height:clamp(190px,25vw,260px);margin:0;flex:none}
 @media (max-width:560px){.herorow{gap:14px}.herorow .lede{font-size:15.5px}.herorow .seal{width:132px;height:156px}}
+
+.vkick{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.vtag{font-family:"Tiro Kannada","Instrument Serif",serif;font-style:italic;font-size:19px;color:var(--ink);margin:-4px 0 4px}
+.vstats{grid-template-columns:repeat(3,auto)!important}
+.vstats div:last-child{grid-column:auto!important}
+.vdim{opacity:.25}
+.vnote{font-size:14px;color:var(--muted);max-width:34ch}
+
+.controls{max-width:920px!important}
+.voyage{max-width:920px!important;grid-template-columns:180px minmax(0,230px) minmax(0,1fr)!important}
+.vname{font-size:clamp(34px,4vw,50px)!important}
+@media (max-width:760px){.voyage{grid-template-columns:1fr!important}}
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
 </head>
@@ -1513,7 +1525,7 @@ const AREA_X={
 (function(){const host=document.getElementById("areas");if(!host)return;
   const wrap=document.createElement("div");wrap.className="voyage";host.parentNode.insertBefore(wrap,host);wrap.appendChild(host);host.classList.add("vlist");
   const win=document.createElement("div");win.className="vwin";win.innerHTML=`<div class="vscene"></div><button type="button" class="vnext" aria-label="Next neighbourhood"><span>Next</span> <b></b></button>`;
-  const info=document.createElement("div");info.className="vinfo";info.innerHTML=`<div class="vname" aria-live="polite"></div><dl class="vstats"></dl>`;
+  const info=document.createElement("div");info.className="vinfo";info.innerHTML=`<div class="vkick">Your reading happens in</div><div class="vname" aria-live="polite"></div><p class="vtag"></p><dl class="vstats"></dl><p class="vnote">Your three cards will play out on these streets. Pick another area to change the setting.</p>`;
   wrap.appendChild(win);wrap.appendChild(info);
   const names=Object.keys(AREAS);let cur=null;
   function show(name){if(name===cur)return;cur=name;const x=AREA_X[name];const sc=win.querySelector(".vscene");
@@ -1521,7 +1533,8 @@ const AREA_X={
     const old=sc.firstElementChild,nw=document.createElement("div");nw.className="vimg in";nw.innerHTML=svg;sc.appendChild(nw);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{nw.classList.remove("in");if(old){old.classList.add("out");setTimeout(()=>old.remove(),600);}}));
     const nm=info.querySelector(".vname");let k=0;nm.innerHTML=name.split(" ").map(w=>`<span class="vw">${[...w].map(c=>`<span style="animation-delay:${((k++)*.03).toFixed(2)}s">${esc(c)}</span>`).join("")}</span>`).join(" ");nm.setAttribute("aria-label",name);
-    info.querySelector(".vstats").innerHTML=`<div><dt>Traffic</dt><dd>${x.t}/10</dd></div><div><dt>Rent</dt><dd>${"₹".repeat(x.r)}</dd></div><div><dt>Known for</dt><dd>${esc(x.v)}</dd></div><div><dt>Fortune</dt><dd>${esc(AREAS[name])}</dd></div>`;
+    info.querySelector(".vtag").textContent=AREAS[name].charAt(0).toUpperCase()+AREAS[name].slice(1)+".";
+    info.querySelector(".vstats").innerHTML=`<div><dt>Traffic</dt><dd>${x.t} out of 10</dd></div><div><dt>Rent</dt><dd>${"₹".repeat(x.r)}<span class="vdim">${"₹".repeat(5-x.r)}</span></dd></div><div><dt>Known for</dt><dd>${esc(x.v)}</dd></div>`;
     win.querySelector(".vnext b").textContent=names[(names.indexOf(name)+1)%names.length];}
   host.addEventListener("click",e=>{requestAnimationFrame(()=>show(area));const c=e.target.closest(".chip");if(c&&host.scrollWidth>host.clientWidth)host.scrollTo({left:c.offsetLeft-host.clientWidth/2+c.offsetWidth/2,behavior:REDUCED?"auto":"smooth"});});
   win.querySelector(".vnext").addEventListener("click",()=>{const n=names[(names.indexOf(area)+1)%names.length];const b=[...host.querySelectorAll(".chip")].find(c=>c.textContent===n);if(b)b.click();});
