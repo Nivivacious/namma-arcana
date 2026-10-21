@@ -1852,18 +1852,71 @@ function citySVG(){const W=1000,H=420;
   return mute(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">${art}</svg>`);}
 
 
-// neighbourhood picker in the style of "Space Voyage": list, window, big name, stats
+// neighbourhood picker scenes: full dioramas in the card-art style (viewBox 200×210, keep the story between y=25 and y=185)
+const VX={
+  house:(x,y,w,h,c,roof)=>`<rect x="${x}" y="${y-h}" width="${w}" height="${h}" fill="${c}" ${S}/>`+(roof?`<path d="M${x-4} ${y-h} L${x+w/2} ${y-h-14} L${x+w+4} ${y-h}Z" fill="${roof}" ${S}/>`:"")+
+    [...Array(Math.max(1,Math.floor((w-8)/14)))].map((_,i)=>`<rect x="${x+6+i*14}" y="${y-h+10}" width="7" height="9" rx="1" fill="#fff7dc" ${S1}/>`).join(""),
+  lights:(x0,x1,y,n=7)=>`<path d="M${x0} ${y} Q${(x0+x1)/2} ${y+22} ${x1} ${y}" stroke="${K}" stroke-width="1" fill="none"/>`+[...Array(n)].map((_,i)=>{const t=(i+.5)/n,x=x0+(x1-x0)*t,yy=y+22*4*t*(1-t)*.5;return `<circle cx="${x.toFixed(1)}" cy="${(yy+3).toFixed(1)}" r="3" fill="${YEL}" ${S1}/>`;}).join(""),
+  sign:(x,y,w,txt,bg=RED,fg=WHITE,fs=9)=>`<rect x="${x-w/2}" y="${y-9}" width="${w}" height="18" rx="3" fill="${bg}" ${S}/>${T(x,y+4,txt,fs,fg)}`,
+  awning:(x,y,w)=>[...Array(Math.ceil(w/12))].map((_,i)=>`<path d="M${x+i*12} ${y} h12 v8 q-6 5 -12 0Z" fill="${i%2?WHITE:RED}" ${S1}/>`).join(""),
+  mug:(x,y,s)=>G(x,y,s,`<rect x="-7" y="-20" width="14" height="20" rx="2" fill="#f2b04e" ${S}/><path d="M-7 -20 Q0 -27 7 -20" fill="${WHITE}" ${S1}/><path d="M7 -15 q7 0 7 6 q0 6 -7 6" stroke="${K}" stroke-width="2" fill="none"/>`),
+  rangoli:(x,y,s)=>G(x,y,s,`${[0,45,90,135].map(a=>`<ellipse cx="0" cy="0" rx="14" ry="5" fill="none" stroke="${WHITE}" stroke-width="1.6" transform="rotate(${a})"/>`).join("")}<circle r="3" fill="${YEL}" ${S1}/>`),
+  gopuram:(x,y,s)=>G(x,y,s,`<path d="M-34 0 L-30 -30 L-24 -34 L-22 -56 L-16 -60 L-14 -78 L14 -78 L16 -60 L22 -56 L24 -34 L30 -30 L34 0Z" fill="#f2d49a" ${S}/>`+[-24,-46,-66].map(yy=>`<path d="M${-26+(-yy)/4} ${yy} H${26-(-yy)/4}" stroke="${K}" stroke-width="1"/>`).join("")+
+    `<rect x="-8" y="-20" width="16" height="20" fill="#8a5a3a" ${S1}/><rect x="-10" y="-84" width="20" height="6" rx="2" fill="${YEL}" ${S1}/>`+[-6,0,6].map(xx=>`<path d="M${xx} -84 v-6" stroke="${YEL}" stroke-width="2"/>`).join("")),
+  jamRow:(y,s)=>autoSide(32,y,s)+scooter(70,y,s*1.05,RED)+bus(118,y-2,s*1.05)+autoSide(166,y,s,{},true),
+  bag:(x,y)=>`<path d="M${x-7} ${y-14} h14 l2 14 h-18Z" fill="${PINK}" ${S1}/><path d="M${x-3} ${y-14} q3 -7 6 0" stroke="${K}" stroke-width="1.4" fill="none"/>`,
+  idcard:()=>`<path d="M-3 -58 L-3 -38" stroke="${BLU}" stroke-width="1.6"/><rect x="-7" y="-40" width="8" height="10" rx="1" fill="${WHITE}" ${S1}/>`
+};
 const AREA_X={
- "Koramangala":{t:7,r:4,v:"Pitch decks",s:()=>tables(36,150,128)+laptop(80,150,1.4)+tumbler(130,150,1.2,true)+ch(60,150,.9,{top:RED,outfit:"hoodie",legs:"sit",hair:"short",armR:[60,40]})},
- "Indiranagar":{t:6,r:5,v:"Craft beer",s:()=>`<path d="M20 70 Q100 100 180 70" stroke="${K}" stroke-width="1" fill="none"/>`+[40,70,100,130,160].map((x,i)=>`<circle cx="${x}" cy="${78+Math.sin(i)*6}" r="4" fill="${YEL}" ${S1}/>`).join("")+
-    [[70,170],[118,170]].map(([x,y])=>`<rect x="${x-14}" y="${y-44}" width="28" height="44" rx="4" fill="#f2b04e" ${S}/><path d="M${x-14} ${y-44} Q${x} ${y-56} ${x+14} ${y-44}" fill="#fff" ${S}/><path d="M${x+14} ${y-34} q12 0 12 12 q0 10 -12 10" stroke="${K}" stroke-width="2" fill="none"/>`).join("")+tree(170,190,.7)},
- "Whitefield":{t:9,r:3,v:"Tech parks",s:()=>tower(20,170,40,120,"#a99ce0","#fff7dc",true)+tower(70,170,36,90,"#b9a8e6","#fff7dc",true)+tower(118,170,50,130,"#a99ce0","#fff7dc",true)+`<rect x="0" y="170" width="200" height="40" fill="#6b6884"/>`+bus(70,196,.9)+autoSide(160,198,.5)},
- "HSR Layout":{t:6,r:4,v:"Startups",s:()=>tower(30,170,36,100,"#b9a8e6","#fff7dc",true)+tower(130,170,40,80,"#a99ce0","#fff7dc",true)+ground(170,"#c9d6a8")+scooter(90,196,.9,RED)+dog(160,196,.7,{pose:"sit"})},
- "Jayanagar":{t:5,r:3,v:"Aunty network",s:()=>`<rect x="20" y="70" width="160" height="100" fill="#f3d9b0" ${S}/>`+[40,80,120,160].map(x=>`<rect x="${x-12}" y="90" width="24" height="26" fill="#fff" ${S1}/>`).join("")+T(100,84,"COMPLEX",9)+ground(170,"#c9d6a8")+ch(70,198,.95,{outfit:"saree",top:"#2f9e5b",border:YEL,hair:"bun",jasmine:true,bindi:true,armR:[30,20],holdR:`<rect x="-4" y="0" width="12" height="14" rx="2" fill="${RED}" ${S1}/>`})+ch(130,198,.95,{outfit:"saree",top:PUR,border:YEL,hair:"bun",bindi:true,face:"grin"})},
- "Malleswaram":{t:4,r:3,v:"Filter coffee",s:()=>`<path d="M60 170 L60 110 L70 100 L70 80 L80 70 L80 55 L120 55 L120 70 L130 80 L130 100 L140 110 L140 170Z" fill="#f2d49a" ${S}/>`+[65,80,95].map(y=>`<path d="M${70-(y-65)/3} ${y+40} H${130+(y-65)/3}" stroke="${K}" stroke-width="1"/>`).join("")+`<circle cx="100" cy="50" r="4" fill="${YEL}" ${S1}/>`+ground(170,"#c9d6a8")+tumbler(40,196,1.5,true)+tumbler(160,196,1.5,true)},
- "Electronic City":{t:8,r:2,v:"Campuses",s:()=>`<path d="M0 120 Q100 80 200 120 L200 132 Q100 92 0 132Z" fill="#d8ccb4" ${S}/>`+[40,100,160].map(x=>`<rect x="${x-5}" y="${x===100?96:110}" width="10" height="70" fill="#d8ccb4" ${S1}/>`).join("")+autoSide(70,112,.4)+bus(140,116,.45)+tower(20,180,60,50,"#b9a8e6","#fff7dc",true)+tower(120,180,64,60,"#a99ce0","#fff7dc",true)},
- "Marathahalli":{t:10,r:3,v:"The bridge",s:()=>`<path d="M0 150 Q100 110 200 150" stroke="#cbbfa8" stroke-width="14" fill="none"/><path d="M0 150 Q100 110 200 150" stroke="${K}" stroke-width="1.5" fill="none"/>`+autoSide(30,148,.42)+bus(80,134,.42)+autoSide(124,130,.42,{},true)+scooter(170,146,.5,RED)+
-    [[40,80],[150,70]].map(([x,y])=>bubble(x-28,y-16,56,18,"Honk!",8)).join("")+ground(180,"#c9d6a8")}
+ "Koramangala":{t:7,r:4,v:"Pitch decks",s:()=>sunFace(170,36,12)+cloud(40,34,.6)+
+    VX.house(10,120,180,60,"#fbe6c8")+VX.awning(10,78,180)+VX.sign(100,56,74,"THIRD WAVE",BLU,WHITE,8)+VX.lights(20,180,96,9)+
+    ground(120,"#c9d6a8")+`<rect x="0" y="176" width="200" height="34" fill="#6b6884" ${S}/>`+
+    tables(34,138,132)+laptop(66,138,1.25)+tumbler(100,138,1.1,true)+laptop(136,138,1.25)+
+    ch(52,172,.9,{top:RED,outfit:"hoodie",legs:"sit",hair:"short",armR:[60,40]})+ch(150,172,.9,{top:PUR,legs:"sit",hair:"long",glasses:true,armL:[-60,40]},true)+
+    bubble(104,100,62,18,"Series A?",8)+dog(182,176,.65,{pose:"sit"})+pot(14,176,.9)},
+ "Indiranagar":{t:6,r:5,v:"Craft beer",s:()=>moonFace(168,36,11)+star(30,30,4)+star(60,22,3)+star(130,26,3)+
+    VX.house(8,118,96,68,"#d9c2f0")+VX.house(112,118,80,54,"#f3d2c2","#b36b5a")+VX.sign(56,70,70,"TAPROOM",K,YEL,8)+`<rect x="122" y="80" width="60" height="26" rx="3" fill="#fff7dc" ${S1}/>${T(152,97,"100 FT RD",8)}`+
+    VX.lights(10,190,112,11)+ground(118,"#9b97b8")+`<rect x="0" y="176" width="200" height="34" fill="#4e4b66" ${S}/>`+
+    tables(50,142,100)+
+    ch(58,172,.9,{top:GRN,hair:"short",legs:"sit",armR:[48,56],holdR:`<rect x="-5" y="-14" width="10" height="14" rx="2" fill="#f2b04e" ${S1}/>`})+ch(142,172,.9,{top:YEL,outfit:"shirt",hair:"bun",legs:"sit",armL:[-48,56],holdL:`<rect x="-5" y="-14" width="10" height="14" rx="2" fill="#f2b04e" ${S1}/>`},true)+
+    tree(188,176,.75,"#48a35a","#ff8fa3")+scooter(22,180,.7,RED)},
+ "Whitefield":{t:9,r:3,v:"Tech parks",s:()=>sunFace(40,44,13)+cloud(150,30,.55)+
+    tower(18,150,34,110,"#a99ce0","#fff7dc",true)+tower(60,150,40,135,"#b9a8e6","#fff7dc",true)+tower(108,150,30,95,"#a99ce0","#fff7dc",true)+tower(146,150,44,120,"#c9b6f2","#fff7dc",true)+
+    `<rect x="48" y="26" width="28" height="12" rx="2" fill="${WHITE}" ${S1}/>${T(62,35,"ITPL",7)}`+
+    pillar(30,176,34,"#d8ccb4")+pillar(100,176,34,"#d8ccb4")+pillar(170,176,34,"#d8ccb4")+`<path d="M0 142 H200 V150 H0Z" fill="#d8ccb4" ${S}/>`+`<rect x="40" y="128" width="120" height="14" rx="4" fill="${PUR}" ${S}/>`+[50,70,90,110,130].map(x=>`<rect x="${x}" y="131" width="12" height="7" rx="1.5" fill="#cfe8f2"/>`).join("")+
+    `<rect x="0" y="176" width="200" height="34" fill="#6b6884" ${S}/><path d="M0 194 H200" stroke="${YEL}" stroke-width="2" stroke-dasharray="14 10"/>`+
+    bus(72,192,.75)+ch(150,196,.85,{top:BLU,legs:"walk",hair:"short",glasses:true,chest:VX.idcard()})+autoSide(22,194,.55)},
+ "HSR Layout":{t:6,r:4,v:"Startups",s:()=>sunFace(164,40,12)+cloud(60,30,.6)+
+    VX.house(6,130,62,70,"#fbe6c8","#b36b5a")+VX.house(74,130,54,56,"#d9c2f0")+VX.house(134,130,60,76,"#f3d2c2","#7a52cc")+
+    `<rect x="78" y="60" width="46" height="12" rx="2" fill="${WHITE}" ${S1}/>${T(101,69,"27th MAIN",7)}`+
+    ground(130,"#c9d6a8")+tree(186,152,.7)+tree(14,152,.6)+`<rect x="0" y="176" width="200" height="34" fill="#6b6884" ${S}/><path d="M0 194 H200" stroke="${YEL}" stroke-width="2" stroke-dasharray="14 10"/>`+
+    scooter(60,192,.9,GRN)+ch(60,174,.72,{top:RED,legs:"sit",hair:"short",chest:`<rect x="-16" y="-44" width="14" height="16" rx="2" fill="${RED}" ${S1}/>`})+
+    cow(126,192,.7,{horn:RED})+dog(174,192,.65,{pose:"sit"})+bubble(20,96,54,18,"10 mins",8)},
+ "Jayanagar":{t:5,r:3,v:"Aunty network",s:()=>sunFace(32,40,12)+cloud(140,28,.6)+
+    `<rect x="24" y="70" width="152" height="60" fill="#f3d9b0" ${S}/>`+[44,76,108,140].map(x=>`<rect x="${x-12}" y="86" width="24" height="26" fill="#bfe3f2" ${S1}/><path d="M${x-12} 96 h24" stroke="${K}" stroke-width="1"/>`).join("")+`<rect x="60" y="56" width="80" height="16" rx="2" fill="${RED}" ${S}/>${T(100,68,"4th BLOCK",8,WHITE)}`+
+    ground(130,"#c9d6a8")+
+    `<rect x="4" y="144" width="40" height="26" rx="3" fill="#8a5a3a" ${S}/>`+[10,20,30].map(x=>`<path d="M${x} 144 q3 10 0 20" stroke="${WHITE}" stroke-width="3" stroke-dasharray="2 2"/>`).join("")+T(24,140,"FLOWERS",6,K)+
+    ch(66,196,.95,{outfit:"saree",top:GRN,border:YEL,hair:"bun",jasmine:true,bindi:true,armR:[30,20],holdR:`<rect x="-4" y="0" width="12" height="14" rx="2" fill="${RED}" ${S1}/>`})+
+    ch(134,196,.95,{outfit:"saree",top:PUR,border:YEL,hair:"bun",jasmine:true,bindi:true,face:"grin",armL:[-28,18]},true)+VX.bag(120,196)+
+    tumbler(176,196,1.3,true)+tree(186,150,.6,"#48a35a",YEL)},
+ "Malleswaram":{t:4,r:3,v:"Filter coffee",s:()=>sunFace(160,36,12)+cloud(40,34,.55)+
+    VX.house(2,130,48,48,"#f3d2c2","#b36b5a")+VX.gopuram(100,130,1.05)+VX.house(150,130,48,52,"#fbe6c8","#b36b5a")+
+    ground(130,"#c9d6a8")+VX.rangoli(100,160,.8)+`<rect x="0" y="176" width="200" height="34" fill="#9b97b8" ${S}/>`+
+    ch(44,196,.92,{outfit:"saree",top:"#d94f6a",border:YEL,hair:"bun",jasmine:true,bindi:true,armR:[36,24],holdR:tumbler(4,2,.8,true)})+
+    ch(154,196,.92,{top:WHITE,bot:WHITE,hair:"short",mustache:true,armL:[-36,24],holdL:tumbler(-4,2,.8,true)},true)+
+    tumbler(100,200,1.3,true)+pot(14,176,.9)+pot(186,176,.9)},
+ "Electronic City":{t:8,r:2,v:"Campuses",s:()=>sunFace(100,44,14)+cloud(30,36,.55)+cloud(170,30,.55)+
+    tower(6,150,46,70,"#b9a8e6","#fff7dc",true)+tower(60,150,56,90,"#c9b6f2","#fff7dc",true)+tower(126,150,66,80,"#a99ce0","#fff7dc",true)+`<rect x="66" y="52" width="44" height="12" rx="2" fill="${WHITE}" ${S1}/>${T(88,61,"CAMPUS",7)}`+
+    `<path d="M0 118 Q100 84 200 118 L200 130 Q100 96 0 130Z" fill="#d8ccb4" ${S}/>`+[30,100,170].map(x=>`<rect x="${x-5}" y="${x===100?100:114}" width="10" height="${x===100?50:36}" fill="#d8ccb4" ${S1}/>`).join("")+
+    autoSide(50,112,.42)+bus(120,110,.46)+scooter(172,116,.45,RED)+
+    `<rect x="0" y="176" width="200" height="34" fill="#6b6884" ${S}/><path d="M0 194 H200" stroke="${YEL}" stroke-width="2" stroke-dasharray="14 10"/>`+ground(150,"#c9d6a8")+
+    ch(60,196,.85,{top:BLU,legs:"walk",hair:"short",chest:VX.idcard()})+ch(130,196,.85,{top:GRN,legs:"walk",hair:"long",glasses:true,chest:VX.idcard()},true)+tree(186,176,.6)},
+ "Marathahalli":{t:10,r:3,v:"The bridge",s:()=>sunFace(170,34,11)+cloud(50,28,.6)+
+    tower(10,150,30,60,"#b9a8e6","#fff7dc")+tower(160,150,34,70,"#c9b6f2","#fff7dc")+`<rect x="84" y="64" width="34" height="12" rx="2" fill="${WHITE}" ${S1}/>${T(101,73,"MALL",7)}`+
+    `<path d="M-10 150 Q100 96 210 150" stroke="#cbbfa8" stroke-width="18" fill="none"/><path d="M-10 150 Q100 96 210 150" stroke="${K}" stroke-width="1.5" fill="none"/><path d="M-10 160 Q100 106 210 160" stroke="${K}" stroke-width="1.5" fill="none"/>`+
+    autoSide(28,142,.42)+bus(76,126,.44)+autoSide(124,124,.42,{},true)+scooter(170,140,.5,RED)+
+    bubble(32,78,46,16,"Honk!",7)+bubble(132,70,48,16,"HONK",7,"right")+
+    ground(160,"#c9d6a8")+`<rect x="0" y="176" width="200" height="34" fill="#6b6884" ${S}/>`+autoSide(26,196,.62)+cow(70,196,.68,{horn:RED})+bus(124,194,.66)+scooter(176,196,.66,RED)}
 };
 (function(){const host=document.getElementById("areas");if(!host)return;
   const wrap=document.createElement("div");wrap.className="voyage";host.parentNode.insertBefore(wrap,host);wrap.appendChild(host);host.classList.add("vlist");
