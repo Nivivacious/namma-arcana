@@ -11,7 +11,9 @@ Pick your neighbourhood, ask a question, hold to shuffle and draw three cards: t
 - **It listens to how you ask.** It reads your question's topic and tone. It won't pretend to read someone else's mind, and it notices when you ask the same thing twice.
 - **Peak Bengaluru advice.** "Something will break. Back up your files before 4pm."
 - **Ask the auto.** A quick yes or no from an auto anna whose eyes follow your cursor. Banni or barolla.
-- **Things to play with.** An ink brush that reveals the city under the title. A neighbourhood picker with traffic and rent stats. Hold-to-shuffle, a fanned deck to pick from, and a story card to share.
+- **A card you can study.** Tap any drawn card to open it full size, drag it to turn it in 3D, and read its element, yes or no lean, both meanings and the tarot link.
+- **City sounds.** Rain, traffic and temple bells, all made in the browser. Off until you switch them on.
+- **Things to play with.** A night skyline that shifts as you move, a cinematic card reveal in gold, A neighbourhood picker with traffic and rent stats. Hold-to-shuffle, a fanned deck to pick from, and a story card to share.
 
 ## Run it
 

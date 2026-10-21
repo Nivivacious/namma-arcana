@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Namma Arcana: the 22 cards of the classic tarot, reimagined in Bengaluru.">
+<meta name="theme-color" content="#191539">
 <title>Namma Arcana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Tiro+Kannada:ital@0;1&family=Figtree:wght@400;500;600&family=Noto+Sans+Kannada:wght@500&display=swap">
@@ -463,6 +464,169 @@ button,a,.fcard,.chip{-webkit-tap-highlight-color:transparent}
   .pos{font-size:9.5px;letter-spacing:.08em}
   h1{font-size:52px}
 }
+
+/* ================= Jacaranda dusk ================= */
+:root{
+  --paper:#221c46;--paper-2:rgba(246,238,220,.055);--ink:#f6eedc;--muted:#b6aed0;--line:rgba(246,238,220,.13);
+  --rose:#eca59b;--marigold:#d8b26a;--gold:#d8b26a;--sage:#d8b26a;
+  --foil:linear-gradient(110deg,#a8823a 0%,#f6e2a6 28%,#c79d4a 46%,#fbedc0 62%,#9c7a35 100%);
+  color-scheme:dark;
+}
+html{background:#191539}
+body{background:linear-gradient(180deg,#171334 0%,#211b49 38%,#2e2560 68%,#4a3470 92%,#5b3d72 100%) fixed;color:var(--ink)}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+  background-image:radial-gradient(1px 1px at 12% 18%,#fff8e6 50%,transparent 51%),radial-gradient(1px 1px at 78% 9%,#fff8e6 50%,transparent 51%),radial-gradient(1.4px 1.4px at 34% 7%,#f6e2a6 50%,transparent 51%),radial-gradient(1px 1px at 61% 27%,#fff8e6 50%,transparent 51%),radial-gradient(1px 1px at 90% 33%,#fff8e6 50%,transparent 51%),radial-gradient(1.4px 1.4px at 22% 41%,#f6e2a6 50%,transparent 51%),radial-gradient(1px 1px at 48% 15%,#fff8e6 50%,transparent 51%),radial-gradient(1px 1px at 6% 62%,#fff8e6 50%,transparent 51%),radial-gradient(1px 1px at 70% 52%,#fff8e6 50%,transparent 51%),radial-gradient(1.2px 1.2px at 95% 70%,#f6e2a6 50%,transparent 51%)}
+body::after{content:"";position:fixed;left:-10%;right:-10%;bottom:-30vh;height:60vh;z-index:0;pointer-events:none;background:radial-gradient(50% 50% at 50% 50%,rgba(236,165,155,.18),transparent 70%)}
+.wrap{gap:80px}
+.progress,.ringcur,.ripple{display:none!important}
+.bar{border-bottom-color:var(--line)}
+.logo{color:var(--ink)}
+.logo em{background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kn{color:var(--gold)!important;letter-spacing:.08em}
+.label,.reading .label,.pos,.eyebrow{color:var(--gold)!important;letter-spacing:.18em}
+.lede{color:var(--muted);font-size:clamp(17px,2vw,20px)}
+h1#title{font-size:clamp(64px,12vw,142px);color:var(--ink)}
+#title em .l{background:var(--foil);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;text-shadow:none!important;animation:foilsheen 7s ease-in-out infinite!important;animation-delay:calc(var(--i,0) * 90ms)!important}
+@keyframes foilsheen{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+.hero::before{background:radial-gradient(40% 45% at 30% 38%,rgba(155,120,220,.22),transparent 70%),radial-gradient(35% 40% at 72% 34%,rgba(216,178,106,.16),transparent 70%)!important}
+.hero::after{background:radial-gradient(240px 240px at var(--mx,50%) var(--my,40%),rgba(216,178,106,.16),transparent 70%)}
+/* hero card */
+.herowrap{margin-top:34px;perspective:900px;animation:floaty 7s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-10px) rotate(1.5deg)}}
+.herocard{width:min(230px,56vw);cursor:default}
+.herocard svg{width:100%;height:100%;display:block;filter:drop-shadow(0 40px 50px rgba(5,3,20,.6)) drop-shadow(0 0 34px rgba(216,178,106,.22))}
+/* foil sheen on every card */
+.card::after{border-radius:5%/3%;background:linear-gradient(115deg,transparent 30%,rgba(255,236,180,.55) 44%,rgba(255,255,255,.22) 50%,rgba(216,178,106,.4) 56%,transparent 70%)!important;background-size:300% 300%!important;background-position:var(--gx,50%) var(--gy,50%)!important;mix-blend-mode:overlay!important}
+.herocard::after{opacity:.75!important;animation:sweep 8s ease-in-out infinite}
+.herocard.tilting::after{animation:none}
+@keyframes sweep{0%,100%{background-position:100% 100%}50%{background-position:0% 0%}}
+.face svg,.fcard svg,.stage .sb svg{filter:drop-shadow(0 18px 26px rgba(5,3,20,.55))!important}
+.card.flipped .front svg{animation:goldglow 1.6s ease-out}
+@keyframes goldglow{0%{filter:drop-shadow(0 0 0 rgba(216,178,106,.9)) drop-shadow(0 18px 26px rgba(5,3,20,.55))}40%{filter:drop-shadow(0 0 22px rgba(216,178,106,.6)) drop-shadow(0 18px 26px rgba(5,3,20,.55))}100%{filter:drop-shadow(0 0 0 rgba(216,178,106,0)) drop-shadow(0 18px 26px rgba(5,3,20,.55))}}
+.card.placeholder{border:1px dashed rgba(216,178,106,.38)!important;background:rgba(246,238,220,.025);border-radius:10px}
+.card.placeholder .ph{color:rgba(216,178,106,.45)!important;font-family:"Tiro Kannada",serif}
+/* buttons */
+.btn{background:var(--foil)!important;color:#221c46!important;border:0!important;box-shadow:0 10px 30px rgba(216,178,106,.22),inset 0 0 0 1px rgba(255,255,255,.25)!important;font-weight:600}
+.btn.ghost,.sopt,.qchip{background:rgba(246,238,220,.05)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1px var(--line)!important;border:0!important}
+.btn.hold .ring{background:conic-gradient(#221c46 calc(var(--p,0)*360deg),rgba(34,28,70,.25) 0)!important}
+.btn.hold.holding{background:var(--foil)!important;filter:brightness(1.12)}
+.autocta{background:rgba(246,238,220,.06)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1px rgba(216,178,106,.5),0 10px 30px rgba(5,3,20,.35)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.autocta b{color:var(--ink)}
+.autocta .aicon{background:#f6eedc}
+.autocta .arrow{background:var(--foil)!important;color:#221c46!important}
+input[type=text]{border-bottom-color:rgba(246,238,220,.4)!important;color:var(--ink)}
+input::placeholder{color:#8c84a8}
+/* picker */
+.vlist .chip{color:var(--muted)}
+.vlist .chip[aria-pressed="true"]{color:var(--ink)}
+.vlist .chip::before{border-color:rgba(216,178,106,.5)!important}
+.vlist .chip[aria-pressed="true"]::before{background:var(--gold)!important;border-color:var(--gold)!important}
+.vlist .ind{background:rgba(216,178,106,.14)!important}
+.vwin{box-shadow:0 30px 60px rgba(5,3,20,.5),0 0 0 1px rgba(216,178,106,.35)!important}
+.vnext{background:rgba(34,28,70,.78)!important;color:var(--ink)!important}
+.vnext span{color:var(--muted)!important}
+.vstats dd{color:var(--ink)}
+/* reading */
+.readings{border-top-color:var(--line)}
+.reading .tie{color:#f3dca0!important;background:rgba(216,178,106,.16)!important}
+.reading h3{color:var(--ink)}
+.verdict{border-color:var(--line)!important}
+.verdict .line .w{background:var(--foil);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.verdict .line{font-family:"Tiro Kannada","Instrument Serif",serif;font-size:clamp(40px,6vw,64px)!important}
+.synth{background:rgba(216,178,106,.08)!important;box-shadow:inset 0 0 0 1px rgba(216,178,106,.25)}
+.synth b{color:var(--gold)!important}
+.closing{background:rgba(246,238,220,.04)!important;border-left-color:var(--gold)!important}
+.hidden-card{background:rgba(246,238,220,.04)!important;box-shadow:inset 0 0 0 1px var(--line)}
+.pats li.on,.pats li:hover{background:rgba(216,178,106,.12)!important}
+.gauge .bar2{background:var(--line)!important}
+.gauge .bar2 i{background:var(--foil)!important}
+.share img{box-shadow:0 20px 50px rgba(5,3,20,.6)!important}
+/* oracle sheet */
+.scrim{background:rgba(8,6,24,.62)!important}
+.sheet{background:linear-gradient(180deg,#2a2257,#221c46)!important;box-shadow:0 40px 90px rgba(5,3,20,.7),inset 0 0 0 1px rgba(216,178,106,.3)!important;border:0!important}
+.autobtn{background:rgba(246,238,220,.06)!important;box-shadow:inset 0 0 0 1px rgba(216,178,106,.35)}
+.close{color:var(--ink)!important;border-color:var(--line)!important}
+.answer .kan{color:var(--gold)!important}
+.greet p{color:var(--ink)}
+.bigmark{-webkit-text-stroke:1px rgba(216,178,106,.35)!important}
+footer{color:var(--muted)}
+/* the reveal */
+.cine-dim{position:fixed;inset:0;z-index:79;opacity:0;cursor:pointer;background:radial-gradient(45% 55% at 50% 45%,rgba(90,70,160,.35),rgba(8,6,24,.94) 75%);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.cine{position:fixed;z-index:81;transform-origin:0 0;perspective:1400px;pointer-events:none}
+.cine .cin{position:relative;width:100%;height:100%;transform-style:preserve-3d}
+.cine .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cine .front{transform:rotateY(180deg)}
+.cine .front.rev svg{transform:rotate(180deg)}
+.cine svg{width:100%;height:100%;display:block;filter:drop-shadow(0 40px 70px rgba(0,0,0,.6)) drop-shadow(0 0 40px rgba(216,178,106,.25))}
+.cine .cap{position:absolute;left:50%;top:calc(100% + 22px);transform:translate(-50%,0);opacity:0;text-align:center;white-space:nowrap;display:flex;flex-direction:column;gap:4px}
+.cine .cap b{font-family:"Tiro Kannada","Instrument Serif",serif;font-weight:400;font-size:26px;color:var(--ink)}
+.cine .cap span{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.burst{position:fixed;inset:0;width:100%;height:100%;z-index:82;pointer-events:none}
+@media (max-width:640px){.cine .cap b{font-size:21px}}
+@media (prefers-reduced-motion:reduce){.herowrap{animation:none}}
+
+.interp ul{color:var(--muted)!important}
+.interp ul b{color:var(--ink)}
+.reading.empty{color:rgba(182,174,208,.55)!important}
+.reading.empty h3{color:rgba(246,238,220,.28)!important}
+.tip,.tl summary,.tl p,.note,.hint{color:var(--muted)!important}
+.interp p,.interp .lead{color:var(--ink)}
+.meta{color:var(--muted)!important}
+.meta b{color:var(--ink)!important}
+.hc-cue{color:var(--muted)!important}
+.sopt{color:var(--ink)!important}
+
+/* living skyline */
+.skyline{position:absolute;z-index:-1;left:50%;transform:translateX(-50%);width:100vw;bottom:-30px;height:min(560px,78vw);pointer-events:none;overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 22%);mask-image:linear-gradient(180deg,transparent,#000 22%)}
+.skyline .sl{position:absolute;inset:-20px -60px 0;will-change:transform;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.skyline .sl svg{width:100%;height:100%;display:block}
+.skyline .far{opacity:.62}.skyline .mid{opacity:1}
+.skyline .near::after{content:"";position:absolute;inset:0;background-image:radial-gradient(1.6px 1.6px at 8% 82%,#f6d48a 60%,transparent 61%),radial-gradient(1.6px 1.6px at 23% 88%,#f6d48a 60%,transparent 61%),radial-gradient(1.6px 1.6px at 41% 80%,#f6d48a 60%,transparent 61%),radial-gradient(1.6px 1.6px at 67% 86%,#f6d48a 60%,transparent 61%),radial-gradient(1.6px 1.6px at 84% 79%,#f6d48a 60%,transparent 61%),radial-gradient(1.6px 1.6px at 93% 90%,#f6d48a 60%,transparent 61%);opacity:.8;animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{50%{opacity:.35}}
+.cloud{position:absolute;border-radius:50%;filter:blur(30px);background:rgba(160,130,220,.18);animation:drift 60s linear infinite}
+.cloud.c1{width:420px;height:90px;top:18%;left:-20%}.cloud.c2{width:300px;height:70px;top:6%;left:30%;animation-duration:85s;animation-delay:-30s}.cloud.c3{width:520px;height:110px;top:30%;left:60%;animation-duration:110s;animation-delay:-60s;background:rgba(236,165,155,.12)}
+@keyframes drift{from{transform:translateX(-30vw)}to{transform:translateX(110vw)}}
+.kitebird{position:absolute;width:46px;top:12%;left:-60px;animation:glide 26s linear infinite;animation-delay:4s}
+.kitebird svg{width:100%;display:block;animation:flap 3s ease-in-out infinite}
+@keyframes glide{0%{transform:translate(0,0)}50%{transform:translate(55vw,40px)}100%{transform:translate(115vw,-20px)}}
+@keyframes flap{50%{transform:scaleY(.82) translateY(2px)}}
+.herowrap{position:relative;z-index:1}
+/* inspector */
+.insp{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px}
+.insp-bg{position:absolute;inset:0;background:radial-gradient(60% 60% at 30% 45%,rgba(90,70,160,.4),rgba(8,6,24,.94) 75%);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:fadein .4s ease both}
+.insp-in{position:relative;width:min(980px,100%);max-height:calc(100dvh - 32px);overflow:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);grid-template-rows:auto auto;gap:24px 40px;align-items:center;
+  background:linear-gradient(180deg,rgba(42,34,87,.92),rgba(30,24,64,.95));border-radius:26px;padding:clamp(20px,4vw,44px);box-shadow:0 40px 100px rgba(0,0,0,.6),inset 0 0 0 1px rgba(216,178,106,.28);animation:popin .5s cubic-bezier(.2,.8,.2,1) both}
+.insp-x{position:absolute;top:14px;right:14px}
+.insp-stage{display:flex;flex-direction:column;align-items:center;gap:12px;perspective:1100px}
+.insp-card{width:min(280px,64vw);aspect-ratio:10/17;cursor:grab;touch-action:none}
+.insp-card:active{cursor:grabbing}
+.insp-rot{width:100%;height:100%;transform-style:preserve-3d;will-change:transform}
+.insp-rot svg{width:100%;height:100%;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.55)) drop-shadow(0 0 30px rgba(216,178,106,.2))}
+.insp-hint{font-size:13px;color:var(--muted);transition:opacity .4s}.insp-hint.gone{opacity:0}
+.insp-info{display:flex;flex-direction:column;gap:14px;min-width:0}
+.insp-info h2{font-family:"Tiro Kannada","Instrument Serif",serif;font-weight:400;font-size:clamp(32px,4vw,46px);line-height:1.05;color:var(--ink)}
+.insp-tarot{font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.insp-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0;padding:14px 0;border-block:1px solid var(--line)}
+.insp-facts dt{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.insp-facts dd{margin:2px 0 0;color:var(--ink);font-size:15px}
+.insp-mean{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.insp-info h4{margin:0 0 4px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.insp-info p{color:var(--ink);font-size:15.5px;line-height:1.5}
+.insp-link p{color:var(--muted)}
+.insp-nav{grid-column:1/-1;display:flex;justify-content:space-between;gap:10px}
+.spread .card.flipped{cursor:zoom-in}
+@media (max-width:760px){.insp-in{grid-template-columns:1fr;gap:18px}.insp-mean{grid-template-columns:1fr}.insp-card{width:min(220px,56vw)}.insp-info{text-align:left}}
+/* sound */
+.snd{position:relative;margin-left:auto;margin-right:12px}
+.snd-btn{display:inline-flex;align-items:center;gap:8px;background:rgba(246,238,220,.05);color:var(--ink);border:0;border-radius:999px;padding:9px 14px;font:500 14px var(--body);cursor:pointer;box-shadow:inset 0 0 0 1px var(--line)}
+.eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}.eq i{width:2px;height:4px;background:var(--gold);border-radius:1px}
+.snd.playing .eq i{animation:eq .9s ease-in-out infinite}.snd.playing .eq i:nth-child(2){animation-delay:.2s}.snd.playing .eq i:nth-child(3){animation-delay:.4s}
+@keyframes eq{50%{height:12px}}
+.snd-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:40;display:flex;gap:6px;padding:8px;border-radius:16px;background:rgba(30,24,64,.96);box-shadow:0 20px 40px rgba(0,0,0,.45),inset 0 0 0 1px rgba(216,178,106,.3);white-space:nowrap;animation:fadeup .3s ease both}
+.snd-panel button{border:0;border-radius:999px;padding:7px 12px;background:rgba(246,238,220,.06);color:var(--muted);font:500 13px var(--body);cursor:pointer}
+.snd-panel button[aria-pressed="true"]{background:var(--foil);color:#221c46}
+@media (max-width:640px){.snd{order:2;margin:0}.bar .logo{order:1}.bar .autocta{order:3}.bar{justify-content:space-between}.snd-panel{right:0}}
+@media (prefers-reduced-motion:reduce){.cloud,.kitebird,.kitebird svg,.skyline .near::after{animation:none}.kitebird{display:none}}
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
 </head>
@@ -475,11 +639,11 @@ button,a,.fcard,.chip{-webkit-tap-highlight-color:transparent}
   </div>
 
   <header class="hero">
-    <div class="pill stagger" style="animation-delay:.05s"><b>New</b> The auto anna now answers yes or no</div>
     <h1 aria-label="Namma Arcana" id="title"><span class="w" style="animation-delay:.15s" aria-hidden="true">Namma</span> <em class="w" style="animation-delay:.32s" aria-hidden="true">Arcana</em></h1>
     <div class="kn stagger" style="animation-delay:.5s">ನಮ್ಮ ಆರ್ಕಾನ</div>
     <p class="lede stagger" style="animation-delay:.6s">22 cards of the classic tarot, reimagined in Bengaluru. Here, the Fool still walks off a cliff but the cliff is a pothole.</p>
-    <p class="label stagger" style="animation-delay:.75s;margin-top:10px">Pick your neighbourhood and draw your week</p>
+    <div class="herowrap stagger" style="animation-delay:.7s" aria-hidden="true"><div class="card herocard" id="heroCard"></div></div>
+    <p class="label stagger" style="animation-delay:.85s;margin-top:10px">Pick your neighbourhood and draw your week</p>
   </header>
 
 
@@ -912,7 +1076,8 @@ function cardSVG(c){
   return `<svg viewBox="0 0 200 340" role="img" aria-label="${esc(c.name)}, ${esc(c.tarot)}">
    <defs><linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mute(sc.sky[0])}"/><stop offset="1" stop-color="${mute(sc.sky[1])}"/></linearGradient>
    <clipPath id="${id}c"><rect x="16" y="40" width="168" height="194" rx="3"/></clipPath></defs>
-   <rect x="1" y="1" width="198" height="338" rx="10" fill="#fdfbf6" stroke="#d6d0c2" stroke-width="1"/>
+   <defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a8823a"/><stop offset=".42" stop-color="#f6e2a6"/><stop offset=".58" stop-color="#c79d4a"/><stop offset="1" stop-color="#8f6d2e"/></linearGradient></defs>
+   <rect x="1" y="1" width="198" height="338" rx="10" fill="#fdfbf6" stroke="url(#${id}g)" stroke-width="2.4"/>
    <rect x="9" y="9" width="182" height="322" rx="5" fill="none" stroke="#c9a35e" stroke-width=".7" opacity=".8"/>
    <text x="100" y="29" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-size="15" fill="#8a8592">${c.num}</text>
    <path d="M58 25 L74 25 M126 25 L142 25" stroke="#c9a35e" stroke-width=".7"/>
@@ -922,12 +1087,14 @@ function cardSVG(c){
    <text x="100" y="316" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="600" font-size="7.5" letter-spacing="2" fill="#9a95a2">${esc(c.tarot.toUpperCase())}</text>
   </svg>`.replace(/<g clip-path[\s\S]*?<\/g>\s*<rect x="16"/,m=>mute(m));
 }
-function backSVG(){let l="";for(let i=-340;i<340;i+=14)l+=`<path d="M${i} 0 L${i+340} 340 M${i+340} 0 L${i} 340" stroke="#c9a35e" stroke-width=".5" opacity=".45"/>`;
-  return `<svg viewBox="0 0 200 340" aria-hidden="true"><defs><clipPath id="bk${uid++}"><rect x="10" y="10" width="180" height="320" rx="6"/></clipPath></defs>
-   <rect x="1" y="1" width="198" height="338" rx="10" fill="#525d86" stroke="#3f4970" stroke-width="1"/>
-   <g clip-path="url(#bk${uid-1})">${l}</g><rect x="10" y="10" width="180" height="320" rx="6" fill="none" stroke="#c9a35e" stroke-width=".8"/>
-   <circle cx="100" cy="170" r="34" fill="#525d86" stroke="#c9a35e" stroke-width=".8"/><circle cx="100" cy="170" r="28" fill="none" stroke="#c9a35e" stroke-width=".5"/>
-   <text x="100" y="180" text-anchor="middle" font-family="'Noto Sans Kannada',sans-serif" font-size="28" fill="#e2c88f">ನ</text></svg>`;}
+function backSVG(){const id="bk"+(uid++);let l="";for(let i=-340;i<340;i+=16)l+=`<path d="M${i} 0 L${i+340} 340 M${i+340} 0 L${i} 340" stroke="#d8b26a" stroke-width=".45" opacity=".3"/>`;
+  let rays="";for(let k=0;k<24;k++){const a=k*Math.PI/12,r2=k%2?44:54;rays+=`<path d="M${(100+Math.cos(a)*31).toFixed(1)} ${(170+Math.sin(a)*31).toFixed(1)} L${(100+Math.cos(a)*r2).toFixed(1)} ${(170+Math.sin(a)*r2).toFixed(1)}" stroke="url(#${id}g)" stroke-width="1.1"/>`;}
+  return `<svg viewBox="0 0 200 340" aria-hidden="true"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a8823a"/><stop offset=".42" stop-color="#f6e2a6"/><stop offset=".58" stop-color="#c79d4a"/><stop offset="1" stop-color="#8f6d2e"/></linearGradient><clipPath id="${id}c"><rect x="10" y="10" width="180" height="320" rx="7"/></clipPath></defs>
+   <rect x="1" y="1" width="198" height="338" rx="11" fill="#2a2257" stroke="url(#${id}g)" stroke-width="2"/><g clip-path="url(#${id}c)">${l}</g>
+   <rect x="10" y="10" width="180" height="320" rx="7" fill="none" stroke="url(#${id}g)" stroke-width="1"/>${rays}
+   <circle cx="100" cy="170" r="27" fill="#2a2257" stroke="url(#${id}g)" stroke-width="1.6"/>
+   <text x="100" y="181" text-anchor="middle" font-family="'Tiro Kannada','Noto Sans Kannada',serif" font-size="29" fill="url(#${id}g)">ನ</text>
+   <path d="M100 38 l5 9 l-5 9 l-5 -9Z M100 284 l5 9 l-5 9 l-5 -9Z" fill="url(#${id}g)"/></svg>`;}
 
 const REDUCED=matchMedia("(prefers-reduced-motion: reduce)").matches,FINE=matchMedia("(pointer:fine)").matches;
 function addTilt(el){if(REDUCED||!FINE)return;
@@ -1185,13 +1352,14 @@ async function deal(){busy=true;sb.disabled=true;current=[];picked=0;order=shuff
   hint.textContent="Pick three. Go with your gut.";document.body.classList.add("picking");sb.querySelector(".lbl").textContent="Hold to reshuffle";
   setTimeout(()=>{sb.disabled=false;busy=false;},REDUCED?0:700);}
 
-function pick(i,el){if(picked>=3||el.dataset.used)return;el.dataset.used="1";const k=picked++;
+let cineBusy=false;
+function pick(i,el){if(picked>=3||el.dataset.used||cineBusy)return;el.dataset.used="1";const k=picked++;
   const card=order[i],rev=card.kind!=="rare"&&Math.random()<.3;current[k]={card,rev};
   const slot=spreadEl.children[k].querySelector(".card");const from=el.getBoundingClientRect(),to=slot.getBoundingClientRect();
   el.classList.add("taken");
   const land=()=>{slot.classList.remove("placeholder");const f=slot.querySelector(".front");f.innerHTML=cardSVG(card);if(rev)f.classList.add("rev");
     slot.setAttribute("aria-label",`${POS[k][0]}: ${card.name}${rev?", reversed":""}`);slot.dataset.idx=k;
-    setTimeout(()=>{slot.classList.add("flipped");},REDUCED?0:140);
+    const inr=slot.querySelector(".inner");inr.style.transition="none";slot.classList.add("flipped");void inr.offsetWidth;inr.style.transition="";
     const r=readingsEl.children[k];r.className="reading";const cl=cardLine(k,card,rev);r.dataset.idx=k;
     r.innerHTML=`<div class="label">${POS[k][0]} · ${esc(cl.place)}</div><h3>${esc(card.name)}</h3>
       <p class="meta"><b>${esc(card.tarot)}</b>${card.kind==="rare"?" · rare":rev?` · <span class="rev">reversed</span>`:""}</p>
@@ -1199,11 +1367,30 @@ function pick(i,el){if(picked>=3||el.dataset.used)return;el.dataset.used="1";con
       <details class="tl"><summary>Tarot link</summary><p>${esc(card.link)}</p></details>`;
     if(picked===3)finish();};
   if(REDUCED){land();return;}
-  const fly=document.createElement("div");fly.className="flyer";fly.innerHTML=backSVG();
-  Object.assign(fly.style,{left:from.left+"px",top:from.top+"px",width:from.width+"px",height:from.height+"px"});document.body.appendChild(fly);
-  const sx=to.width/from.width,dx=to.left-from.left,dy=to.top-from.top,rot=getComputedStyle(el).getPropertyValue("--r")||"0deg";
-  fly.animate([{transform:`rotate(${rot})`},{transform:`translate(${dx*.5}px,${dy*.5-60}px) rotate(0deg) scale(${(1+sx)/2})`,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(${sx})`}],
-    {duration:720,easing:"cubic-bezier(.3,.7,.2,1)",fill:"forwards"}).finished.then(()=>{fly.remove();land();});}
+  cineBusy=true;cine(el,card,rev,slot).then(()=>{cineBusy=false;land();});}
+
+// the reveal: the room dims, the card comes to centre stage, turns over, then takes its place
+function cine(el,card,rev,slot){return new Promise(res=>{
+  const from=el.getBoundingClientRect(),to=slot.getBoundingClientRect();
+  const W=Math.min(300,innerWidth*.62),H=W*1.7,cx=(innerWidth-W)/2,cy=Math.max(16,(innerHeight-H)/2-26);
+  const dim=document.createElement("div");dim.className="cine-dim";document.body.appendChild(dim);
+  const fl=document.createElement("div");fl.className="cine";Object.assign(fl.style,{left:cx+"px",top:cy+"px",width:W+"px",height:H+"px"});
+  fl.innerHTML=`<div class="cin"><div class="face back">${backSVG()}</div><div class="face front${rev?" rev":""}">${cardSVG(card)}</div></div><div class="cap"><b>${esc(card.name)}</b><span>${esc(card.tarot)}${rev?" · reversed":""}</span></div>`;
+  document.body.appendChild(fl);const inner=fl.querySelector(".cin"),cap=fl.querySelector(".cap");
+  const t0=`translate(${from.left-cx}px,${from.top-cy}px) scale(${from.width/W})`,t1=`translate(${to.left-cx}px,${to.top-cy}px) scale(${to.width/W})`;
+  let skip=false;dim.addEventListener("click",()=>{skip=true;});
+  dim.animate([{opacity:0},{opacity:1}],{duration:500,fill:"forwards"});
+  fl.animate([{transform:t0},{transform:"translate(0px,-12px) scale(1.03)",offset:.75},{transform:"translate(0px,0px) scale(1)"}],{duration:800,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"}).finished
+   .then(()=>inner.animate([{transform:"rotateY(0deg)"},{transform:"rotateY(180deg)"}],{duration:900,easing:"cubic-bezier(.45,.05,.2,1)",fill:"forwards"}).finished)
+   .then(()=>{goldBurst(cx+W/2,cy+H/2,W);cap.animate([{opacity:0,transform:"translate(-50%,10px)"},{opacity:1,transform:"translate(-50%,0)"}],{duration:600,easing:"ease-out",fill:"forwards"});
+     return new Promise(r=>{let t=0;const iv=setInterval(()=>{t+=100;if(skip||t>=1400){clearInterval(iv);r();}},100);});})
+   .then(()=>{cap.animate([{opacity:1},{opacity:0}],{duration:220,fill:"forwards"});dim.animate([{opacity:1},{opacity:0}],{duration:650,fill:"forwards"});
+     return fl.animate([{transform:"translate(0px,0px) scale(1)"},{transform:t1}],{duration:750,easing:"cubic-bezier(.55,0,.2,1)",fill:"forwards"}).finished;})
+   .then(()=>{fl.remove();dim.remove();res();});});}
+function goldBurst(x,y,w){if(REDUCED)return;const cv=document.createElement("canvas");cv.className="burst";const d=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*d;cv.height=innerHeight*d;document.body.appendChild(cv);
+  const c=cv.getContext("2d");c.setTransform(d,0,0,d,0,0);const P=Array.from({length:70},()=>{const a=Math.random()*6.283,sp=Math.random()*3.2+.8;return {x:x+Math.cos(a)*w*.3,y:y+Math.sin(a)*w*.5,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-.6,l:1,r:Math.random()*1.8+.6};});
+  (function f(){c.clearRect(0,0,innerWidth,innerHeight);let alive=false;P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.03;p.vx*=.985;p.l-=.012;if(p.l>0){alive=true;c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.fillStyle=`rgba(246,222,160,${p.l})`;c.shadowColor="rgba(246,210,130,.9)";c.shadowBlur=8;c.fill();}});
+    if(alive)requestAnimationFrame(f);else cv.remove();})();}
 
 function finish(){hint.textContent="";document.body.classList.remove("picking");[...pickEl.querySelectorAll(".fcard:not(.taken)")].forEach((c,i)=>{c.style.transitionDelay=(i*.02)+"s";c.classList.add("fold");});
   setTimeout(()=>{restingStack();},REDUCED?0:700);setTimeout(showVerdict,REDUCED?0:900);}
@@ -1248,17 +1435,17 @@ function wrapT(x,t,cx,y,mw,lh){const ws=t.split(" ");let l="",ls=[];ws.forEach(w
 async function makeShare(v,q){const out=document.getElementById("shareOut");out.innerHTML=`<p class="note">Preparing your card…</p>`;
   try{await Promise.all([document.fonts.load('80px "Instrument Serif"'),document.fonts.load('500 30px Figtree'),document.fonts.load('40px "Noto Sans Kannada"','ನಮ್ಮ')]);}catch(e){}
   const W=1080,H=1920,cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d");
-  x.fillStyle="#f7f5f0";x.fillRect(0,0,W,H);x.strokeStyle="#c9a35e";x.lineWidth=2;x.strokeRect(48,48,W-96,H-96);
-  x.textAlign="center";x.fillStyle="#7f9a82";x.font='36px "Noto Sans Kannada",sans-serif';x.fillText("ನಮ್ಮ ಆರ್ಕಾನ",W/2,190);
-  x.fillStyle="#2f2c3d";x.font='130px "Instrument Serif",Georgia,serif';x.fillText("Namma Arcana",W/2,330);
-  x.fillStyle="#76727f";x.font='500 30px Figtree,sans-serif';x.fillText(("My week in "+area).toUpperCase().split("").join(" "),W/2,410);
+  {const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"#191539");g.addColorStop(.55,"#2a2257");g.addColorStop(1,"#5b3d72");x.fillStyle=g;x.fillRect(0,0,W,H);}x.strokeStyle="#d8b26a";x.lineWidth=2;x.strokeRect(48,48,W-96,H-96);
+  x.textAlign="center";x.fillStyle="#d8b26a";x.font='36px "Noto Sans Kannada",sans-serif';x.fillText("ನಮ್ಮ ಆರ್ಕಾನ",W/2,190);
+  x.fillStyle="#f6eedc";x.font='130px "Tiro Kannada","Instrument Serif",Georgia,serif';x.fillText("Namma Arcana",W/2,330);
+  x.fillStyle="#b6aed0";x.font='500 30px Figtree,sans-serif';x.fillText(("My week in "+area).toUpperCase().split("").join(" "),W/2,410);
   const ims=await Promise.all(current.map(c=>svgImg(cardSVG(c.card))));const cw=290,chh=493;
-  current.forEach((c,i)=>{const cx=W/2+(i-1)*318,cy=780;if(ims[i]){x.save();x.translate(cx,cy);if(c.rev)x.rotate(Math.PI);x.shadowColor="rgba(47,44,61,.18)";x.shadowBlur=40;x.shadowOffsetY=16;x.drawImage(ims[i],-cw/2,-chh/2,cw,chh);x.restore();}
-    x.fillStyle="#76727f";x.font='600 22px Figtree,sans-serif';x.fillText(POS[i][0].toUpperCase(),cx,cy+300);
-    x.fillStyle=c.rev?"#c98f8b":"#9a95a2";x.font='italic 30px "Instrument Serif",Georgia,serif';x.fillText(c.card.kind==="rare"?"rare card":c.rev?"reversed":"upright",cx,cy+340);});
-  x.fillStyle="#2f2c3d";x.font='70px "Instrument Serif",Georgia,serif';wrapT(x,v.line,W/2,1290,W-240,80);
-  x.fillStyle="#dcd7cb";x.fillRect(W/2-220,1620,440,6);x.fillStyle="#c98f8b";x.fillRect(W/2-220,1620,44*v.sc,6);
-  x.fillStyle="#76727f";x.font='500 30px Figtree,sans-serif';x.fillText(`Peak Bengaluru score ${v.sc}/10 · ${v.lab}`,W/2,1690);
+  current.forEach((c,i)=>{const cx=W/2+(i-1)*318,cy=780;if(ims[i]){x.save();x.translate(cx,cy);if(c.rev)x.rotate(Math.PI);x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=40;x.shadowOffsetY=16;x.drawImage(ims[i],-cw/2,-chh/2,cw,chh);x.restore();}
+    x.fillStyle="#b6aed0";x.font='600 22px Figtree,sans-serif';x.fillText(POS[i][0].toUpperCase(),cx,cy+300);
+    x.fillStyle=c.rev?"#eca59b":"#b6aed0";x.font='italic 30px "Instrument Serif",Georgia,serif';x.fillText(c.card.kind==="rare"?"rare card":c.rev?"reversed":"upright",cx,cy+340);});
+  x.fillStyle="#f6eedc";x.font='70px "Instrument Serif",Georgia,serif';wrapT(x,v.line,W/2,1290,W-240,80);
+  x.fillStyle="rgba(246,238,220,.18)";x.fillRect(W/2-220,1620,440,6);x.fillStyle="#eca59b";x.fillRect(W/2-220,1620,44*v.sc,6);
+  x.fillStyle="#b6aed0";x.font='500 30px Figtree,sans-serif';x.fillText(`Peak Bengaluru score ${v.sc}/10 · ${v.lab}`,W/2,1690);
   let url;try{url=cv.toDataURL("image/png");}catch(e){url=null;}
   out.innerHTML=url?`<img src="${url}" alt="Your Namma Arcana story card"><p class="note">Long-press or right-click the image to save it.</p>`:`<p class="note">This browser couldn't make the image. Use "Copy as text" instead.</p>`;}
 
@@ -1290,23 +1477,7 @@ function citySVG(){const W=1000,H=420;
     `<rect x="0" y="380" width="${W}" height="40" fill="#6b6884" ${S}/><path d="M0 400 H1000" stroke="${YEL}" stroke-width="3" stroke-dasharray="26 18"/>`+
     autoSide(180,410,.75)+bus(420,406,.9)+autoSide(640,410,.75,{},true)+scooter(820,410,.8,RED)+cow(80,380,.7,{horn:RED})+dog(950,380,.7,{pose:"sit"});
   return mute(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">${art}</svg>`);}
-(function(){const hero=document.querySelector(".hero");if(!hero)return;
-  const layer=document.createElement("div");layer.className="reveal-layer";layer.setAttribute("aria-hidden","true");
-  layer.innerHTML=`<img alt="" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(citySVG())}"><canvas></canvas>`;hero.prepend(layer);
-  const hint=document.createElement("p");hint.className="ink-hint";hint.textContent=FINE?"Move your cursor around. The city is underneath.":"Drag a finger across. The city is underneath.";hero.appendChild(hint);
-  if(REDUCED){layer.classList.add("still");return;}
-  const cv=layer.querySelector("canvas"),ctx=cv.getContext("2d"),PAPER="#faf6ee";let W=0,H=0,d=1,active=false,idle=0,last=null;
-  function size(){const r=layer.getBoundingClientRect();d=Math.min(2,devicePixelRatio||1);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);ctx.globalCompositeOperation="source-over";ctx.fillStyle=PAPER;ctx.fillRect(0,0,W,H);}
-  size();addEventListener("resize",size);
-  function blob(x,y,r){ctx.globalCompositeOperation="destination-out";for(let i=0;i<6;i++){const a=Math.random()*6.283,rr=r*(.35+Math.random()*.55),ox=Math.cos(a)*r*.45,oy=Math.sin(a)*r*.45;
-      const g=ctx.createRadialGradient(x+ox,y+oy,0,x+ox,y+oy,rr);g.addColorStop(0,"rgba(0,0,0,1)");g.addColorStop(.7,"rgba(0,0,0,.85)");g.addColorStop(1,"rgba(0,0,0,0)");
-      ctx.fillStyle=g;ctx.beginPath();ctx.arc(x+ox,y+oy,rr,0,6.283);ctx.fill();}}
-  function paint(e){const r=layer.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;if(x<0||y<0||x>W||y>H)return;
-    const rad=W<600?58:84;if(last){const dx=x-last.x,dy=y-last.y,steps=Math.min(8,Math.ceil(Math.hypot(dx,dy)/24));for(let i=1;i<=steps;i++)blob(last.x+dx*i/steps,last.y+dy*i/steps,rad);}else blob(x,y,rad);
-    last={x,y};idle=0;hint.classList.add("gone");if(!active){active=true;requestAnimationFrame(regrow);}}
-  function regrow(){ctx.globalCompositeOperation="source-over";ctx.fillStyle="rgba(250,246,238,.035)";ctx.fillRect(0,0,W,H);idle++;
-    if(idle<260)requestAnimationFrame(regrow);else{ctx.fillStyle=PAPER;ctx.fillRect(0,0,W,H);active=false;}}
-  hero.addEventListener("pointermove",paint);hero.addEventListener("pointerdown",paint);hero.addEventListener("pointerleave",()=>{last=null;});hero.addEventListener("pointerup",()=>{last=null;});})();
+
 
 // neighbourhood picker in the style of "Space Voyage": list, window, big name, stats
 const AREA_X={
@@ -1348,6 +1519,93 @@ const AREA_X={
   row.addEventListener("click",e=>{const b=e.target.closest(".qchip");if(!b)return;aq.value=b.textContent;document.getElementById("autoBtn").click();});
   const op=document.getElementById("openAuto"),op2=document.getElementById("openAuto2");
   [op,op2].forEach(b=>b&&b.addEventListener("click",()=>{g.classList.remove("play");void g.offsetWidth;g.classList.add("play");}));})();
+
+{const hc=document.getElementById("heroCard");if(hc){hc.innerHTML=cardSVG(DECK[0]);addTilt(hc);}}
+// ===== round two: living skyline, card inspector, city sounds =====
+(function skyline(){const hero=document.querySelector(".hero");if(!hero)return;
+  const R=(seed)=>{let r=seed;return()=>{r=(r*9301+49297)%233280;return r/233280;};};
+  function layer(seed,base,minH,maxH,col,dome){const rnd=R(seed);let x=0,d="";
+    while(x<1600){const w=30+rnd()*70,h=minH+rnd()*(maxH-minH);d+=`M${x.toFixed(0)} 400 V${(400-h).toFixed(0)} H${(x+w).toFixed(0)} V400 Z `;
+      if(rnd()<.18)d+=`M${(x+w*.5-4).toFixed(0)} ${(400-h).toFixed(0)} V${(400-h-26).toFixed(0)} h8 V${(400-h).toFixed(0)}Z `;x+=w+rnd()*14;}
+    let extra="";if(dome){extra=`<g transform="translate(${dome} 400)"><rect x="-150" y="-70" width="300" height="70"/><rect x="-100" y="-120" width="200" height="50"/><rect x="-34" y="-158" width="68" height="38"/><path d="M-40 -158 A40 40 0 0 1 40 -158Z"/><rect x="-2" y="-210" width="4" height="34"/><path d="M-95 -120 A18 18 0 0 1 -59 -120Z M59 -120 A18 18 0 0 1 95 -120Z"/></g>`;}
+    return `<svg viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice"><g fill="${col}"><path d="${d}"/>${extra}</g></svg>`;}
+  const wrap=document.createElement("div");wrap.className="skyline";wrap.setAttribute("aria-hidden","true");
+  wrap.innerHTML=`<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+   <div class="sl far" data-d="10">${layer(3,0,90,250,"#4b3d8a",0)}</div>
+   <div class="sl mid" data-d="22">${layer(11,0,60,170,"#342a68",800)}</div>
+   <div class="sl near" data-d="40">${layer(29,0,30,100,"#221b4a",0)}</div>
+   <div class="kitebird"><svg viewBox="-30 -12 60 24"><path d="M0 0 Q-14 -8 -28 -2 Q-14 -2 -5 4Z M0 0 Q14 -8 28 -2 Q14 -2 5 4Z" fill="#1c1740"/><ellipse cx="0" cy="2" rx="4" ry="5" fill="#1c1740"/></svg></div>`;
+  hero.prepend(wrap);
+  if(REDUCED)return;const layers=[...wrap.querySelectorAll(".sl")];let mx=0,sy=0,raf=0;
+  const apply=()=>{layers.forEach(l=>{const d=+l.dataset.d;l.style.transform=`translate3d(${(-mx*d).toFixed(1)}px,${(sy*d*.012).toFixed(1)}px,0)`;});};
+  addEventListener("pointermove",e=>{mx=(e.clientX/innerWidth-.5);cancelAnimationFrame(raf);raf=requestAnimationFrame(apply);},{passive:true});
+  addEventListener("scroll",()=>{sy=scrollY;cancelAnimationFrame(raf);raf=requestAnimationFrame(apply);},{passive:true});})();
+
+// card inspector: tap a drawn card to study it like a specimen
+(function inspector(){
+  const box=document.createElement("div");box.className="insp";box.hidden=true;box.setAttribute("role","dialog");box.setAttribute("aria-modal","true");box.setAttribute("aria-label","Card details");
+  box.innerHTML=`<div class="insp-bg"></div><div class="insp-in"><button class="close insp-x" aria-label="Close">×</button>
+   <div class="insp-stage"><div class="insp-card"></div><p class="insp-hint">Drag to turn the card</p></div>
+   <div class="insp-info"></div><div class="insp-nav"><button class="btn ghost" data-go="-1">Previous</button><button class="btn ghost" data-go="1">Next</button></div></div>`;
+  document.body.appendChild(box);
+  const cardEl=box.querySelector(".insp-card"),info=box.querySelector(".insp-info");let idx=0,last=null;
+  const YN={yes:"Leans yes",no:"Leans no",maybe:"Could go either way"};
+  function render(){const c=current[idx];if(!c)return;const {card,rev}=c,l=card.kind==="rare"?null:LORE[card.scene];
+    cardEl.innerHTML=`<div class="insp-rot">${cardSVG(card)}</div>`;if(rev)cardEl.querySelector("svg").style.transform="rotate(180deg)";
+    const pairs=l?PAIRS.filter(([p])=>p.includes(card.scene)).map(([p,t])=>t):[];
+    info.innerHTML=`<div class="label">${POS[idx][0]} · No. ${esc(card.num)}</div><h2>${esc(card.name)}</h2>
+     <p class="insp-tarot">${esc(card.tarot)}${rev?" · reversed":""}</p>
+     <dl class="insp-facts">${l?`<div><dt>Element</dt><dd>${EL[l.el].name}</dd></div><div><dt>Yes or no</dt><dd>${YN[rev?lean(l.yn,true):l.yn]}</dd></div><div><dt>Keyword</dt><dd>${esc(card.kw)}</dd></div>`:`<div><dt>Rarity</dt><dd>About 1 in 25 shuffles</dd></div>`}</dl>
+     <div class="insp-mean"><div><h4>Upright</h4><p>${esc(card.up)}</p></div>${card.rev?`<div><h4>Reversed</h4><p>${esc(card.rev)}</p></div>`:""}</div>
+     <div class="insp-link"><h4>The tarot link</h4><p>${esc(card.link)}</p></div>
+     ${pairs.length?`<div class="insp-link"><h4>Known pairs</h4><p>${esc(pairs[0])}</p></div>`:""}`;}
+  function open(k){idx=k;last=document.activeElement;render();box.hidden=false;document.body.style.overflow="hidden";box.querySelector(".insp-x").focus();}
+  function close(){box.hidden=true;document.body.style.overflow="";if(last)last.focus();}
+  box.querySelector(".insp-x").onclick=close;box.querySelector(".insp-bg").onclick=close;
+  addEventListener("keydown",e=>{if(box.hidden)return;if(e.key==="Escape")close();if(e.key==="ArrowRight")go(1);if(e.key==="ArrowLeft")go(-1);});
+  function go(d){const n=current.filter(Boolean).length;if(!n)return;idx=(idx+d+n)%n;render();}
+  box.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  // drag to rotate, springs back
+  let rx=0,ry=0,dragging=false,sx=0,sy2=0,raf=0;
+  const setT=()=>{const r=cardEl.querySelector(".insp-rot");if(r)r.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`;};
+  cardEl.addEventListener("pointerdown",e=>{dragging=true;sx=e.clientX;sy2=e.clientY;cardEl.setPointerCapture(e.pointerId);cancelAnimationFrame(raf);box.querySelector(".insp-hint").classList.add("gone");});
+  cardEl.addEventListener("pointermove",e=>{if(!dragging)return;ry=Math.max(-55,Math.min(55,(e.clientX-sx)*.45));rx=Math.max(-35,Math.min(35,-(e.clientY-sy2)*.35));setT();});
+  const release=()=>{if(!dragging)return;dragging=false;const spring=()=>{rx*=.86;ry*=.86;setT();if(Math.abs(rx)+Math.abs(ry)>.2)raf=requestAnimationFrame(spring);else{rx=ry=0;setT();}};raf=requestAnimationFrame(spring);};
+  cardEl.addEventListener("pointerup",release);cardEl.addEventListener("pointercancel",release);
+  spreadEl.addEventListener("click",e=>{const c=e.target.closest(".card");if(!c||!c.classList.contains("flipped")||cineBusy)return;const k=[...spreadEl.querySelectorAll(".card")].indexOf(c);if(current[k])open(k);});
+  window.__inspect=open;})();
+
+// city sounds, synthesised in the browser
+(function sounds(){const bar=document.querySelector(".bar");if(!bar)return;
+  const wrap=document.createElement("div");wrap.className="snd";
+  wrap.innerHTML=`<button class="snd-btn" aria-expanded="false" aria-controls="sndPanel" type="button"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="snd-l">Sound</span></button>
+   <div class="snd-panel" id="sndPanel" hidden><button type="button" data-s="rain" aria-pressed="false">Rain</button><button type="button" data-s="traffic" aria-pressed="false">Traffic</button><button type="button" data-s="bells" aria-pressed="false">Temple bells</button></div>`;
+  bar.insertBefore(wrap,bar.lastElementChild);
+  const btn=wrap.querySelector(".snd-btn"),panel=wrap.querySelector(".snd-panel");let ctx=null,master=null;const on={};const nodes={};
+  btn.onclick=()=>{const o=panel.hidden;panel.hidden=!o;btn.setAttribute("aria-expanded",String(o));};
+  function init(){if(ctx)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;ctx=new AC();master=ctx.createGain();master.gain.value=.9;master.connect(ctx.destination);}
+  function noise(){const b=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource();s.buffer=b;s.loop=true;return s;}
+  function fade(g,v,t=1.2){g.gain.cancelScheduledValues(ctx.currentTime);g.gain.setTargetAtTime(v,ctx.currentTime,t/3);}
+  const make={
+    rain(){const n=noise(),bp=ctx.createBiquadFilter();bp.type="bandpass";bp.frequency.value=1400;bp.Q.value=.6;const hp=ctx.createBiquadFilter();hp.type="highpass";hp.frequency.value=500;
+      const g=ctx.createGain();g.gain.value=0;n.connect(bp).connect(hp).connect(g).connect(master);n.start();return {g,v:.07};},
+    traffic(){const n=noise(),lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=260;const g=ctx.createGain();g.gain.value=0;n.connect(lp).connect(g).connect(master);n.start();
+      const hg=ctx.createGain();hg.gain.value=.022;hg.connect(g);
+      const honk=()=>{if(!on.traffic)return;const t=ctx.currentTime,f=[380,420,330][Math.floor(Math.random()*3)];for(let k=0;k<(Math.random()<.5?1:2);k++){const o=ctx.createOscillator(),og=ctx.createGain(),f2=ctx.createBiquadFilter();f2.type="lowpass";f2.frequency.value=1400;
+          o.type="square";o.frequency.value=f;og.gain.setValueAtTime(0,t+k*.22);og.gain.linearRampToValueAtTime(1,t+k*.22+.02);og.gain.setValueAtTime(1,t+k*.22+.14);og.gain.linearRampToValueAtTime(0,t+k*.22+.18);
+          o.connect(f2).connect(og).connect(hg);o.start(t+k*.22);o.stop(t+k*.22+.2);}
+        nodes.traffic.t=setTimeout(honk,2200+Math.random()*5000);};
+      const r={g,v:.16};nodes.traffic=r;setTimeout(honk,900);return r;},
+    bells(){const g=ctx.createGain();g.gain.value=0;g.connect(master);
+      const ring=()=>{if(!on.bells)return;const t=ctx.currentTime,base=[523,587,659][Math.floor(Math.random()*3)];[[1,.5],[2.76,.22],[5.4,.1],[8.9,.05]].forEach(([m,a])=>{const o=ctx.createOscillator(),og=ctx.createGain();o.type="sine";o.frequency.value=base*m;
+          og.gain.setValueAtTime(a,t);og.gain.exponentialRampToValueAtTime(.0001,t+4.5/m**.3);o.connect(og).connect(g);o.start(t);o.stop(t+5);});
+        nodes.bells.t=setTimeout(ring,5000+Math.random()*5000);};
+      const r={g,v:.12};nodes.bells=r;setTimeout(ring,300);return r;}};
+  panel.addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;init();if(!ctx)return;if(ctx.state==="suspended")ctx.resume();const k=b.dataset.s;on[k]=!on[k];b.setAttribute("aria-pressed",String(on[k]));
+    if(on[k]){if(!nodes[k]||!nodes[k].g)nodes[k]=make[k]();else if(k!=="rain"){nodes[k]=make[k]();}fade(nodes[k].g,nodes[k].v);}
+    else if(nodes[k]){fade(nodes[k].g,0,.8);clearTimeout(nodes[k].t);}
+    wrap.classList.toggle("playing",Object.values(on).some(Boolean));});
+  document.addEventListener("visibilitychange",()=>{if(!ctx)return;document.hidden?ctx.suspend():(Object.values(on).some(Boolean)&&ctx.resume());});})();
 
 // ===== interaction layer =====
 (function(){
