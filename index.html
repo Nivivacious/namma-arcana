@@ -710,7 +710,6 @@ body{background:linear-gradient(180deg,var(--sky0) 0%,var(--sky1) 38%,var(--sky2
 /* circular text ring */
 .autobtn{position:relative;overflow:visible!important}
 .ring-txt{position:absolute;width:142%;height:142%;left:-21%;top:-21%;pointer-events:none;animation:ringspin 40s linear infinite;opacity:.85}
-.oracle{position:relative}
 .oracle .autobtn{position:relative}
 @keyframes ringspin{to{transform:rotate(360deg)}}
 /* liquid-glass oracle */
@@ -720,6 +719,54 @@ body{background:linear-gradient(180deg,var(--sky0) 0%,var(--sky1) 38%,var(--sky2
 .sheet::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;border:1px solid transparent;background:linear-gradient(120deg,rgba(236,165,155,.35),transparent 30%,transparent 70%,rgba(130,170,255,.35)) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:0}
 .sheet > *{position:relative;z-index:1}
 @media (prefers-reduced-motion:reduce){.mline-in{transform:none;animation:none}.ring-txt{animation:none}.grain{display:none}}
+/* ===== round 4: sticky bar + title dock, scratch card, push-apart fan, typewriter, chip flip, swipe sheet, clock ===== */
+@media (min-width:761px){
+  .bar.stick{position:sticky;top:0;z-index:30;padding-top:14px;margin-top:-14px;background:linear-gradient(180deg,rgba(25,21,57,.92),rgba(25,21,57,.78));-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
+  .bar.stick::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-1;background:inherit;-webkit-backdrop-filter:inherit;backdrop-filter:inherit;border-bottom:1px solid var(--line)}
+  .bar.stick{border-bottom-color:transparent}
+  .bar.stick .logo{opacity:0;transition:opacity .25s}
+  .bar.stick.docked .logo{opacity:1}
+  .title-ghost{position:fixed;left:0;top:0;z-index:32;pointer-events:none;transform-origin:left top;opacity:0;white-space:nowrap;text-align:center;color:var(--ink);will-change:transform}
+  .title-ghost .w,.title-ghost .l{animation:none!important;opacity:1!important;filter:none!important}
+  .title-ghost em{font-style:italic;letter-spacing:-.01em;padding-right:.04em}
+  .title-ghost em .l{background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
+}
+@media (max-width:760px){.title-ghost{display:none}}
+/* scratch-to-reveal hidden card */
+.hidden-card .hc-art{touch-action:none}
+.hidden-card .hc-art .scratch{position:absolute;inset:0;z-index:3;border-radius:6px;cursor:crosshair;transition:opacity .5s}
+.hidden-card .hc-art.scratching .face.front{transform:none}
+.hidden-card .hc-art.scratching .face.back{opacity:0}
+.hidden-card .hc-art.cleared .scratch{opacity:0;pointer-events:none}
+.hc-hintdot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:8px;vertical-align:middle;animation:hcdot 1.4s ease-in-out infinite}
+@keyframes hcdot{50%{opacity:.3;transform:scale(.7)}}
+/* fan push-apart */
+.fcard{transform:translate(calc(var(--x) + var(--px,0px)),calc(var(--y) - var(--lift,0px))) rotate(var(--r)) scale(var(--s,1))}
+@media (hover:hover){.fcard:not(.rest):hover{transform:translate(calc(var(--x) + var(--px,0px)),calc(var(--y) - var(--lift,0px))) rotate(var(--r)) scale(var(--s,1))}}
+/* typewriter placeholder caret */
+/* chip flips to Kannada on hover */
+.vlist .chip .cf{display:inline-grid;overflow:hidden;line-height:1.35;vertical-align:top}
+.vlist .chip .cf>span{grid-area:1/1;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .3s;white-space:nowrap}
+.vlist .chip .cf .kn2{transform:translateY(110%);opacity:0;font-family:"Noto Sans Kannada","Tiro Kannada",sans-serif;font-size:.95em}
+@media (hover:hover) and (pointer:fine){
+  .vlist .chip:hover .cf .en{transform:translateY(-110%);opacity:0}
+  .vlist .chip:hover .cf .kn2{transform:translateY(0);opacity:1}
+}
+/* swipe-to-close sheet */
+@media (max-width:640px){
+  .sheet.dragging{animation:none;transition:none}
+  .sheet .grab{position:sticky;top:0;z-index:5;display:block;width:100%;height:34px;margin:-6px 0 -20px;touch-action:none;cursor:grab}
+  .sheet .grab::after{content:"";position:absolute;left:50%;top:10px;width:42px;height:4px;margin-left:-21px;border-radius:2px;background:rgba(246,238,220,.3)}
+}
+@media (min-width:641px){.sheet .grab{display:none}}
+/* thinking dot in the oracle */
+.answer.thinking .means::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:8px;vertical-align:middle;animation:hcdot 1s ease-in-out infinite}
+/* gold fill-on-scroll for the advice */
+.closing p.fill{background:linear-gradient(90deg,var(--ink) calc(var(--fill,0) * 100%),rgba(246,238,220,.32) calc(var(--fill,0) * 100%));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* live clock */
+footer .now{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.hc-hintdot,.answer.thinking .means::before{animation:none}.vlist .chip .cf>span{transition:none}}
+
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
 </head>
@@ -1528,7 +1575,8 @@ function showVerdict(){const v=verdictFor(current),q=document.getElementById("q"
     const off=()=>{table.classList.remove("linking");spreadEl.querySelectorAll(".card").forEach(c=>c.classList.remove("lit"));li.classList.remove("on");};
     li.addEventListener("mouseenter",on);li.addEventListener("mouseleave",off);li.addEventListener("focus",on);li.addEventListener("blur",off);
     li.addEventListener("click",()=>{on();spreadEl.scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"});setTimeout(off,2200);});});
-  const hc=verdictEl.querySelector(".hidden-card");if(hc){const b=hc.querySelector(".hc-art");addTilt(b);b.onclick=()=>{b.classList.add("flipped");hc.classList.remove("closed");b.setAttribute("aria-label","Your hidden card, revealed");};}
+  const hc=verdictEl.querySelector(".hidden-card");if(hc){scratchCard(hc);}
+  fillOnScroll(verdictEl);
   setTimeout(()=>verdictEl.scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"}),300);}
 function copyText(v,q){const t=`My Namma Arcana week in ${area}${q?` ("${q}")`:""}:\n`+current.map((c,i)=>`${POS[i][0]}: ${c.card.name} (${c.card.tarot})${c.rev?", reversed":""}`).join("\n")+`\n${v.line}\nPeak Bengaluru score: ${v.sc}/10`;
   const m=document.getElementById("cpMsg");const fb=()=>{m.innerHTML="";const ta=document.createElement("textarea");ta.value=t;ta.rows=6;ta.style.cssText="width:100%;max-width:440px;border:1px solid #dcd7cb;border-radius:8px;padding:8px;font:15px var(--body)";m.appendChild(ta);ta.select();};
@@ -1682,6 +1730,100 @@ function rackFocus(){const cards=[...spreadEl.querySelectorAll(".card")];if(!car
 (function(){const ab=document.getElementById("autoBtn");if(!ab)return;const ring=document.createElementNS("http://www.w3.org/2000/svg","svg");ring.setAttribute("class","ring-txt");ring.setAttribute("viewBox","0 0 200 200");ring.setAttribute("aria-hidden","true");
   ring.innerHTML=`<defs><path id="ringPath" d="M100 100 m-82 0 a82 82 0 1 1 164 0 a82 82 0 1 1 -164 0"/></defs><text font-family="Figtree,sans-serif" font-size="11.5" letter-spacing="3.2" fill="#d8b26a"><textPath href="#ringPath" textLength="515">BANNI · BAROLLA · METER MELE IPPATTHU · ಬನ್ನಿ · ಬರೋಲ್ಲ ·</textPath></text>`;ab.parentNode.insertBefore(ring,ab);})();
 
+
+// ===== round 4 =====
+// title docks into the sticky bar logo as you scroll (desktop only, reversible)
+(function(){const bar=document.querySelector(".bar"),h1=document.getElementById("title"),logo=bar&&bar.querySelector(".logo");if(!bar||!h1||!logo)return;
+  const mq=matchMedia("(min-width:761px)");let on=false,raf=0,ghost=null,nat=null;
+  function measure(){const r=h1.getBoundingClientRect();nat={top:r.top+scrollY,left:r.left,w:r.width,h:r.height};
+    const cs=getComputedStyle(h1);ghost.style.font=cs.font;ghost.style.letterSpacing=cs.letterSpacing;ghost.style.lineHeight=cs.lineHeight;ghost.style.width=r.width+"px";}
+  function frame(){raf=0;if(!on)return;if(!nat)measure();const y=scrollY,lr=logo.getBoundingClientRect(),br=bar.getBoundingClientRect();
+    const start=Math.max(0,nat.top-br.bottom-200),end=start+340;const p=Math.max(0,Math.min(1,(y-start)/(end-start)));
+    const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+    if(p<=0){ghost.style.opacity=0;h1.style.visibility="";bar.classList.remove("docked");return;}
+    if(p>=1){ghost.style.opacity=0;h1.style.visibility="hidden";bar.classList.add("docked");return;}
+    bar.classList.remove("docked");h1.style.visibility="hidden";ghost.style.opacity=1;
+    const vt=nat.top-y,s=1+(lr.width/nat.w-1)*e,tx=nat.left+(lr.left-nat.left)*e,ty=vt+(lr.top-vt)*e;
+    ghost.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s.toFixed(4)})`;}
+  function onScroll(){if(!raf)raf=requestAnimationFrame(frame);}
+  function set(){const want=mq.matches&&!REDUCED;if(want===on)return;on=want;bar.classList.toggle("stick",on);
+    if(on){if(!ghost){ghost=document.createElement("div");ghost.className="title-ghost";ghost.setAttribute("aria-hidden","true");ghost.innerHTML=h1.innerHTML;document.body.appendChild(ghost);}
+      nat=null;addEventListener("scroll",onScroll,{passive:true});frame();}
+    else{removeEventListener("scroll",onScroll);if(ghost)ghost.style.opacity=0;h1.style.visibility="";bar.classList.remove("docked");}}
+  mq.addEventListener?mq.addEventListener("change",set):mq.addListener(set);
+  addEventListener("resize",()=>{nat=null;if(on)frame();});
+  setTimeout(set,1500);})();
+
+// scratch-to-reveal the hidden card
+function scratchCard(hc){const b=hc.querySelector(".hc-art");if(!b||b.querySelector(".scratch"))return;
+  const cue=hc.querySelector(".hc-cue");if(cue)cue.innerHTML=`<span class="hc-hintdot" aria-hidden="true"></span>Scratch to reveal your hidden card.`;
+  const cv=document.createElement("canvas");cv.className="scratch";b.appendChild(cv);const c=cv.getContext("2d");
+  const d=Math.min(2,devicePixelRatio||1);let W=0,H=0;
+  function paint(){const r=b.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;c.setTransform(d,0,0,d,0,0);
+    const g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,"#7a5a1c");g.addColorStop(.35,"#d8b26a");g.addColorStop(.5,"#f6dea0");g.addColorStop(.65,"#d8b26a");g.addColorStop(1,"#6e4f17");
+    c.fillStyle=g;c.fillRect(0,0,W,H);
+    c.strokeStyle="rgba(255,245,220,.18)";c.lineWidth=1;for(let i=-H;i<W;i+=9){c.beginPath();c.moveTo(i,0);c.lineTo(i+H,H);c.stroke();}
+    c.fillStyle="rgba(60,40,10,.55)";c.font=`600 ${Math.max(9,W*.11)}px Figtree,sans-serif`;c.textAlign="center";c.fillText("SCRATCH",W/2,H/2+4);
+    c.globalCompositeOperation="destination-out";}
+  paint();b.classList.add("scratching");
+  let down=false,moved=0,lx=0,ly=0,done=false;const R=Math.max(9,W*.16);
+  function dot(x,y){c.beginPath();c.arc(x,y,R,0,6.283);c.fill();}
+  function line(x0,y0,x1,y1){const n=Math.ceil(Math.hypot(x1-x0,y1-y0)/4)||1;for(let i=0;i<=n;i++)dot(x0+(x1-x0)*i/n,y0+(y1-y0)*i/n);}
+  function cleared(){const img=c.getImageData(0,0,cv.width,cv.height).data;let t=0,e=0;for(let i=3;i<img.length;i+=4*7){t++;if(img[i]<40)e++;}return e/t;}
+  function reveal(){if(done)return;done=true;b.classList.add("cleared");hc.classList.remove("closed");b.setAttribute("aria-label","Your hidden card, revealed");
+    try{sfx&&sfx("deal");}catch(_){ }}
+  const pos=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];};
+  cv.addEventListener("pointerdown",e=>{if(done)return;e.preventDefault();down=true;moved=0;[lx,ly]=pos(e);dot(lx,ly);try{cv.setPointerCapture(e.pointerId);}catch(_){ }});
+  cv.addEventListener("pointermove",e=>{if(!down||done)return;const [x,y]=pos(e);moved+=Math.hypot(x-lx,y-ly);line(lx,ly,x,y);lx=x;ly=y;
+    if(moved>W*2.2&&cleared()>.42)reveal();});
+  const up=()=>{if(!down)return;down=false;if(done)return;if(moved<6){reveal();return;}if(cleared()>.42)reveal();};
+  cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",up);
+  b.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();reveal();}});
+  b.onclick=null;}
+
+// fan: neighbours push apart from the pointer (book-shelf dock)
+(function(){const pk=document.getElementById("pick");if(!pk||!matchMedia("(hover:hover) and (pointer:fine)").matches)return;
+  pk.addEventListener("pointermove",e=>{pk.querySelectorAll(".fcard:not(.rest):not(.taken)").forEach(c=>{const r=c.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),a=Math.abs(dx);
+    const f=a<=r.width/2?0:Math.max(0,1-(a-r.width/2)/150);c.style.setProperty("--px",(-Math.sign(dx)*f*f*20).toFixed(1)+"px");});});
+  pk.addEventListener("pointerleave",()=>pk.querySelectorAll(".fcard").forEach(c=>c.style.removeProperty("--px")));})();
+
+// neighbourhood chips roll over to Kannada on hover
+(function(){const KN={"Koramangala":"ಕೋರಮಂಗಲ","Indiranagar":"ಇಂದಿರಾನಗರ","Whitefield":"ವೈಟ್‌ಫೀಲ್ಡ್","HSR Layout":"ಎಚ್‌ಎಸ್‌ಆರ್ ಲೇಔಟ್","Jayanagar":"ಜಯನಗರ","Malleswaram":"ಮಲ್ಲೇಶ್ವರಂ","Electronic City":"ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಸಿಟಿ","Marathahalli":"ಮಾರತ್ತಹಳ್ಳಿ"};
+  document.querySelectorAll(".chip").forEach(c=>{const n=c.textContent.trim();if(!KN[n]||c.querySelector(".cf"))return;c.dataset.name=n;
+    c.innerHTML=`<span class="cf"><span class="en">${n}</span><span class="kn2" aria-hidden="true">${KN[n]}</span></span>`;});})();
+
+// the auto sheet can be swiped down to close on phones
+(function(){const sh=document.getElementById("oracle"),close=document.getElementById("closeAuto");if(!sh||!close)return;
+  const g=document.createElement("div");g.className="grab";g.setAttribute("aria-hidden","true");sh.prepend(g);
+  let y0=0,dy=0,t0=0,drag=false;
+  sh.addEventListener("pointerdown",e=>{if(e.pointerType!=="touch"||!matchMedia("(max-width:640px)").matches)return;
+    if(e.target.closest("input,button,a"))return;if(!e.target.closest(".grab")&&sh.scrollTop>0)return;y0=e.clientY;dy=0;t0=performance.now();drag=true;try{sh.setPointerCapture(e.pointerId);}catch(_){ }});
+  sh.addEventListener("pointermove",e=>{if(!drag)return;dy=Math.max(0,e.clientY-y0);if(dy>4){sh.classList.add("dragging");sh.style.transform=`translateY(${dy}px)`;}},{passive:true});
+  const end=()=>{if(!drag)return;drag=false;const v=dy/Math.max(1,performance.now()-t0);
+    if(dy>120||v>.6){sh.style.transition="transform .25s ease-in";sh.style.transform="translateY(110%)";setTimeout(()=>{close.click();sh.style.transition="";sh.style.transform="";sh.classList.remove("dragging");},240);}
+    else{sh.style.transition="transform .45s cubic-bezier(.2,.8,.2,1)";sh.style.transform="";setTimeout(()=>{sh.style.transition="";sh.classList.remove("dragging");},460);}};
+  sh.addEventListener("pointerup",end);sh.addEventListener("pointercancel",end);})();
+
+// hold button cycles its words while you hold
+(function(){const b=document.getElementById("shuffle");if(!b)return;const l=b.querySelector(".lbl");if(!l)return;
+  const W=["Mixing the deck","Asking the city","Nearly there"];let iv=0,i=0,orig="";
+  const mo=new MutationObserver(()=>{const h=b.classList.contains("holding");
+    if(h&&!iv){orig=l.textContent;i=0;iv=setInterval(()=>{l.textContent=W[i%W.length];i++;},520);}
+    else if(!h&&iv){clearInterval(iv);iv=0;if(W.includes(l.textContent))l.textContent=orig;}});
+  mo.observe(b,{attributes:true,attributeFilter:["class"]});})();
+
+// live Bengaluru time in the footer
+(function(){const f=document.querySelector("footer");if(!f)return;const n=f.firstChild;if(!n||n.nodeType!==3)return;
+  const s=document.createElement("span");s.className="now";n.textContent="Made in Bengaluru, between two signals, where it's now ";f.insertBefore(s,n.nextSibling);
+  const tail=document.createTextNode(". For fun only.");f.insertBefore(tail,s.nextSibling);
+  const fmt=new Intl.DateTimeFormat("en-IN",{hour:"numeric",minute:"2-digit",timeZone:"Asia/Kolkata"});
+  const tick=()=>{s.textContent=fmt.format(new Date()).toLowerCase().replace(/\s/g," ");};tick();setInterval(tick,15000);})();
+
+// advice fills with ink as it scrolls into view
+function fillOnScroll(root){if(REDUCED)return;const ps=root.querySelectorAll(".closing p");if(!ps.length)return;ps.forEach(p=>p.classList.add("fill"));
+  let raf=0;const frame=()=>{raf=0;ps.forEach(p=>{const r=p.getBoundingClientRect(),a=innerHeight*.92,b=innerHeight*.45;const f=Math.max(0,Math.min(1,(a-r.top)/(a-b)));p.style.setProperty("--fill",f.toFixed(3));});};
+  const on=()=>{if(!raf)raf=requestAnimationFrame(frame);};addEventListener("scroll",on,{passive:true});frame();setTimeout(frame,400);setTimeout(frame,1200);}
+
 // ===== motionsites-inspired features =====
 // driver face with eyes that follow the cursor
 function driverFace(){return `<circle cx="0" cy="-48" r="8" fill="${SK2}" ${S1}/><path d="M-8.5 -53 Q0 -61 8.5 -53Z" fill="${K}"/>`+
@@ -1738,7 +1880,7 @@ const AREA_X={
     info.querySelector(".vstats").innerHTML=`<div><dt>Traffic</dt><dd>${x.t} out of 10</dd></div><div><dt>Rent</dt><dd>${"₹".repeat(x.r)}<span class="vdim">${"₹".repeat(5-x.r)}</span></dd></div><div><dt>Known for</dt><dd>${esc(x.v)}</dd></div>`;
     win.querySelector(".vnext b").textContent=names[(names.indexOf(name)+1)%names.length];}
   host.addEventListener("click",e=>{requestAnimationFrame(()=>show(area));const c=e.target.closest(".chip");if(c&&host.scrollWidth>host.clientWidth)host.scrollTo({left:c.offsetLeft-host.clientWidth/2+c.offsetWidth/2,behavior:REDUCED?"auto":"smooth"});});
-  win.querySelector(".vnext").addEventListener("click",()=>{const n=names[(names.indexOf(area)+1)%names.length];const b=[...host.querySelectorAll(".chip")].find(c=>c.textContent===n);if(b)b.click();});
+  win.querySelector(".vnext").addEventListener("click",()=>{const n=names[(names.indexOf(area)+1)%names.length];const b=[...host.querySelectorAll(".chip")].find(c=>(c.dataset.name||c.textContent.trim())===n);if(b)b.click();});
   show(area);})();
 
 // auto anna greets you, and quick questions you can tap
@@ -1922,7 +2064,7 @@ setTimeout(()=>{const t=document.getElementById("title");if(t)haloPulse(t,1600);
   const moveInd=()=>{const c=chipsEl.querySelector('.chip[aria-pressed="true"]');if(!c)return;Object.assign(ind.style,{left:c.offsetLeft+"px",top:c.offsetTop+"px",width:c.offsetWidth+"px",height:c.offsetHeight+"px"});};
   chipsEl.addEventListener("click",()=>requestAnimationFrame(moveInd));addEventListener("resize",moveInd);setTimeout(moveInd,60);document.fonts&&document.fonts.ready.then(moveInd);
   // question box types example questions until you start typing
-  const qi=document.getElementById("q"),ex=["Should I take the new job?","Will I find a flat this month?","Should I text him back?","Is this startup idea any good?","Will the landlord return my deposit?"];
+  const qi=document.getElementById("q"),ex=["Should I take the new job?","Will the 500D actually show up?","Should I text him back?","Will the landlord return my deposit?","Is this the week I finally quit?","Will it rain at exactly 6pm again?"];
   if(!REDUCED){let ei=0,ci=0,del=false,stop=false;const base=qi.placeholder;
     qi.addEventListener("focus",()=>{stop=true;qi.placeholder=base;});
     (function type(){if(stop||qi.value)return;const t=ex[ei];ci+=del?-1:1;qi.placeholder=t.slice(0,ci)+(ci<t.length||del?"|":"");
@@ -1967,7 +2109,7 @@ const ANS=[["ಬನ್ನಿ","Banni","Yes. Get in."],["ಬರೋಲ್ಲ","Bar
 const ans=document.getElementById("answer");
 autoBtn.onclick=()=>{const raw=document.getElementById("aq").value.trim();
   if(!raw){ans.innerHTML=`<span class="means">Ask a yes or no first. No small talk.</span>`;document.getElementById("aq").focus();return;}
-  autoBtn.classList.remove("shake");void autoBtn.offsetWidth;autoBtn.classList.add("shake");ans.innerHTML=`<span class="means">Thinking…</span>`;
+  autoBtn.classList.remove("shake");void autoBtn.offsetWidth;autoBtn.classList.add("shake");ans.classList.add("thinking");ans.innerHTML=`<span class="means">Thinking…</span>`;
   const Q=readQuestion(raw),c=DECK[rand(DECK.length)],rev=Math.random()<.3,v=lean(LORE[c.scene].yn,rev);
   const pick={yes:[["ಬನ್ನಿ","Banni","Yes. Get in."],["ಬನ್ನಿ","Banni","Yes. He knows a shortcut."]],
     no:[["ಬರೋಲ್ಲ","Barolla","No. Find another auto."],["ಬರೋಲ್ಲ","Barolla","No. Not even sorry."]],
@@ -1975,7 +2117,7 @@ autoBtn.onclick=()=>{const raw=document.getElementById("aq").value.trim();
   const a=pick[rand(pick.length)];
   const note=Q.other?"He can't read their mind. Only your road.":Q.anxious?"Breathe. It's only a lean.":"";
   const car=autoBtn.querySelector("svg");if(!REDUCED&&car)car.animate([{transform:"translateX(0)"},{transform:"translateX(-170%) rotate(-4deg)"}],{duration:420,easing:"cubic-bezier(.6,0,.9,.4)",fill:"forwards"});
-  setTimeout(()=>{if(!REDUCED&&car)car.animate([{transform:"translateX(170%) rotate(3deg)"},{transform:"translateX(-6%)",offset:.8},{transform:"translateX(0)"}],{duration:560,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"});ans.classList.remove("in");void ans.offsetWidth;ans.classList.add("in");ans.innerHTML=`<div class="kan" lang="kn">${a[0]}</div><div class="say">${a[1]}</div><div class="means">${a[2]}</div>
+  setTimeout(()=>{if(!REDUCED&&car)car.animate([{transform:"translateX(170%) rotate(3deg)"},{transform:"translateX(-6%)",offset:.8},{transform:"translateX(0)"}],{duration:560,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"});ans.classList.remove("in","thinking");void ans.offsetWidth;ans.classList.add("in");ans.innerHTML=`<div class="kan" lang="kn">${a[0]}</div><div class="say">${a[1]}</div><div class="means">${a[2]}</div>
     <p class="drew">He drew <b>${esc(c.name)}</b> (${esc(c.tarot)}${rev?", reversed":""}), which leans ${v}. ${esc(LORE[c.scene][Q.topic==="week"||Q.topic==="family"?"self":Q.topic])} ${note}</p>`;},650);};
 })();
 </script>
