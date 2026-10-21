@@ -767,6 +767,51 @@ body{background:linear-gradient(180deg,var(--sky0) 0%,var(--sky1) 38%,var(--sky2
 footer .now{font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:reduce){.hc-hintdot,.answer.thinking .means::before{animation:none}.vlist .chip .cf>span{transition:none}}
 
+/* ===== story spine: chapters, the road, cards met, hidden cows ===== */
+.chap{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 -8px;width:100%;max-width:920px;margin-inline:auto;align-self:stretch;box-sizing:border-box}
+.chap .num{font-family:var(--display);font-size:15px;letter-spacing:.14em;color:var(--gold);min-width:1.6em}
+.chap .ttl{font-family:var(--display);font-style:italic;font-size:clamp(22px,2.6vw,28px);color:var(--ink);line-height:1}
+.chap .say{font-size:14px;color:var(--muted);flex-basis:100%;margin-top:2px}
+@media (min-width:761px){.chap .say{flex-basis:auto;margin-left:auto;text-align:right;max-width:46%}}
+.chap.c2{margin-top:10px}
+.narr{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-style:italic;font-size:17px;color:var(--muted)}
+.narr .aico{width:26px;height:26px;border-radius:50%;background:rgba(246,238,220,.08);display:grid;place-items:center;flex:none}
+.narr .aico svg{width:22px;height:22px;display:block}
+/* the road */
+.journey{margin-top:6px;padding:18px 18px 14px;border-radius:18px;background:rgba(246,238,220,.035);box-shadow:inset 0 0 0 1px var(--line)}
+.journey .label{margin-bottom:6px}
+.journey svg{width:100%;height:auto;display:block;overflow:visible}
+.journey .stop{fill:rgba(246,238,220,.12);stroke:rgba(216,178,106,.35);stroke-width:1}
+.journey .stop.met{fill:rgba(216,178,106,.35)}
+.journey .stop.lit{fill:var(--gold);stroke:#fff3cf;stroke-width:1.5;filter:drop-shadow(0 0 6px rgba(246,222,160,.9))}
+.journey .num{font:600 7px var(--body);fill:rgba(246,238,220,.55);text-anchor:middle}
+.journey .lit+.num{fill:#221c46}
+.journey .jcap{margin:10px 0 0;font-family:var(--display);font-size:19px;color:var(--ink);text-wrap:balance}
+.journey .jcap b{color:var(--gold);font-weight:400}
+.journey .fig{transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+/* cards met */
+.met{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:12px;align-items:center}
+.met .mtitle{font-family:var(--display);font-size:20px;color:var(--ink)}
+.met .mtitle b{color:var(--gold);font-weight:400}
+.met .mgrid{display:grid;grid-template-columns:repeat(11,22px);gap:5px}
+.met .mgrid i{display:block;width:22px;height:34px;border-radius:3px;background:rgba(246,238,220,.06);box-shadow:inset 0 0 0 1px rgba(216,178,106,.18);position:relative;overflow:hidden}
+.met .mgrid i.on{background:var(--c);box-shadow:inset 0 0 0 1px rgba(246,238,220,.45)}
+.met .mgrid i.on::after{content:attr(data-n);position:absolute;inset:auto 0 3px;text-align:center;font:600 7px var(--body);color:#fff}
+.met .mgrid i.new{animation:metpop .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes metpop{0%{transform:scale(.4);filter:brightness(2)}100%{transform:none}}
+.met .mnote{font-size:14px;color:var(--muted);text-align:center;max-width:46ch}
+.met .mcows{display:inline-flex;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
+.met .mcows svg{width:30px;height:18px}
+.met .mcows svg.off{opacity:.3;filter:grayscale(1)}
+@media (max-width:420px){.met .mgrid{grid-template-columns:repeat(11,18px);gap:4px}.met .mgrid i{width:18px;height:28px}}
+/* hidden cows */
+.hcow{cursor:pointer}
+.spread .card.flipped .hcow:hover{filter:brightness(1.15)}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 110px);transform:translateX(-50%) translateY(20px);z-index:60;background:rgba(30,24,64,.96);color:var(--ink);border-radius:999px;padding:10px 18px;font:500 14px var(--body);box-shadow:0 20px 40px rgba(0,0,0,.45),inset 0 0 0 1px rgba(216,178,106,.35);opacity:0;transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1);pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){.journey .fig{transition:none}.met .mgrid i.new{animation:none}}
+.narr .aicon{width:26px;height:26px;padding:3px;background:rgba(246,238,220,.08)}.narr .aicon svg{width:100%;height:auto}
+
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
 </head>
@@ -798,7 +843,7 @@ footer .now{font-variant-numeric:tabular-nums}
     <div class="table">
       <div class="spread" id="spread"></div>
       <div class="pick" id="pick"></div>
-      <p class="hint" id="tapHint" aria-live="polite">Hold to shuffle. Think of your question.</p>
+      <p class="hint" id="tapHint" aria-live="polite">Hold the deck and think of your question. I'll find a gap in the traffic.</p>
       <div class="readings" id="readings"></div>
       <div id="verdictBox" hidden></div>
     </div>
@@ -1066,7 +1111,7 @@ const SCENES={
   G(92,224,1,`<path d="M-8 0 L8 0 L6 -5 L-6 -5Z" fill="#e6b06a" ${S1}/>`)}),
  hermit:()=>({sky:["#1f2366","#3b3f99"],art:
   [[30,60,3],[60,90,2.4],[150,58,2.8],[176,96,2],[118,70,1.8]].map(([x,y,r])=>star(x,y,r,"#fff1a8",4)).join("")+
-  tower(54,236,92,96,"#5a5ea8","#2b2f6b",true)+`<path d="M48 140 L152 140" stroke="${K}" stroke-width="3"/><path d="M50 140 L50 130 L150 130 L150 140" fill="none" ${S1}/>`+
+  tower(54,236,92,96,"#5a5ea8","#2b2f6b",true)+`<g class="hcow" data-cow="hermit">${cow(176,236,.36,{c:"#3a3a52",horn:RED},true)}</g>`+`<path d="M48 140 L152 140" stroke="${K}" stroke-width="3"/><path d="M50 140 L50 130 L150 130 L150 140" fill="none" ${S1}/>`+
   ch(100,140,1.35,{top:"#8a8fb0",outfit:"hoodie",bot:"#5a5e7a",hair:"long",hairC:"#d8d8e6",beard:true,face:"calm",armL:[60,140],
     holdL:`<g transform="translate(-6 -2)">${laptop(0,0,1.1)}</g>${star(-6,-10,4,"#fff1a8",6)}`,armR:[20,10],holdR:`<path d="M0 0 Q6 30 -20 58" stroke="${K}" stroke-width="2" fill="none"/>`,
     crown:`<path d="M-14 -62 Q-16 -82 0 -82 Q16 -82 14 -62 Q10 -74 0 -74 Q-10 -74 -14 -62Z" fill="#8a8fb0" ${S1}/>`})}),
@@ -1100,7 +1145,7 @@ const SCENES={
   ch(176,236,.8,{top:BLU,legs:"kneel",hair:"short",face:"closed"},true)}),
  temperance:()=>({sky:["#ffd08a","#fff2d8"],art:
   sunFace(150,96,12)+hills(150,"#c9b6f2")+`<path d="M150 150 Q120 190 160 236 L176 236 Q150 190 158 150Z" fill="#e8d6a5" ${S1}/>`+
-  ground(200,"#9ad67a")+`<path d="M14 214 Q60 198 96 214 L96 236 L14 236Z" fill="#6ec3e8" ${S}/>`+
+  ground(200,"#9ad67a")+`<g class="hcow" data-cow="temperance">${cow(178,236,.38,{c:"#f4f1ea",horn:BLU},true)}</g>`+`<path d="M14 214 Q60 198 96 214 L96 236 L14 236Z" fill="#6ec3e8" ${S}/>`+
   [[30,196],[42,192],[22,202]].map(([x,y])=>`<path d="M${x} ${y} l0 -16" stroke="#2f7a3a" stroke-width="2"/><ellipse cx="${x}" cy="${y-18}" rx="4" ry="6" fill="${PUR}" ${S1}/>`).join("")+
   ch(96,226,1.35,{outfit:"saree",top:WHITE,blouse:"#ffcf7a",border:"#ffcf7a",wings:true,hair:"bun",jasmine:true,bindi:true,face:"calm",
     chest:`<path d="M-5 -38 L5 -38 L0 -30Z" fill="${YEL}" ${S1}/>`,armL:[150,150],holdL:tumbler(0,6,.9).replace("<g ","<g "),armR:[60,40],holdR:G(4,0,.9,`<path d="M-12 0 L12 0 L10 6 L-10 6Z" fill="#b9c0cc" ${S1}/>`)})+
@@ -1124,7 +1169,7 @@ const SCENES={
  star:()=>({sky:["#5a4ab8","#ffb08a"],art:
   star(100,82,18,YEL,8)+[[40,64],[62,96],[150,62],[168,96],[30,118],[172,128],[110,124]].map(([x,y])=>star(x,y,6,"#fff1a8",8)).join("")+
   hills(190,"#6a5ab0","#4a4a8c")+`<path d="M14 210 Q100 196 186 210 L186 236 L14 236Z" fill="#6ec3e8" ${S}/>`+
-  tree(176,190,.7,"#3d9a52")+kite(176,136,.6)+
+  tree(176,190,.7,"#3d9a52")+kite(176,136,.6)+`<g class="hcow" data-cow="star">${cow(192,236,.32,{c:"#f4f1ea",horn:RED},true)}</g>`+
   ch(84,214,1.3,{top:"#ff8fa3",outfit:"tee",bot:"#3b4a8c",legs:"kneel",hair:"long",face:"calm",armL:[40,60],holdL:bottle(0,0,1,150),armR:[70,90],holdR:bottle(0,0,1,-150)})+
   `<path d="M58 210 Q56 220 60 228" stroke="#bfe8ff" stroke-width="3" fill="none"/><path d="M114 210 Q122 214 126 222" stroke="#bfe8ff" stroke-width="3" fill="none"/>`}),
  moon:()=>({sky:["#1f2a66","#4a5aa8"],art:
@@ -1471,12 +1516,12 @@ restingStack();
 const sb=document.getElementById("shuffle"),HOLD=1100;let holdStart=0,raf=0;
 function setP(p){sb.style.setProperty("--p",p.toFixed(3));}
 function jitter(on){[...pickEl.children].forEach((c,i)=>c.classList.toggle("jit",on));}
-function startHold(){if(busy||holdStart)return;if(REDUCED){deal();return;}holdStart=performance.now();sb.classList.add("holding");jitter(true);hint.textContent="Keep holding.";
+function startHold(){if(busy||holdStart)return;if(REDUCED){deal();return;}holdStart=performance.now();sb.classList.add("holding");jitter(true);hint.textContent="Keep holding. Cows crossing.";
   {const top=pickEl.lastElementChild;if(top)kal.start(top);}
   const tick=()=>{const p=(performance.now()-holdStart)/HOLD;setP(Math.min(1,p));if(p>=1){endHold(true);}else raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);}
 function endHold(done){if(!holdStart)return;cancelAnimationFrame(raf);holdStart=0;sb.classList.remove("holding");jitter(false);setP(0);
   kal.stop();
-  if(done)deal();else hint.textContent="Hold till the ring fills.";}
+  if(done)deal();else hint.textContent="Hold till the meter fills.";}
 sb.addEventListener("pointerdown",e=>{e.preventDefault();try{sb.setPointerCapture(e.pointerId);}catch(_){}startHold();});
 sb.addEventListener("contextmenu",e=>e.preventDefault());
 ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>sb.addEventListener(ev,()=>endHold(false)));
@@ -1484,8 +1529,8 @@ sb.addEventListener("keydown",e=>{if((e.key===" "||e.key==="Enter")&&!e.repeat){
 sb.addEventListener("keyup",e=>{if(e.key===" "||e.key==="Enter")endHold(false);});
 sb.addEventListener("click",e=>e.preventDefault());
 
-function shuffled(){const a=DECK.slice();for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]];}if(Math.random()<.04)a.splice(rand(a.length),0,RARE);return a;}
-async function deal(){busy=true;sb.disabled=true;current=[];picked=0;order=shuffled();verdictGrade("");emptyReadings();verdictEl.hidden=true;verdictEl.innerHTML="";renderSlots();
+function shuffled(){const a=DECK.slice();for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]];}if(Math.random()<.04||(typeof MET!=="undefined"&&MET.size>=DECK.length))a.splice(rand(a.length),0,RARE);return a;}
+async function deal(){busy=true;sb.disabled=true;current=[];picked=0;order=shuffled();verdictGrade("");journey.reset();emptyReadings();verdictEl.hidden=true;verdictEl.innerHTML="";renderSlots();
   const narrow=pickEl.clientWidth<520,N=Math.min(narrow?9:13,order.length);pickEl.innerHTML="";
   const R=Math.min(pickEl.clientWidth/2-(narrow?34:50),narrow?150:300);
   for(let i=0;i<N;i++){const t=(i/(N-1))*2-1,b=document.createElement("button");b.type="button";b.className="fcard";
@@ -1494,12 +1539,12 @@ async function deal(){busy=true;sb.disabled=true;current=[];picked=0;order=shuff
     b.onclick=()=>pick(i,b);pickEl.appendChild(b);}
   {const slot=spreadEl.children[0]&&spreadEl.children[0].querySelector(".card");if(slot)morph.travel(sb,slot,{ms:720,r0:999,r1:10,cls:"outline"});}
   pickEl.classList.add("closed");void pickEl.offsetWidth;requestAnimationFrame(()=>pickEl.classList.remove("closed"));setTimeout(()=>[...pickEl.children].forEach(c=>c.style.transitionDelay=""),900);
-  hint.textContent="Pick three. Go with your gut.";document.body.classList.add("picking");sb.querySelector(".lbl").textContent="Hold to reshuffle";
+  hint.textContent="Three signals ahead. Pick three, go with your gut.";document.body.classList.add("picking");sb.querySelector(".lbl").textContent="Hold to reshuffle";
   setTimeout(()=>{sb.disabled=false;busy=false;},REDUCED?0:700);}
 
 let cineBusy=false;
 function pick(i,el){if(picked>=3||el.dataset.used||cineBusy)return;el.dataset.used="1";const k=picked++;
-  const card=order[i],rev=card.kind!=="rare"&&Math.random()<.3;current[k]={card,rev};
+  const card=order[i],rev=card.kind!=="rare"&&Math.random()<.3;current[k]={card,rev};met.add(card);journey.update(current.filter(Boolean));
   const slot=spreadEl.children[k].querySelector(".card");const from=el.getBoundingClientRect(),to=slot.getBoundingClientRect();
   el.classList.add("taken");
   const land=()=>{slot.classList.remove("placeholder");const f=slot.querySelector(".front");f.innerHTML=cardSVG(card);if(rev)f.classList.add("rev");
@@ -1549,7 +1594,7 @@ function verdictFor(cs){const tone=cs.reduce((s,c)=>s+(c.rev?c.card.tr:c.card.tu
   const lab=sc<=3?"suspiciously calm":sc<=6?"a standard Tuesday":sc<=8?"very Peak Bengaluru":"maximum Peak Bengaluru";return {line,sc,lab};}
 function showVerdict(){const v=verdictFor(current),q=document.getElementById("q").value.trim();verdictEl.hidden=false;
   const R=interpret(current,area,q),ans=R.out.answer,big=ans?ans.label+".":v.line,sub=ans?v.line:`${area}, ${AREAS[area]}.`;
-  verdictEl.innerHTML=`<div class="verdict"><div class="label">Your week in ${esc(area)}</div>${q?`<p class="sub qline">"${esc(q)}"</p>`:""}
+  verdictEl.innerHTML=`<div class="verdict"><div class="label">IV · You've arrived. Your week in ${esc(area)}</div>${q?`<p class="sub qline">"${esc(q)}"</p>`:""}
    <div class="line" aria-label="${esc(big)}"><span class="w dec" aria-hidden="true">${esc(big)}</span></div><p class="sub">${esc(sub)}</p>
    <div class="gauge" aria-label="Peak Bengaluru score ${v.sc} out of 10"><div class="bar2"><i style="width:${v.sc*10}%"></i></div><div class="lab">Peak Bengaluru score <b><span id="scoreN">${REDUCED?v.sc:0}</span>/10</b>, ${v.lab}</div></div>
    ${interpretHTML(R)}
@@ -1823,6 +1868,75 @@ function scratchCard(hc){const b=hc.querySelector(".hc-art");if(!b||b.querySelec
 function fillOnScroll(root){if(REDUCED)return;const ps=root.querySelectorAll(".closing p");if(!ps.length)return;ps.forEach(p=>p.classList.add("fill"));
   let raf=0;const frame=()=>{raf=0;ps.forEach(p=>{const r=p.getBoundingClientRect(),a=innerHeight*.92,b=innerHeight*.45;const f=Math.max(0,Math.min(1,(a-r.top)/(a-b)));p.style.setProperty("--fill",f.toFixed(3));});};
   const on=()=>{if(!raf)raf=requestAnimationFrame(frame);};addEventListener("scroll",on,{passive:true});frame();setTimeout(frame,400);setTimeout(frame,1200);}
+
+
+// ===== story spine: an auto anna narrates a newcomer's first year, one ride at a time =====
+const STORE={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(_){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(_){}}};
+const MET=new Set(STORE.get("na_met",[]).filter(s=>DECK.some(c=>c.scene===s))),COWS=new Set(STORE.get("na_cows",[]));
+const COW_HOMES={hermit:"on the street under the Hermit's terrace",temperance:"beside Temperance's cup",star:"under the tree at Nandi Hills"};
+let toastEl=null,toastT=0;
+function toast(t,ms=2600){if(!toastEl){toastEl=document.createElement("div");toastEl.className="toast";toastEl.setAttribute("role","status");document.body.appendChild(toastEl);}
+  toastEl.textContent=t;toastEl.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove("show"),ms);}
+function chap(n,t,s){const d=document.createElement("div");d.className="chap";d.innerHTML=`<span class="num">${n}</span><span class="ttl">${t}</span><span class="say">${s}</span>`;return d;}
+(function(){
+  const controls=document.querySelector(".controls"),qrow=document.querySelector(".qrow"),table=document.querySelector(".table"),spread=document.getElementById("spread");
+  if(controls)controls.insertBefore(chap("I","Where to?","Every ride starts with that."),controls.firstChild);
+  if(qrow){const c=chap("II","Why are you going?","Tell me, or don't. The deck already knows.");c.classList.add("c2");qrow.parentNode.insertBefore(c,qrow);}
+  if(table&&spread)table.insertBefore(chap("III","Three signals","Three stops between here and your week."),spread);
+  const hero=document.querySelector(".hero"),lab=hero&&hero.querySelector(".label");
+  if(lab){const n=document.createElement("div");n.className="narr stagger";n.style.animationDelay=".78s";n.innerHTML=`<span class="aico aicon" aria-hidden="true"></span><span>Read by an auto anna who knows every road here.</span>`;hero.insertBefore(n,lab);}
+})();
+
+// the road: 22 stops from the airport bus to Nandi Hills
+const journey=(()=>{
+  let box=null,svg=null,fig=null,cap=null,pts=[];
+  const PATH="M24 96 C120 30 190 150 300 92 S470 20 560 86 S720 150 820 80 S930 30 976 70";
+  function build(){if(box)return;const readings=document.getElementById("readings");if(!readings)return;
+    box=document.createElement("div");box.className="journey";box.hidden=true;box.setAttribute("aria-live","polite");
+    const stops=DECK.map((c,i)=>`<g class="st" data-i="${i}"><circle class="stop${MET.has(c.scene)?" met":""}" r="7"/><text class="num" dy="2.6">${esc(c.num)}</text></g>`).join("");
+    box.innerHTML=`<div class="label">The road so far</div><svg viewBox="0 0 1000 150" aria-hidden="true">
+      <path d="${PATH}" fill="none" stroke="rgba(216,178,106,.3)" stroke-width="2" stroke-dasharray="4 7"/>
+      <g class="lm" transform="translate(10 118)"><path d="M0 0 l14 -6 l10 -10 l3 2 l-7 10 l12 -4 l2 3 l-13 7 l-2 9 l-3 1 l-1 -8 l-14 1Z" fill="rgba(246,238,220,.7)"/><text x="16" y="22" font-size="8" fill="rgba(246,238,220,.6)" text-anchor="middle" font-family="Figtree,sans-serif">AIRPORT BUS</text></g>
+      <g class="lm" transform="translate(976 34)"><circle r="9" fill="#ffc83d" opacity=".9"/><path d="M-16 0 h32 M-11 -11 l22 22 M11 -11 l-22 22 M0 -16 v32" stroke="#ffc83d" stroke-width="1.5" opacity=".6"/><text x="0" y="-20" font-size="8" fill="rgba(246,238,220,.6)" text-anchor="middle" font-family="Figtree,sans-serif">NANDI HILLS</text></g>
+      ${stops}<g class="figbase"><g class="fig">${mute(ch(0,0,.3,{top:"#ffb84d",outfit:"tee",bot:"#3b4a8c",hair:"short",legs:"walk",face:"grin",armR:[40,30],holdR:`<rect x="-5" y="-6" width="10" height="14" rx="2" fill="${RED}" ${S1}/>`}))}</g></g></svg>
+      <p class="jcap"></p>`;
+    readings.parentNode.insertBefore(box,readings.nextSibling);svg=box.querySelector("svg");fig=svg.querySelector(".fig");cap=box.querySelector(".jcap");
+    const p=document.createElementNS("http://www.w3.org/2000/svg","path");p.setAttribute("d",PATH);const L=p.getTotalLength();
+    pts=DECK.map((_,i)=>{const q=p.getPointAtLength(L*(0.03+0.94*i/(DECK.length-1)));return {x:q.x,y:q.y};});
+    svg.querySelectorAll(".st").forEach((g,i)=>g.setAttribute("transform",`translate(${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)})`));
+    svg.querySelector(".figbase").setAttribute("transform",`translate(${pts[0].x.toFixed(1)} ${(pts[0].y-9).toFixed(1)})`);}
+  function update(cards){build();if(!box)return;const idx=cards.map(c=>DECK.indexOf(c.card)).filter(i=>i>=0);if(!idx.length)return;
+    box.hidden=false;svg.querySelectorAll(".stop").forEach((s,i)=>{s.classList.toggle("lit",idx.includes(i));s.classList.toggle("met",!idx.includes(i)&&MET.has(DECK[i].scene));});
+    const far=Math.max(...idx),c=DECK[far];fig.style.transform=`translate(${(pts[far].x-pts[0].x).toFixed(1)}px,${(pts[far].y-pts[0].y).toFixed(1)}px)`;
+    const ri=far===0?-1:ROWS.findIndex(r=>far>=r[0]&&far<=r[1]);
+    const where=far===0?"Still on the airport bus. Everything is ahead of you.":`Month ${Math.max(1,Math.round(far/21*12))} of year one. This stretch is ${ROWS[ri][2]}.`;
+    const stage=far===0?"":`${far} ${far===1?"stop":"stops"} down the road, at `;
+    cap.innerHTML=`${stage}<b>${esc(c.name)}</b>${far?". ":" "}${where}`;}
+  function reset(){if(box){box.hidden=true;}}
+  return {update,reset};})();
+
+// cards met, remembered on this device
+const met=(()=>{
+  let box=null;
+  function build(){if(box)return;const f=document.querySelector("footer");if(!f)return;box=document.createElement("section");box.className="met";box.id="met";box.setAttribute("aria-label","Cards met");
+    f.parentNode.insertBefore(box,f);render();}
+  function cowSVG(on){return `<svg viewBox="-36 -40 72 44" class="${on?"":"off"}" aria-hidden="true">${mute(cow(0,0,1,{horn:RED}))}</svg>`;}
+  function render(fresh){if(!box)return;const n=MET.size,all=n>=DECK.length;
+    box.innerHTML=`<div class="mtitle">Cards met: <b>${n} of ${DECK.length}</b></div>
+      <div class="mgrid" role="img" aria-label="${n} of ${DECK.length} cards met">${DECK.map(c=>`<i class="${MET.has(c.scene)?"on":""}${fresh===c.scene?" new":""}" style="--c:${c.accent}" data-n="${esc(c.num)}" title="${MET.has(c.scene)?esc(c.name):"Not met yet"}"></i>`).join("")}</div>
+      <p class="mnote">${all?"All 22 met. The Empty Road rides with you now, in every shuffle.":"Your deck remembers on this device. Meet all 22 and a card that isn't in any deck joins yours."}</p>
+      <div class="mcows" title="They hide in the card art">${[0,1,2].map(i=>cowSVG(COWS.size>i)).join("")}<span>${COWS.size===3?"All three cows found.":COWS.size?`${COWS.size} of 3 cows spotted. The rest hide in the card art.`:"Three cows hide in the card art. Tap one when you see it."}</span></div>`;}
+  function add(card){if(!card||card.kind==="rare")return;const fresh=!MET.has(card.scene);if(fresh){MET.add(card.scene);STORE.set("na_met",[...MET]);}
+    build();render(fresh?card.scene:null);if(fresh&&MET.size===DECK.length)setTimeout(()=>toast("All 22 met. The Empty Road is in your deck now."),3600);}
+  return {build,add,refresh:()=>render()};})();
+met.build();
+
+// three cows hide in the card art
+document.addEventListener("click",e=>{const g=e.target.closest(".hcow");if(!g)return;if(!g.closest(".spread .card.flipped,.insp,.hidden-card .hc-art.cleared"))return;
+  e.stopPropagation();e.preventDefault();const id=g.dataset.cow;if(COWS.has(id)){toast("You found this one already. Moo.");return;}
+  COWS.add(id);STORE.set("na_cows",[...COWS]);met.build();met.refresh();
+  try{sfx&&sfx("deal");}catch(_){ }
+  toast(COWS.size===3?"All three cows found. Nothing unlocks. You can still tell people.":`Cow ${COWS.size} of 3, ${COW_HOMES[id]||"spotted"}. ${3-COWS.size} more somewhere in the deck.`,3400);},true);
 
 // ===== motionsites-inspired features =====
 // driver face with eyes that follow the cursor

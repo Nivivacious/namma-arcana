@@ -2,6 +2,8 @@
 
 22 cards of the classic tarot, reimagined in Bengaluru. Here, the Fool still walks off a cliff but the cliff is a pothole.
 
+An auto anna who knows every road in the city reads your week as one ride. Where to? Why are you going? Three signals on the way. You've arrived. Underneath it runs the Fool's Journey: 22 stops from the airport bus to Nandi Hills, and your cards show how far down the road you are.
+
 Pick your neighbourhood, ask a question, hold to shuffle and draw three cards: the Commute, the Hustle and the Heart. Then get a reading that actually knows where you live.
 
 ## What's inside
@@ -12,6 +14,7 @@ Pick your neighbourhood, ask a question, hold to shuffle and draw three cards: t
 - **Peak Bengaluru advice.** "Something will break. Back up your files before 4pm."
 - **Ask the auto.** A quick yes or no from an auto anna whose eyes follow your cursor. Banni or barolla.
 - **A card you can study.** Tap any drawn card to open it full size, drag it to turn it in 3D, and read its element, yes or no lean, both meanings and the tarot link.
+- **A deck that remembers.** Cards you've met are kept on your device. Meet all 22 and The Empty Road, a card that isn't in any deck, joins yours. Three cows hide in the card art; tap them when you spot them.
 - **City sounds.** Rain, traffic and temple bells, all made in the browser. Off until you switch them on.
 - **Things to play with.** A gold particle seal that scatters under your cursor and drifts back, fireflies that follow you, an answer that decodes from Kannada letters, an auto anna who chats now and then, a night skyline that shifts as you move, a cinematic card reveal that flies, flips on the beat and glows gold, a shape that morphs from the shuffle button into your spread, a kaleidoscope that blooms while you hold the deck, a sky that warms or cools with your verdict, a title that shrinks into the top bar as you scroll, a hidden card you scratch open with your finger, and an auto sheet you can swipe away and a neighbourhood picker with traffic and rent stats. Hold-to-shuffle, a fanned deck to pick from, and a story card to share.
 
