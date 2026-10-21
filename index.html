@@ -578,7 +578,7 @@ footer{color:var(--muted)}
 
 /* living skyline */
 .skyline{position:absolute;z-index:-1;left:50%;transform:translateX(-50%);width:100vw;bottom:-30px;height:min(560px,78vw);pointer-events:none;overflow:hidden;
-  -webkit-mask-image:linear-gradient(180deg,transparent,#000 22%);mask-image:linear-gradient(180deg,transparent,#000 22%)}
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent)}
 .skyline .sl{position:absolute;inset:-20px -60px 0;will-change:transform;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .skyline .sl svg{width:100%;height:100%;display:block}
 .skyline .far{opacity:.62}.skyline .mid{opacity:1}
@@ -637,6 +637,11 @@ footer{color:var(--muted)}
 .bubble2.below{border-radius:4px 14px 14px 14px}
 .bubble2.on{opacity:1;transform:none}
 .dec{display:inline-block;min-height:1em}
+
+.herorow{display:flex;align-items:center;justify-content:center;gap:clamp(20px,4vw,44px);width:100%;max-width:760px}
+.herorow .lede{text-align:left;margin:0;flex:1 1 0;min-width:0;max-width:40ch}
+.herorow .seal{width:clamp(170px,22vw,230px);height:clamp(190px,25vw,260px);margin:0;flex:none}
+@media (max-width:560px){.herorow{gap:14px}.herorow .lede{font-size:15.5px}.herorow .seal{width:132px;height:156px}}
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
 </head>
@@ -651,8 +656,10 @@ footer{color:var(--muted)}
   <header class="hero">
     <h1 aria-label="Namma Arcana" id="title"><span class="w" style="animation-delay:.15s" aria-hidden="true">Namma</span> <em class="w" style="animation-delay:.32s" aria-hidden="true">Arcana</em></h1>
     <div class="kn stagger" style="animation-delay:.5s">ನಮ್ಮ ಆರ್ಕಾನ</div>
-    <p class="lede stagger" style="animation-delay:.6s">22 cards of the classic tarot, reimagined in Bengaluru. Here, the Fool still walks off a cliff but the cliff is a pothole.</p>
-    <div class="seal stagger" id="seal" style="animation-delay:.7s" aria-hidden="true"></div>
+    <div class="herorow">
+      <p class="lede stagger" style="animation-delay:.6s">22 cards of the classic tarot, reimagined in Bengaluru. Here, the Fool still walks off a cliff but the cliff is a pothole.</p>
+      <div class="seal stagger" id="seal" style="animation-delay:.7s" aria-hidden="true"></div>
+    </div>
     <p class="label stagger" style="animation-delay:.85s;margin-top:10px">Pick your neighbourhood and draw your week</p>
   </header>
 
@@ -1536,24 +1543,24 @@ const AREA_X={
   const cv=document.createElement("canvas");host.appendChild(cv);const ctx=cv.getContext("2d");
   let W=0,H=0,d=1,P=[],mx=-9999,my=-9999,raf=0,visible=true;
   function targets(){const off=document.createElement("canvas");off.width=W;off.height=H;const o=off.getContext("2d");
-    const cw=Math.min(W*.5,210),ch=cw*1.62,x0=(W-cw)/2,y0=(H-ch)/2;
+    const cw=Math.min(W*.72,H*.56),ch=cw*1.62,x0=(W-cw)/2,y0=(H-ch)/2;
     o.strokeStyle="#fff";o.lineWidth=7;o.beginPath();o.roundRect(x0,y0,cw,ch,16);o.stroke();
     o.lineWidth=4;o.beginPath();o.roundRect(x0+16,y0+16,cw-32,ch-32,9);o.stroke();
     o.beginPath();o.arc(W/2,H/2,cw*.3,0,6.283);o.lineWidth=5;o.stroke();
     for(let k=0;k<24;k++){const a=k*Math.PI/12,r1=cw*.34,r2=cw*(k%2?.42:.48);o.beginPath();o.moveTo(W/2+Math.cos(a)*r1,H/2+Math.sin(a)*r1);o.lineTo(W/2+Math.cos(a)*r2,H/2+Math.sin(a)*r2);o.lineWidth=4;o.stroke();}
     o.fillStyle="#fff";o.font=`${Math.round(cw*.34)}px "Tiro Kannada","Noto Sans Kannada",serif`;o.textAlign="center";o.textBaseline="middle";o.fillText("ನ",W/2,H/2+cw*.02);
     [[W/2,y0+30],[W/2,y0+ch-30]].forEach(([x,y])=>{o.beginPath();o.moveTo(x,y-7);o.lineTo(x+6,y);o.lineTo(x,y+7);o.lineTo(x-6,y);o.closePath();o.fill();});
-    const img=o.getImageData(0,0,W,H).data,pts=[],step=W<380?4:5;
+    const img=o.getImageData(0,0,W,H).data,pts=[],step=W<180?3:4;
     for(let y=0;y<H;y+=step)for(let x=0;x<W;x+=step){if(img[(y*W+x)*4+3]>90)pts.push([x+(Math.random()-.5)*2,y+(Math.random()-.5)*2]);}
     return pts;}
   function build(){const r=host.getBoundingClientRect();d=Math.min(2,devicePixelRatio||1);W=Math.round(r.width);H=Math.round(r.height);if(!W||!H)return;
     cv.width=W*d;cv.height=H*d;cv.style.width=W+"px";cv.style.height=H+"px";ctx.setTransform(d,0,0,d,0,0);
     const T=targets();P=T.map(([tx,ty])=>({tx,ty,x:W/2+(Math.random()-.5)*W,y:H/2+(Math.random()-.5)*H,vx:0,vy:0,s:Math.random()*1.3+.7,p:Math.random()*6.28}));
-    for(let i=0;i<70;i++)P.push({free:true,x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,s:Math.random()*1.1+.4,p:Math.random()*6.28});}
+    for(let i=0;i<30;i++)P.push({free:true,x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,s:Math.random()*1.1+.4,p:Math.random()*6.28});}
   function frame(){ctx.clearRect(0,0,W,H);
     for(const q of P){q.p+=.03;
       if(q.free){q.x+=q.vx;q.y+=q.vy;if(q.x<0)q.x=W;if(q.x>W)q.x=0;if(q.y<0)q.y=H;if(q.y>H)q.y=0;}
-      else{const dx=q.x-mx,dy=q.y-my,dist=Math.hypot(dx,dy);if(dist<90){const f=(90-dist)/90*4.2;q.vx+=dx/dist*f;q.vy+=dy/dist*f;}
+      else{const dx=q.x-mx,dy=q.y-my,dist=Math.hypot(dx,dy);if(dist<90){const f=(90-dist)/90*3.2;q.vx+=dx/dist*f;q.vy+=dy/dist*f;}
         q.vx+=(q.tx-q.x)*.018;q.vy+=(q.ty-q.y)*.018;q.vx*=.86;q.vy*=.86;q.x+=q.vx;q.y+=q.vy;}
       const a=q.free?.25+.25*Math.sin(q.p):.65+.35*Math.sin(q.p);
       ctx.beginPath();ctx.arc(q.x,q.y,q.s,0,6.283);ctx.fillStyle=`rgba(246,222,160,${a.toFixed(2)})`;ctx.fill();}
