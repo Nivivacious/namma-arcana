@@ -1,0 +1,1407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Namma Arcana: the 22 cards of the classic tarot, reimagined in Bengaluru.">
+<title>Namma Arcana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Tiro+Kannada:ital@0;1&family=Figtree:wght@400;500;600&family=Noto+Sans+Kannada:wght@500&display=swap">
+<style>
+/* Layout: a quiet printed-deck page. Centered column, generous white space, three cards resting in a row, readings set like book text. */
+:root{
+  --paper:#faf6ee;
+  --paper-2:#efece4;
+  --ink:#2f2c3d;
+  --muted:#76727f;
+  --line:#dcd7cb;
+  --sage:#7f9a82;
+  --rose:#d8736a;
+  --marigold:#eea43a;
+  --leaf:#5f9a52;
+  --indigo:#4f5b86;
+  --ochre:#c9a35e;
+  --display:"Instrument Serif","Georgia",serif;
+  --body:"Figtree",system-ui,sans-serif;
+  --kn:"Noto Sans Kannada","Figtree",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{overflow-x:hidden;overflow-x:clip}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:88px}
+p{margin:0}
+button,input{font-family:inherit}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:3px}
+
+.bar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+.logo{font-family:var(--display);font-size:24px}
+.bar nav{display:flex;gap:22px}
+.bar a{color:var(--muted);text-decoration:none;font-size:15px}
+@media (hover:hover){.bar a:hover{color:var(--ink)}}
+
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+.kn{font-family:var(--kn);color:var(--sage);font-size:15px;letter-spacing:.04em}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(60px,11vw,124px);line-height:.95;margin:0;letter-spacing:-.01em}
+h1 em{color:var(--rose)}
+.lede{font-size:clamp(17px,2vw,19px);color:var(--muted);max-width:44ch}
+.fan{display:flex;justify-content:center;align-items:flex-end;gap:0;margin-top:18px;height:clamp(250px,34vw,330px)}
+.fan .fc{width:clamp(130px,16vw,170px);aspect-ratio:10/17;transition:transform .45s cubic-bezier(.2,.8,.2,1);margin:0 -10px}
+.fan .fc svg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 18px rgba(47,44,61,.12))}
+.fan .fc:nth-child(1){transform:rotate(-6deg) translateY(10px)}
+.fan .fc:nth-child(3){transform:rotate(6deg) translateY(10px)}
+.fan .fc:nth-child(2){position:relative;z-index:1}
+@media (hover:hover){.fan .fc:hover{transform:translateY(-12px)}}
+
+.label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(38px,5vw,54px);line-height:1;margin:0;text-wrap:balance}
+.sec-head{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;max-width:56ch;margin:0 auto}
+.sec-head p{color:var(--muted)}
+
+.controls{display:flex;flex-direction:column;gap:22px;align-items:center;max-width:720px;margin:0 auto;width:100%}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.chip{font-size:15px;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;background:transparent;color:var(--ink);transition:background .2s,border-color .2s}
+@media (hover:hover){.chip:hover{border-color:var(--ink)}}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.qrow{display:flex;gap:10px;width:100%;flex-wrap:wrap}
+.qrow input[type=text]{flex:1 1 260px}
+input[type=text]{width:100%;min-width:0;font-size:16px;border:0;border-bottom:1px solid var(--ink);padding:10px 2px;background:transparent;color:var(--ink);border-radius:0}
+input::placeholder{color:#a19dab}
+input:focus-visible{outline:none;border-bottom-width:2px}
+
+.btn{font-size:16px;font-weight:500;border:1px solid var(--ink);border-radius:999px;padding:11px 24px;cursor:pointer;background:var(--ink);color:var(--paper);transition:background .2s,color .2s,transform .2s}
+@media (hover:hover){.btn:hover{transform:translateY(-1px)}}
+.btn.ghost{background:transparent;color:var(--ink)}
+@media (hover:hover){.btn.ghost:hover{background:var(--paper-2)}}
+.btn:disabled{opacity:.5;cursor:default;transform:none}
+
+.table{display:flex;flex-direction:column;gap:28px;margin-top:8px}
+.stage{position:relative;height:0;transition:height .35s ease}
+.stage.on{height:250px}
+.stage .sb{position:absolute;left:50%;top:50%;width:88px;height:150px;margin:-75px 0 0 -44px}
+.stage .sb svg{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 10px rgba(47,44,61,.15))}
+.spread{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,4vw,56px);max-width:760px;margin:0 auto;width:100%}
+.slot{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.pos{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:center}
+.card{position:relative;width:min(100%,210px);aspect-ratio:10/17;background:none;border:0;padding:0;cursor:pointer;
+  transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.card:disabled{cursor:default}
+.card.tilting{transition:transform .1s linear}
+.card .inner{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.card.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden}
+.face svg{width:100%;height:100%;display:block;filter:drop-shadow(0 12px 20px rgba(47,44,61,.13))}
+.front{transform:rotateY(180deg)}
+.front.rev svg{transform:rotate(180deg)}
+.card.deal{animation:deal .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes deal{from{transform:translateY(-60px);opacity:0}}
+.hint{text-align:center;color:var(--muted);font-size:14px;font-style:italic;font-family:var(--display);font-size:19px}
+
+.readings{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,4vw,48px);border-top:1px solid var(--line);padding-top:32px}
+.reading{display:flex;flex-direction:column;gap:10px;min-width:0;animation:fade .6s ease both}
+.reading.empty{color:#b3afba}
+.reading.empty h3{color:#c4c0ca}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.reading h3{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.05;margin:0}
+.meta{font-size:13px;color:var(--muted)}
+.meta b{font-weight:600;color:var(--ink)}
+.meta .rev{color:var(--rose);font-weight:600}
+.tarot{font-size:14.5px;color:var(--muted);padding-top:10px;border-top:1px dashed var(--line)}
+.tarot i{font-family:var(--display);font-size:17px;color:var(--ink)}
+
+.verdict{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:44px 16px;border-block:1px solid var(--line)}
+.verdict .line{font-family:var(--display);font-size:clamp(28px,4.4vw,42px);line-height:1.12;max-width:24ch;text-wrap:balance}
+.verdict .sub{color:var(--muted)}
+.gauge{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:6px}
+.gauge .bar2{width:220px;height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.gauge .bar2 i{display:block;height:100%;background:var(--rose);border-radius:4px;transform-origin:left;animation:grow 1.1s .3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.gauge .lab{font-size:13px;color:var(--muted)}
+.gauge .lab b{color:var(--ink);font-weight:600}
+.share{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:28px}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.share img{width:min(100%,280px);border-radius:10px;box-shadow:0 14px 30px rgba(47,44,61,.15)}
+.note{font-size:14px;color:var(--muted);text-align:center}
+
+.oracle{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,5vw,64px);align-items:center;max-width:820px;margin:0 auto;width:100%}
+.autobtn{width:clamp(150px,20vw,190px);aspect-ratio:1;border-radius:50%;border:1px solid var(--line);background:var(--paper-2);cursor:pointer;display:grid;place-items:center;padding:24px;transition:transform .3s,border-color .3s}
+@media (hover:hover){.autobtn:hover{border-color:var(--ink);transform:rotate(-3deg)}}
+.autobtn svg{width:100%;height:auto}
+.autobtn.shake{animation:shake .6s}
+@keyframes shake{25%{transform:translateX(-4px) rotate(-3deg)}50%{transform:translateX(4px) rotate(3deg)}75%{transform:translateX(-2px)}}
+.oracle-body{display:flex;flex-direction:column;gap:14px;min-width:0}
+.answer{min-height:82px}
+.answer .kan{font-family:var(--kn);font-size:22px;color:var(--sage)}
+.answer .say{font-family:var(--display);font-size:32px;line-height:1.1}
+.answer .means{color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:22px}
+
+
+/* motion-site patterns, kept quiet */
+.hero{position:relative;padding-top:12px}
+.hero::before{content:"";position:absolute;z-index:-1;inset:-40px 0 auto;height:560px;pointer-events:none;
+  background:radial-gradient(40% 50% at 30% 40%,rgba(127,154,130,.22),transparent 70%),radial-gradient(35% 45% at 72% 35%,rgba(201,143,139,.22),transparent 70%),radial-gradient(30% 40% at 50% 80%,rgba(79,91,134,.14),transparent 70%)}
+.pill{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink);background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 6px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.pill b{font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--paper);border-radius:999px;padding:3px 9px}
+h1 .w{display:inline-block;animation:blurin 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes blurin{from{opacity:0;filter:blur(12px);transform:translateY(18px)}}
+.stagger{animation:fadeup .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}}
+.reveal.pre{opacity:0;transform:translateY(26px)}
+.reveal{transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-18deg);transition:left .7s ease}
+@media (hover:hover){.btn:hover::after{left:130%}}
+.btn.ghost::after{background:linear-gradient(100deg,transparent,rgba(47,44,61,.08),transparent)}
+
+.marquee{overflow:hidden;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee .track{display:flex;gap:22px;width:max-content;padding-block:14px 22px;animation:slide 90s linear infinite}
+@media (hover:hover){.marquee:hover .track{animation-play-state:paused}}
+.marquee .mc{width:118px;aspect-ratio:10/17;flex:none;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+@media (hover:hover){.marquee .mc:hover{transform:translateY(-8px)}}
+.marquee .mc svg{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 14px rgba(47,44,61,.12))}
+@keyframes slide{to{transform:translateX(-50%)}}
+.deckhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:6px}
+.deckhead p{color:var(--muted);font-size:15px}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,32px)}
+.step{display:flex;flex-direction:column;gap:10px;padding:26px 24px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.3));min-width:0;
+  transition:border-color .3s,transform .3s}
+@media (hover:hover){.step:hover{border-color:#bdb6a6;transform:translateY(-3px)}}
+.step .n{font-family:var(--display);font-size:40px;line-height:1;color:var(--rose)}
+.step h3{font-family:var(--display);font-weight:400;font-size:26px;margin:0;line-height:1.1}
+.step p{color:var(--muted);font-size:15.5px}
+
+.cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;padding:64px 20px;border-radius:24px;position:relative;overflow:hidden;
+  background:radial-gradient(60% 80% at 50% 0%,rgba(127,154,130,.2),transparent 70%),var(--paper-2);border:1px solid var(--line)}
+.cta h2{max-width:18ch}
+.bigmark{font-family:var(--display);font-size:clamp(46px,12.5vw,150px);line-height:.85;text-align:center;letter-spacing:-.02em;color:transparent;-webkit-text-stroke:1px #c8c1b2;user-select:none;margin-top:-20px;white-space:nowrap;overflow:hidden}
+@media (max-width:720px){.steps{grid-template-columns:1fr}}
+
+.hero{gap:14px;padding-top:24px}
+.wrap{gap:56px}
+.scrim{position:fixed;inset:0;background:rgba(47,44,61,.28);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);z-index:40;animation:fadein .3s ease both}
+@keyframes fadein{from{opacity:0}}
+.sheet{position:fixed;z-index:41;left:50%;top:50%;transform:translate(-50%,-50%);width:min(calc(100% - 32px),760px);max-height:calc(100% - 32px);overflow:auto;
+  background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 70px rgba(47,44,61,.22);padding:clamp(22px,4vw,40px);animation:popin .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes popin{from{opacity:0;transform:translate(-50%,-46%) scale(.97)}}
+.close{position:absolute;top:12px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:22px;line-height:1;cursor:pointer;color:var(--ink)}
+@media (hover:hover){.close:hover{background:var(--paper-2)}}
+.bar{align-items:center}
+.bar .btn{padding:8px 18px;font-size:15px}
+
+.interp{text-align:left;max-width:640px;width:100%;display:flex;flex-direction:column;gap:12px;margin-top:22px;padding-top:26px;border-top:1px solid var(--line)}
+.interp .lead{font-family:var(--display);font-size:22px;line-height:1.35;color:var(--ink)}
+.interp h4{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:14px 0 0}
+.interp p{font-size:16px}
+.interp p i{font-family:var(--display);font-size:18px}
+.interp ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;color:#4a4658;font-size:15.5px}
+.interp b{font-weight:600}
+.yn{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.yn-l{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.yn-v{font-family:var(--display);font-size:34px;line-height:1.1;color:var(--rose)}
+.yn p{font-size:15px;color:var(--muted)}
+.hidden-card{display:grid;grid-template-columns:96px 1fr;gap:18px;align-items:center;margin-top:10px;padding:16px;border-radius:14px;background:var(--paper-2)}
+.hidden-card .hc-art svg{width:100%;height:auto;display:block}
+.hidden-card h4{margin:0;color:var(--ink);font-family:var(--display);font-size:22px;text-transform:none;letter-spacing:0;font-weight:400}
+.hidden-card .meta{margin:4px 0}
+.closing{margin-top:8px;padding:16px 18px;border-left:2px solid var(--sage);background:rgba(127,154,130,.08);border-radius:0 12px 12px 0;display:flex;flex-direction:column;gap:6px}
+.drew{font-size:14.5px;color:var(--muted);margin-top:10px;max-width:52ch}
+@media (max-width:520px){.hidden-card{grid-template-columns:72px 1fr}}
+
+/* interactions */
+.btn.hold{position:relative;display:inline-flex;align-items:center;gap:10px;touch-action:none;user-select:none;-webkit-user-select:none}
+.btn.hold .ring{width:18px;height:18px;border-radius:50%;flex:none;background:conic-gradient(var(--ochre) calc(var(--p,0)*360deg),rgba(255,255,255,.25) 0);
+  -webkit-mask:radial-gradient(circle,transparent 5px,#000 5.5px);mask:radial-gradient(circle,transparent 5px,#000 5.5px)}
+.btn.hold.holding{transform:scale(.97);background:#3d3950}
+.pick{position:relative;height:clamp(170px,26vw,230px);margin-top:4px}
+.fcard{position:absolute;left:50%;top:18%;width:clamp(58px,8vw,84px);aspect-ratio:10/17;margin-left:calc(clamp(58px,8vw,84px)/-2);border:0;padding:0;background:none;cursor:pointer;
+  transform:translate(var(--x),var(--y)) rotate(var(--r));transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s;transform-origin:50% 120%}
+.fcard svg{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 10px rgba(47,44,61,.16))}
+.pick.closed .fcard{transform:translate(0,0) rotate(0);transition:none}
+.fcard:not(.rest):focus-visible{transform:translate(var(--x),calc(var(--y) - 22px)) rotate(var(--r)) scale(1.06);z-index:50!important}
+@media (hover:hover){.fcard:not(.rest):hover{transform:translate(var(--x),calc(var(--y) - 22px)) rotate(var(--r)) scale(1.06);z-index:50!important}}
+.fcard.rest{cursor:default}
+.fcard.jit{animation:jit .18s ease-in-out infinite alternate}
+.fcard.jit:nth-child(2n){animation-duration:.22s}
+@keyframes jit{from{translate:-2px 0;rotate:-1.5deg}to{translate:2px -1px;rotate:1.5deg}}
+.fcard.taken{opacity:0;pointer-events:none}
+.fcard.fold{transform:translate(0,40px) rotate(0) scale(.8);opacity:0;pointer-events:none}
+.flyer{position:fixed;z-index:30;pointer-events:none;transform-origin:0 0}
+.flyer svg{width:100%;height:100%;display:block;filter:drop-shadow(0 14px 22px rgba(47,44,61,.2))}
+.card.placeholder .inner{opacity:0}
+.card.placeholder{border:1.5px dashed #cfc8b8;border-radius:10px;cursor:default;display:grid;place-items:center}
+.card .ph{display:none}
+.card.placeholder .ph{display:block;font-family:var(--display);font-size:42px;color:#cfc8b8;position:absolute;inset:0;display:grid;place-items:center}
+.card.flipped .front svg{animation:glow 1.6s ease-out}
+@keyframes glow{0%{filter:drop-shadow(0 0 0 rgba(201,163,94,.9)) drop-shadow(0 12px 20px rgba(47,44,61,.13))}40%{filter:drop-shadow(0 0 16px rgba(201,163,94,.6)) drop-shadow(0 12px 20px rgba(47,44,61,.13))}100%{filter:drop-shadow(0 0 0 rgba(201,163,94,0)) drop-shadow(0 12px 20px rgba(47,44,61,.13))}}
+.card::after{content:"";position:absolute;inset:0;border-radius:6%/3.5%;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(circle at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.5),transparent 42%);mix-blend-mode:soft-light}
+.card.tilting::after{opacity:1}
+.table.linking .spread .card{opacity:.35;transition:opacity .3s,transform .4s}
+.table.linking .spread .card.lit{opacity:1;transform:translateY(-8px)}
+.pats li{cursor:pointer;border-radius:8px;padding:4px 8px;margin-left:-8px;transition:background .2s}
+.pats li.on{background:rgba(201,163,94,.14)}
+@media (hover:hover){.pats li:hover{background:rgba(201,163,94,.14)}}
+.tip{font-size:11px;letter-spacing:0;text-transform:none;font-weight:400;color:#a19dab;margin-left:8px}
+.verdict .line .w{display:inline-block;animation:blurin .9s cubic-bezier(.2,.8,.2,1) both}
+.hidden-card .hc-art{width:96px;position:relative;cursor:pointer}
+.hidden-card.closed .hc-body{display:none}
+.hidden-card:not(.closed) .hc-cue{display:none}
+.hidden-card:not(.closed) .hc-body{animation:fadeup .6s ease both}
+.hc-cue{font-family:var(--display);font-size:19px;color:var(--muted)}
+.answer.in>*{animation:fadeup .6s cubic-bezier(.2,.8,.2,1) both}
+.answer.in>*:nth-child(2){animation-delay:.08s}.answer.in>*:nth-child(3){animation-delay:.16s}.answer.in>*:nth-child(4){animation-delay:.24s}
+.autobtn{overflow:hidden}
+
+.autocta{display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;padding:6px 64px 6px 6px;min-width:340px;cursor:pointer;font-family:var(--body);text-align:left;
+  background:#e7c779;color:var(--ink);box-shadow:0 6px 16px rgba(201,163,94,.35),inset 0 0 0 1px rgba(47,44,61,.12);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+@media (hover:hover){.autocta:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(201,163,94,.45),inset 0 0 0 1px rgba(47,44,61,.18)}}
+.autocta .aicon{width:40px;height:40px;border-radius:50%;background:var(--paper);display:grid;place-items:center;flex:none;padding:5px}
+.autocta .aicon svg{width:100%;height:auto;display:block}
+.autocta b{display:block;font-weight:600;font-size:15px;line-height:1.1}
+.autocta small{display:block;font-size:12px;color:#5d5340;line-height:1.2}
+.autocta.nudge .aicon svg{animation:drivein 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes drivein{0%{transform:translateX(0)}35%{transform:translateX(18px)}36%{transform:translateX(-22px)}100%{transform:translateX(0)}}
+.autocta.float{position:fixed;z-index:35;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);padding-right:56px;min-width:290px;animation:fadeup .4s ease both}
+.autocta.float b{font-size:15px}
+@media (max-width:520px){.bar .autocta small{display:none}.bar .autocta{padding-right:36px;min-width:220px}}
+
+/* a little festive */
+.thoran{height:40px;margin-top:-56px;margin-bottom:-24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='40'%3E%3Cpath d='M0 4 Q24 12 48 4' fill='none' stroke='%23b8892f' stroke-width='1.4'/%3E%3Cpath d='M12 8 Q6 22 12 32 Q18 22 12 8Z' fill='%235f9a52' stroke='%233a5f36' stroke-width='.8'/%3E%3Cpath d='M12 9 L12 30' stroke='%233a5f36' stroke-width='.6'/%3E%3Ccircle cx='36' cy='13' r='5.5' fill='%23eea43a' stroke='%23b8892f' stroke-width='.8'/%3E%3Ccircle cx='36' cy='13' r='2.2' fill='%23d8736a'/%3E%3Ccircle cx='36' cy='23' r='3.6' fill='%23f2c14e' stroke='%23b8892f' stroke-width='.6'/%3E%3C/svg%3E") repeat-x 0 0/48px 40px;opacity:.95}
+.hero::before{background:radial-gradient(40% 50% at 28% 40%,rgba(238,164,58,.26),transparent 70%),radial-gradient(35% 45% at 72% 35%,rgba(216,115,106,.24),transparent 70%),radial-gradient(30% 40% at 50% 85%,rgba(95,154,82,.18),transparent 70%)!important}
+.pill b{background:var(--marigold);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--marigold);border-color:var(--marigold);color:var(--ink)}
+@media (hover:hover){.chip:hover{border-color:var(--marigold)}}
+.btn.hold .ring{background:conic-gradient(var(--marigold) calc(var(--p,0)*360deg),rgba(255,255,255,.25) 0)}
+.gauge .bar2 i{background:linear-gradient(90deg,var(--marigold),var(--rose))}
+.reading .label,.label{color:#8a7a60}
+.closing{border-left-color:var(--marigold);background:rgba(238,164,58,.09)}
+.bigmark{-webkit-text-stroke:1px #e6c58a}
+.yn-v{color:var(--rose)}
+/* ask the auto, bigger */
+.bar{flex-wrap:wrap}
+.autocta{min-width:0!important;padding:6px 6px 6px 6px!important;gap:14px;background:#f3d27e!important;box-shadow:0 8px 22px rgba(238,164,58,.35),inset 0 0 0 1.5px rgba(47,44,61,.16)!important}
+.autocta .aicon{width:46px;height:46px}
+.autocta .txt{padding-right:6px}
+.autocta b{font-size:16px}
+.autocta .go{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border-radius:999px;padding:11px 18px;font-size:14.5px;font-weight:600;white-space:nowrap;transition:background .2s}
+.autocta .go .sm{display:none}
+@media (max-width:640px){.autocta .go .sm{display:inline}}
+.autocta .go i{font-style:normal;transition:transform .25s}
+@media (hover:hover){.autocta:hover .go{background:#433e5a}}
+@media (hover:hover){.autocta:hover .go i{transform:translateX(4px)}}
+.autocta.float{padding:5px 5px 5px 5px!important}
+.autocta.float .aicon{width:40px;height:40px}
+.autocta.float .go{padding:10px 16px}
+@media (max-width:640px){
+  .bar .autocta{width:100%;justify-content:space-between}
+  .bar .autocta small{display:none}
+  .autocta .txt{white-space:nowrap}
+  .autocta .go .lg{display:none}
+  .autocta .go{font-size:13.5px;padding:10px 14px}
+  .autocta.float .txt{display:none}
+  .thoran{margin-top:-46px}
+}
+
+/* single-message auto button */
+.autocta .arrow{width:42px;height:42px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:18px;flex:none;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .2s}
+@media (hover:hover){.autocta:hover .arrow{transform:translateX(3px) rotate(-8deg);background:#433e5a}}
+.autocta .txt{padding:0 8px 0 2px}
+.autocta.float .txt{display:block!important}
+@media (max-width:640px){.autocta b{font-size:14.5px;text-wrap:balance;display:block}.autocta .txt{white-space:normal!important;flex:1;min-width:0}.autocta.float{left:16px;right:16px}}
+
+/* more interactions */
+.progress{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:3px;z-index:60;background:linear-gradient(90deg,var(--marigold),var(--rose));transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+.hero::after{content:"";position:absolute;z-index:-1;inset:-40px 0 auto;height:620px;pointer-events:none;opacity:0;transition:opacity .5s;
+  background:radial-gradient(260px 260px at var(--mx,50%) var(--my,40%),rgba(238,164,58,.28),transparent 70%)}
+.hero.lit::after{opacity:1}
+#title .l{display:inline-block;transition:transform .35s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.chips{position:relative}
+.chips .ind{position:absolute;z-index:0;border-radius:999px;background:var(--marigold);transition:left .45s cubic-bezier(.3,.8,.2,1),top .45s cubic-bezier(.3,.8,.2,1),width .45s cubic-bezier(.3,.8,.2,1),height .45s;pointer-events:none}
+.chips .chip{position:relative;z-index:1}
+.chips.has-ind .chip[aria-pressed="true"]{background:transparent;border-color:transparent}
+.fcard{transform:translate(var(--x),calc(var(--y) - var(--lift,0px))) rotate(var(--r)) scale(var(--s,1))}
+@media (hover:hover){.fcard:not(.rest):hover{transform:translate(var(--x),calc(var(--y) - var(--lift,0px))) rotate(var(--r)) scale(var(--s,1))}}
+.pick.docking .fcard{transition:transform .18s ease-out,opacity .4s}
+.ripple{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.45);transform:scale(0);animation:ripple .6s ease-out forwards}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+.ringcur{position:fixed;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:1.5px solid rgba(47,44,61,.55);pointer-events:none;z-index:70;
+  transition:width .25s,height .25s,margin .25s,background .25s,border-color .25s,opacity .25s;opacity:0}
+.ringcur.on{opacity:1}
+.ringcur.big{width:54px;height:54px;margin:-27px 0 0 -27px;background:rgba(238,164,58,.16);border-color:var(--marigold)}
+.ringcur.down{width:22px;height:22px;margin:-11px 0 0 -11px}
+
+/* hidden city under the hero */
+.hero{isolation:isolate}
+.reveal-layer{position:absolute;z-index:-2;top:-30px;bottom:-10px;left:50%;width:min(1100px,100vw);transform:translateX(-50%);overflow:hidden;border-radius:28px;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 82%,transparent);mask-image:linear-gradient(180deg,transparent,#000 12%,#000 82%,transparent)}
+.reveal-layer img,.reveal-layer canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.reveal-layer.still img{opacity:.12}
+.reveal-layer.still canvas{display:none}
+.ink-hint{font-family:var(--display);font-style:italic;font-size:16px;color:#a79f8c;margin-top:2px;transition:opacity .6s}
+.ink-hint.gone{opacity:0}
+@media (hover:hover){.hero{cursor:crosshair}}
+.hero h1,.hero p,.hero .pill,.hero .kn{position:relative}
+/* Arcana catches the light */
+#title em .l{animation:glint .9s ease-in-out both;animation-delay:calc(1.2s + var(--i,0) * 70ms)}
+@keyframes glint{0%,100%{color:var(--rose);text-shadow:none}50%{color:#f2b56a;text-shadow:0 0 22px rgba(238,164,58,.55)}}
+/* neighbourhood picker */
+.voyage{display:grid;grid-template-columns:190px minmax(0,240px) minmax(0,1fr);gap:28px;align-items:center;width:100%;max-width:860px;text-align:left}
+.vlist{display:flex!important;flex-direction:column;gap:2px!important;justify-content:flex-start!important}
+.vlist .chip{border:0;background:transparent;text-align:left;padding:7px 14px 7px 30px;font-size:15px;position:relative;color:var(--muted)}
+.vlist .chip::before{content:"";position:absolute;left:12px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;border:1.5px solid #c5bdaa;transition:background .3s,border-color .3s}
+.vlist .chip[aria-pressed="true"]{color:var(--ink);font-weight:600}
+.vlist .chip[aria-pressed="true"]::before{background:var(--ink);border-color:var(--ink)}
+.vlist .ind{background:rgba(238,164,58,.22)!important}
+.vwin{position:relative;aspect-ratio:1/1.05;border-radius:34px;overflow:hidden;box-shadow:0 18px 40px rgba(47,44,61,.16),inset 0 0 0 1px rgba(47,44,61,.08);background:#eee8da}
+.vscene{position:absolute;inset:0}
+.vimg{position:absolute;inset:0;transition:opacity .55s ease,transform .7s cubic-bezier(.2,.8,.2,1),filter .55s}
+.vimg svg{width:100%;height:100%;display:block}
+.vimg.in{opacity:0;transform:scale(1.12);filter:blur(10px)}
+.vimg.out{opacity:0;transform:scale(.94);filter:blur(8px)}
+.vnext{position:absolute;right:12px;top:12px;border:0;border-radius:999px;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font:600 12px var(--body);color:var(--ink);padding:6px 12px;cursor:pointer}
+.vnext span{color:var(--muted);font-weight:500}
+.vinfo{display:flex;flex-direction:column;gap:14px;min-width:0}
+.vname{font-family:var(--display);font-size:clamp(36px,4.8vw,54px);line-height:.98;letter-spacing:-.01em}
+.vname .vw{display:inline-block;white-space:nowrap}
+.vname .vw span{display:inline-block;animation:blurin .6s cubic-bezier(.2,.8,.2,1) both}
+.vstats{display:grid;grid-template-columns:repeat(3,auto);gap:10px 22px;margin:0;justify-content:start}
+.vstats div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vstats div:last-child{grid-column:1/-1}
+.vstats dt{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.vstats dd{margin:0;font-size:15px;color:var(--ink);animation:fadeup .5s ease both}
+@media (max-width:760px){
+  .voyage{grid-template-columns:1fr;gap:18px}
+  .vlist{flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto;margin-inline:-16px;padding-inline:16px;max-width:100vw;scrollbar-width:none;-webkit-overflow-scrolling:touch;gap:4px!important;padding-bottom:4px}
+  .vlist::-webkit-scrollbar{display:none}
+  .vlist .chip{white-space:nowrap;padding:7px 12px 7px 26px;flex:none}
+  .vlist .chip::before{left:10px}
+  .vwin{width:min(100%,320px);margin:0 auto;aspect-ratio:1.2/1}
+  .vinfo{text-align:center;align-items:center}
+  .vstats{justify-content:center;text-align:left}
+}
+/* auto anna greeting and quick questions */
+.greet{display:flex;flex-direction:column;gap:2px}
+.greet p{font-family:var(--display);font-size:22px;line-height:1.25;color:var(--ink)}
+.greet p+p{font-size:17px;color:var(--muted)}
+.greet.play p{animation:blurin .8s cubic-bezier(.2,.8,.2,1) both}
+.greet.play p+p{animation-delay:.35s}
+.quick{display:flex;flex-wrap:wrap;gap:8px}
+.qchip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:500 13.5px var(--body);color:var(--ink);cursor:pointer;transition:border-color .2s,transform .2s}
+@media (hover:hover){.qchip:hover{border-color:var(--marigold);transform:translateY(-2px)}}
+.eye{transform-box:fill-box;transform-origin:center}
+@media (max-width:640px){.quick{justify-content:center}}
+
+.story{display:flex;flex-direction:column;gap:10px}
+.story .intro{font-family:var(--display);font-size:21px;color:var(--ink)}
+.story p[data-cards]{cursor:default;border-radius:8px;transition:background .2s;padding:2px 8px;margin-left:-8px}
+.story .tie{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;color:#8a5a1a;background:rgba(238,164,58,.18);border-radius:999px;padding:1px 9px;margin-left:4px}
+.synth{font-family:var(--display);font-size:22px;line-height:1.35;color:var(--ink);padding:16px 18px;border-radius:14px;background:rgba(238,164,58,.10);margin-top:6px}
+.synth b{font-weight:400;color:var(--rose)}
+.softnote{color:var(--muted);font-size:15px}
+.qline{font-family:var(--display);font-size:20px;color:var(--ink)}
+
+/* wordmark */
+:root{--mark:"Tiro Kannada","Instrument Serif",Georgia,serif}
+h1#title{font-family:var(--mark);font-weight:400;letter-spacing:-.02em;line-height:1}
+h1#title em{font-weight:400;font-style:italic;letter-spacing:-.01em;padding-right:.04em}
+.logo{font-family:var(--mark);font-weight:400;font-size:25px;letter-spacing:-.01em}
+.kn{font-family:"Tiro Kannada","Noto Sans Kannada",serif;font-size:17px}
+.logo em{font-style:italic;font-weight:400;color:var(--rose)}
+.bigmark{font-family:var(--mark);font-weight:400;letter-spacing:-.02em}
+
+.sharebtn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px}
+.sharepanel{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:6px;animation:fadeup .4s ease both}
+.shareopts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.sopt{font:600 14px var(--body);color:var(--ink);text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;cursor:pointer}
+@media (hover:hover){.sopt:hover{border-color:var(--marigold)}}
+
+.autocta.float.dodge{opacity:0;pointer-events:none;transform:translateY(24px)}
+.autocta.float{transition:opacity .3s,transform .3s}
+@media (max-width:720px){
+  .readings{grid-template-columns:1fr;gap:28px}
+  .oracle{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .fan .fc{margin:0 -18px}
+  .wrap{gap:64px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* touch and cross-browser */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,.fcard,.chip{-webkit-tap-highlight-color:transparent}
+.btn.hold,.fcard,.card{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.fcard{touch-action:manipulation}
+@media (max-width:640px){
+  body{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 96px)}
+  .sheet{top:auto;bottom:0;left:0;right:0;transform:none;width:100%;max-height:88%;border-radius:22px 22px 0 0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px);animation:sheetup .4s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes sheetup{from{transform:translateY(100%)}}
+  .qrow{flex-direction:column;align-items:stretch}
+  .qrow input[type=text]{flex:none}
+  .pill{font-size:12.5px;white-space:nowrap;gap:8px}
+  body.picking .autocta.float{opacity:0;pointer-events:none;transform:translateY(20px)}
+  .autocta.float{transition:opacity .3s,transform .3s}
+  .qrow .btn{justify-content:center}
+  .verdict .line{font-size:28px}
+  .pick{height:190px}
+}
+@media (max-width:360px){
+  .spread{gap:8px}
+  .pos{font-size:9.5px;letter-spacing:.08em}
+  h1{font-size:52px}
+}
+</style>
+<style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
+</head>
+<body>
+<div class="progress" id="prog" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="bar">
+    <div class="logo">Namma <em>Arcana</em></div>
+    <button class="autocta" id="openAuto" aria-haspopup="dialog" aria-controls="oracle"><span class="aicon" aria-hidden="true"></span><span class="txt"><b>Ask the auto for a quick yes or no</b></span><span class="arrow" aria-hidden="true">→</span></button>
+  </div>
+
+  <header class="hero">
+    <div class="pill stagger" style="animation-delay:.05s"><b>New</b> The auto anna now answers yes or no</div>
+    <h1 aria-label="Namma Arcana" id="title"><span class="w" style="animation-delay:.15s" aria-hidden="true">Namma</span> <em class="w" style="animation-delay:.32s" aria-hidden="true">Arcana</em></h1>
+    <div class="kn stagger" style="animation-delay:.5s">ನಮ್ಮ ಆರ್ಕಾನ</div>
+    <p class="lede stagger" style="animation-delay:.6s">22 cards of the classic tarot, reimagined in Bengaluru. Here, the Fool still walks off a cliff but the cliff is a pothole.</p>
+    <p class="label stagger" style="animation-delay:.75s;margin-top:10px">Pick your neighbourhood and draw your week</p>
+  </header>
+
+
+
+  <section id="read" style="display:flex;flex-direction:column;gap:36px">
+    <div class="controls">
+      <div class="chips" id="areas" role="group" aria-label="Your neighbourhood"></div>
+      <div class="qrow"><input type="text" id="q" maxlength="80" placeholder="Ask a question (optional)" aria-label="Your question"><button class="btn hold" id="shuffle" aria-describedby="tapHint"><span class="ring" aria-hidden="true"></span><span class="lbl">Hold to shuffle</span></button></div>
+    </div>
+    <div class="table">
+      <div class="spread" id="spread"></div>
+      <div class="pick" id="pick"></div>
+      <p class="hint" id="tapHint" aria-live="polite">Hold to shuffle. Think of your question.</p>
+      <div class="readings" id="readings"></div>
+      <div id="verdictBox" hidden></div>
+    </div>
+  </section>
+
+  <button class="autocta float" id="openAuto2" aria-haspopup="dialog" aria-controls="oracle" hidden><span class="aicon" aria-hidden="true"></span><span class="txt"><b>Ask the auto for a quick yes or no</b></span><span class="arrow" aria-hidden="true">→</span></button>
+  <div class="scrim" id="scrim" hidden></div>
+  <section id="oracle" class="oracle sheet" role="dialog" aria-modal="true" aria-labelledby="oTitle" hidden>
+    <button class="close" id="closeAuto" aria-label="Close">×</button>
+    <button class="autobtn" id="autoBtn" aria-label="Hail the auto"></button>
+    <div class="oracle-body">
+      <div class="label">Auto Oracle</div>
+      <h2 id="oTitle">Ask the auto anna</h2>
+      <input type="text" id="aq" maxlength="80" placeholder="Should I text him back?" aria-label="Your yes or no question">
+      <div class="answer" id="answer" aria-live="polite"><span class="means">Type a question. Tap the auto.</span></div>
+    </div>
+  </section>
+
+
+  <footer>Made in Bengaluru, between two signals. For fun only.<br>Personal project by Nivivacious. All rights reserved.</footer>
+  <div class="bigmark" aria-hidden="true">Namma Arcana</div>
+</div>
+
+<script>
+(function(){
+// ===== Namma Arcana illustration kit =====
+// Card is 200 x 340. Painted window: x 14-186, y 40-236.
+const K="#3a364d";
+const S=`stroke="${K}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"`;
+const S1=`stroke="${K}" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"`;
+const YEL="#ffc83d", GRN="#2f9e5b", RED="#ef5b3b", PUR="#7a52cc", BLU="#3d6fd1", PINK="#ff8fa3", CREAM="#fffaf0", SKY="#a9dcef", WHITE="#ffffff";
+const SK1="#e8b48a", SK2="#c98a5e", SK3="#9a6340";
+
+function G(x,y,s,inner,rot,flip){return `<g transform="translate(${x} ${y}) scale(${flip?-s:s} ${s})${rot?` rotate(${rot})`:""}">${inner}</g>`;}
+function limb(d,c,w){return `<path d="${d}" stroke="${K}" stroke-width="${w+3}" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" stroke="${c}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;}
+function T(x,y,t,fs,c=K,fam="'Baloo Tamma 2',sans-serif",w=800){return `<text x="${x}" y="${y}" text-anchor="middle" font-family="${fam}" font-weight="${w}" font-size="${fs}" fill="${c}">${t}</text>`;}
+
+// ---------- character ----------
+function ch(x,y,s,o={},flip){
+  const sk=o.skin||SK2, hc=o.hairC||"#2b1d1a", top=o.top||RED, bot=o.bot||"#3b4a8c", out=o.outfit||"shirt";
+  let back="",legs="",body="",arms="",head="",extra="";
+  if(o.wings) back+=`<path d="M-9 -40 Q-46 -66 -40 -14 Q-30 -26 -10 -26Z" fill="${WHITE}" ${S}/><path d="M9 -40 Q46 -66 40 -14 Q30 -26 10 -26Z" fill="${WHITE}" ${S}/><path d="M-30 -42 q6 8 4 18 M30 -42 q-6 8 -4 18" stroke="${K}" stroke-width="1.2" fill="none"/>`;
+  if(o.halo) back+=`<circle cx="0" cy="-60" r="19" fill="${YEL}" opacity=".9" ${S1}/>`;
+  if(o.hair==="long"||o.hair==="braid") back+=`<path d="M-14.5 -62 Q-17 -40 -12 -33 L12 -33 Q17 -40 14.5 -62Z" fill="${hc}" ${S}/>`;
+  if(o.hair==="bun") back+=`<circle cx="0" cy="-76" r="6.5" fill="${hc}" ${S}/>`+(o.jasmine?[[-6,-79],[-3,-83],[2,-84],[6,-80],[7,-75]].map(([a,b])=>`<circle cx="${a}" cy="${b}" r="2" fill="${WHITE}" ${S1}/>`).join(""):"");
+  const L=o.legs||"stand";
+  if(out==="saree"||out==="robe"){
+    const bc=out==="saree"?(o.border||YEL):(o.border||"none");
+    if(L==="sit"||L==="kneel") legs=`<path d="M-14 -24 L15 -24 Q22 -12 21 0 L-15 0Z" fill="${o.skirt||top}" ${S}/>`+(bc!=="none"?`<path d="M-14 -3.5 L20 -3.5" stroke="${bc}" stroke-width="3"/>`:"");
+    else legs=`<path d="M-13 -24 Q-16 -10 -17 0 L17 0 Q16 -10 13 -24Z" fill="${o.skirt||top}" ${S}/>`+(bc!=="none"?`<path d="M-16.5 -3.5 L16.5 -3.5" stroke="${bc}" stroke-width="3"/>`:"")+`<ellipse cx="-7" cy="0" rx="5" ry="2.5" fill="${K}"/><ellipse cx="7" cy="0" rx="5" ry="2.5" fill="${K}"/>`;
+  } else {
+    const P={stand:["M-5 -24 L-5 -3","M5 -24 L5 -3",[-6,-1],[6,-1]],walk:["M-4 -24 L-11 -3","M4 -24 L9 -3",[-13,-1],[11,-1]],
+      sit:["M-5 -24 L-9 -15 L-8 -3","M5 -24 L9 -15 L8 -3",[-9,-1],[9,-1]],kneel:["M-5 -24 L-8 -10 L4 -5","M5 -24 L11 -13 L12 -3",[6,-4],[13,-1]],
+      four:["M-4 -24 L-4 -2","M4 -24 L13 -14 L-3 -13",[-4,0],[-5,-13]]}[L];
+    if(P){legs=limb(P[0],bot,7)+limb(P[1],bot,7)+`<ellipse cx="${P[2][0]}" cy="${P[2][1]}" rx="5.5" ry="3" fill="${o.shoe||K}"/><ellipse cx="${P[3][0]}" cy="${P[3][1]}" rx="5.5" ry="3" fill="${o.shoe||K}"/>`;}
+  }
+  if(out==="kurta") body=`<path d="M-12 -44 Q0 -48 12 -44 L15 -12 Q0 -9 -15 -12Z" fill="${top}" ${S}/><path d="M0 -44 L0 -34" stroke="${K}" stroke-width="1.2"/>`;
+  else if(out==="robe") body=`<path d="M-12 -44 Q0 -48 12 -44 L14 -22 L-14 -22Z" fill="${top}" ${S}/>`;
+  else if(out==="saree") body=`<path d="M-12 -44 Q0 -48 12 -44 L13 -22 Q0 -20 -13 -22Z" fill="${o.blouse||top}" ${S}/><path d="M-11 -44 L-3 -44 L14 -24 L13 -16 Z" fill="${top}" ${S}/><path d="M-6 -44 L13 -21" stroke="${o.border||YEL}" stroke-width="2.4"/>`;
+  else body=`<path d="M-12 -44 Q0 -48 12 -44 L13 -22 Q0 -20 -13 -22Z" fill="${top}" ${S}/>`+
+    (out==="khaki"?`<rect x="3" y="-40" width="6" height="5" fill="none" ${S1}/><path d="M0 -45 L0 -23" stroke="${K}" stroke-width="1"/>`:"")+
+    (out==="hoodie"?`<path d="M-8 -45 Q0 -40 8 -45" fill="none" ${S1}/><path d="M-3 -42 L-3 -34 M3 -42 L3 -34" stroke="${K}" stroke-width="1"/>`:"")+
+    (out==="blazer"?`<path d="M-3 -46 L0 -36 L3 -46 M0 -36 L0 -22" stroke="${WHITE}" stroke-width="2.2" fill="none"/>`:"");
+  if(o.chest) body+=o.chest;
+  const arm=(sx,spec,hold)=>{const [a1,a2,l1=11,l2=11]=spec;const r=Math.PI/180;
+    const sx0=sx*11, sy0=-42, ex=sx0+sx*l1*Math.sin(a1*r), ey=sy0+l1*Math.cos(a1*r), hx=ex+sx*l2*Math.sin(a2*r), hy=ey+l2*Math.cos(a2*r);
+    return limb(`M${sx0} ${sy0} L${ex.toFixed(1)} ${ey.toFixed(1)} L${hx.toFixed(1)} ${hy.toFixed(1)}`,o.sleeve||(out==="saree"?(o.blouse||top):top),6)+
+      (hold?`<g transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)})">${hold}</g>`:"")+`<circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="3.4" fill="${sk}" ${S1}/>`;};
+  arms=arm(-1,o.armL||[12,8],o.holdL)+arm(1,o.armR||[12,8],o.holdR);
+  // head
+  head+=`<circle cx="-13" cy="-58" r="3.2" fill="${sk}" ${S1}/><circle cx="13" cy="-58" r="3.2" fill="${sk}" ${S1}/><circle cx="0" cy="-59" r="13" fill="${sk}" ${S}/>`;
+  const h=o.hair||"short";
+  if(h==="short") head+=`<path d="M-13.6 -58 Q-15 -76 0 -74.5 Q15 -76 13.6 -58 Q12 -66 6 -67.5 Q0 -63.5 -8 -67.5 Q-12 -65 -13.6 -58Z" fill="${hc}" ${S1}/>`;
+  if(h==="long"||h==="braid"||h==="bun") head+=`<path d="M-13.8 -58 Q-13 -75.5 0 -74.5 Q13 -75.5 13.8 -58 Q11 -68 0 -67 Q-11 -68 -13.8 -58Z" fill="${hc}" ${S1}/><path d="M0 -74 L0 -67" stroke="${K}" stroke-width=".8"/>`;
+  if(h==="curly") head+=[[-11,-66],[-6,-71],[0,-73],[6,-71],[11,-66],[-13,-60],[13,-60]].map(([a,b])=>`<circle cx="${a}" cy="${b}" r="5" fill="${hc}" ${S1}/>`).join("");
+  if(h==="bald") head+=`<path d="M-13 -57 q-2 -5 1 -9 M13 -57 q2 -5 -1 -9" stroke="${o.hairC||"#c9c9d6"}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+  if(h==="cap") head+=`<path d="M-14 -61 Q-13 -77 0 -77 Q13 -77 14 -61Z" fill="${o.capC||BLU}" ${S1}/><path d="M9 -62 L23 -60 Q16 -57 9 -59Z" fill="${o.capC||BLU}" ${S1}/>`;
+  if(h==="helmet") head+=`<path d="M-16 -56 Q-16 -79 0 -79 Q16 -79 16 -56 L12 -56 Q12 -62 0 -62 Q-12 -62 -12 -56Z" fill="${o.capC||RED}" ${S1}/>`;
+  const f=o.face||"smile";
+  head+= f==="closed"||f==="calm"?`<path d="M-6.5 -58 q2 2 4 0 M2.5 -58 q2 2 4 0" stroke="${K}" stroke-width="1.5" fill="none"/>`
+       : f==="wink"?`<path d="M-6.5 -58 q2 2 4 0" stroke="${K}" stroke-width="1.5" fill="none"/><ellipse cx="4.5" cy="-58" rx="1.7" ry="2.3" fill="${K}"/>`
+       : f==="up"?`<ellipse cx="-4.5" cy="-60" rx="1.7" ry="2.3" fill="${K}"/><ellipse cx="4.5" cy="-60" rx="1.7" ry="2.3" fill="${K}"/>`
+       : `<ellipse cx="-4.5" cy="-58" rx="1.7" ry="2.3" fill="${K}"/><ellipse cx="4.5" cy="-58" rx="1.7" ry="2.3" fill="${K}"/>`;
+  head+=`<circle cx="-8" cy="-53.5" r="2.4" fill="${PINK}" opacity=".6"/><circle cx="8" cy="-53.5" r="2.4" fill="${PINK}" opacity=".6"/>`;
+  if(o.glasses) head+=`<circle cx="-4.5" cy="-58" r="4" fill="none" ${S1}/><circle cx="4.5" cy="-58" r="4" fill="none" ${S1}/><path d="M-.5 -58 L.5 -58" ${S1}/>`;
+  if(o.mustache) head+=`<path d="M-5.5 -53.5 Q-2.5 -56.5 0 -54 Q2.5 -56.5 5.5 -53.5 Q2.5 -52 0 -53 Q-2.5 -52 -5.5 -53.5Z" fill="${o.mustacheC||hc}"/>`;
+  if(o.beard) head+=`<path d="M-12 -55 Q-11 -42 0 -41 Q11 -42 12 -55 Q6 -48 0 -49 Q-6 -48 -12 -55Z" fill="${o.beardC||"#d8d8e6"}" ${S1}/>`;
+  const mouth={smile:`<path d="M-4 -51.5 Q0 -48 4 -51.5" stroke="${K}" stroke-width="1.6" fill="none"/>`,grin:`<path d="M-5 -52.5 Q0 -45.5 5 -52.5Z" fill="#8a2b3b" ${S1}/>`,
+    o:`<ellipse cx="0" cy="-50.5" rx="2.4" ry="3" fill="#8a2b3b" ${S1}/>`,calm:`<path d="M-2.5 -51 Q0 -49.6 2.5 -51" stroke="${K}" stroke-width="1.5" fill="none"/>`,closed:`<path d="M-3 -51 Q0 -48.5 3 -51" stroke="${K}" stroke-width="1.5" fill="none"/>`,
+    worried:`<path d="M-4 -50 Q-2 -52.5 0 -50 Q2 -47.5 4 -50" stroke="${K}" stroke-width="1.5" fill="none"/>`,up:`<ellipse cx="0" cy="-51" rx="2.6" ry="3.2" fill="#8a2b3b" ${S1}/>`,wink:`<path d="M-4 -51.5 Q0 -48 4 -51.5" stroke="${K}" stroke-width="1.6" fill="none"/>`};
+  if(!o.beard) head+=mouth[f]||mouth.smile;
+  if(o.bindi) head+=`<circle cx="0" cy="-64" r="1.5" fill="#e23b3b"/>`;
+  if(o.crown) head+=o.crown;
+  if(o.horns) head+=`<path d="M-9 -70 Q-14 -82 -8 -84 Q-8 -76 -5 -72Z M9 -70 Q14 -82 8 -84 Q8 -76 5 -72Z" fill="${RED}" ${S1}/>`;
+  if(o.garland) extra+=`<path d="M-10 -45 Q0 -22 10 -45" fill="none" stroke="${o.garland}" stroke-width="4" stroke-dasharray="3 1.6"/>`;
+  return G(x,y,s,back+legs+body+arms+head+extra,o.rot,flip);
+}
+
+// ---------- props ----------
+function autoSide(x,y,s,o={},flip){return G(x,y,s,`
+ <path d="M-36 -27 L-36 -38 Q-34 -58 -10 -59 L18 -59 Q34 -57 38 -30Z" fill="${YEL}" ${S}/>
+ <path d="M-40 -28 L40 -28 Q45 -18 42 -9 L-40 -9Z" fill="${GRN}" ${S}/>
+ <path d="M-30 -28 L-30 -42 Q-29 -52 -12 -52 L0 -52 L0 -28Z" fill="${K}"/>
+ <path d="M6 -52 L18 -52 Q30 -50 33 -30 L6 -30Z" fill="${SKY}" ${S1}/>
+ ${o.driver?`<circle cx="16" cy="-40" r="6" fill="${SK2}" ${S1}/><path d="M10 -42 Q16 -50 22 -42Z" fill="${K}"/>`:""}
+ <path d="M-40 -18 L43 -18" stroke="${K}" stroke-width="1.4"/>
+ <circle cx="-26" cy="-8" r="8.5" fill="${K}"/><circle cx="-26" cy="-8" r="3" fill="#cfd3dc"/>
+ <circle cx="31" cy="-8" r="8.5" fill="${K}"/><circle cx="31" cy="-8" r="3" fill="#cfd3dc"/>
+ <circle cx="42" cy="-22" r="3.2" fill="#fff3b0" ${S1}/>`,0,flip);}
+function autoFront(x,y,s,o={}){return G(x,y,s,`
+ <path d="M-33 -42 Q-33 -72 0 -72 Q33 -72 33 -42Z" fill="${YEL}" ${S}/>
+ ${o.stars?[[-18,-60],[-6,-66],[8,-64],[20,-57],[0,-56]].map(([a,b])=>`<path d="M${a} ${b-3.5} L${a+1} ${b-1} L${a+3.5} ${b} L${a+1} ${b+1} L${a} ${b+3.5} L${a-1} ${b+1} L${a-3.5} ${b} L${a-1} ${b-1}Z" fill="${WHITE}"/>`).join(""):""}
+ <path d="M-28 -42 L28 -42 L24 -12 L-24 -12Z" fill="${GRN}" ${S}/>
+ <path d="M-25 -42 Q-25 -62 0 -62 Q25 -62 25 -42Z" fill="${SKY}" ${S}/>
+ ${o.driver||""}
+ <path d="M-25 -42 Q-25 -62 0 -62 Q25 -62 25 -42Z" fill="${SKY}" opacity=".35"/>
+ <rect x="-10" y="-34" width="20" height="9" rx="2" fill="${YEL}" ${S1}/>${T(0,-27.5,"KA 01",6)}
+ <circle cx="0" cy="-17" r="4" fill="#fff3b0" ${S1}/>
+ <rect x="-6" y="-12" width="12" height="13" rx="4" fill="${K}"/>
+ <path d="M-28 -46 L-36 -50 M28 -46 L36 -50" ${S}/><circle cx="-37" cy="-51" r="3" fill="${CREAM}" ${S1}/><circle cx="37" cy="-51" r="3" fill="${CREAM}" ${S1}/>`);}
+function cow(x,y,s,o={},flip){const c=o.c||"#f4f1ea",hn=o.horn||BLU;
+  if(o.sit) return G(x,y,s,`<path d="M-26 -2 Q-30 -22 -6 -24 Q4 -32 14 -24 Q30 -22 26 -2Z" fill="${c}" ${S}/><path d="M-4 -26 Q2 -34 10 -26" fill="${c}" ${S1}/>
+   <path d="M-34 -30 Q-40 -42 -34 -44 M-24 -30 Q-18 -42 -24 -44" stroke="${hn}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+   <ellipse cx="-29" cy="-24" rx="9" ry="10" fill="${c}" ${S}/><ellipse cx="-29" cy="-17" rx="6.5" ry="4.5" fill="${PINK}" ${S1}/><circle cx="-32" cy="-26" r="1.4" fill="${K}"/><circle cx="-26" cy="-26" r="1.4" fill="${K}"/>
+   <path d="M-38 -28 L-44 -26 M-20 -28 L-14 -26" ${S}/><circle cx="-29" cy="-10" r="3" fill="${YEL}" ${S1}/>`,0,flip);
+  return G(x,y,s,`<path d="M-20 -14 L-20 0 M-12 -14 L-12 0 M14 -14 L14 0 M22 -14 L22 0" stroke="${K}" stroke-width="5" stroke-linecap="round"/><path d="M-20 -14 L-20 -1 M-12 -14 L-12 -1 M14 -14 L14 -1 M22 -14 L22 -1" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/>
+   <path d="M30 -30 Q38 -26 36 -14" stroke="${K}" stroke-width="2" fill="none"/>
+   <path d="M-24 -28 Q-24 -40 -10 -40 Q-4 -50 6 -40 L24 -38 Q32 -36 30 -24 L28 -12 L-22 -12 Q-26 -18 -24 -28Z" fill="${c}" ${S}/>
+   <path d="M-36 -40 Q-42 -52 -36 -54 M-26 -40 Q-20 -52 -26 -54" stroke="${hn}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+   <ellipse cx="-31" cy="-33" rx="9" ry="10" fill="${c}" ${S}/><ellipse cx="-31" cy="-26" rx="6.5" ry="4.5" fill="${PINK}" ${S1}/><circle cx="-34" cy="-35" r="1.4" fill="${K}"/><circle cx="-28" cy="-35" r="1.4" fill="${K}"/>
+   <path d="M-40 -37 L-46 -35 M-22 -37 L-16 -35" ${S}/><circle cx="-31" cy="-18" r="3" fill="${YEL}" ${S1}/>`,0,flip);}
+function dog(x,y,s,o={},flip){const c=o.c||"#d9a05e";
+  if(o.pose==="howl") return G(x,y,s,`<path d="M-14 0 Q-18 -18 -6 -24 L4 -24 Q10 -20 10 -10 L10 0Z" fill="${c}" ${S}/><path d="M-14 -4 Q-24 -6 -22 -16" stroke="${K}" stroke-width="2" fill="none"/>
+    <path d="M-2 -24 Q-4 -36 4 -42 L14 -50 Q18 -46 14 -40 Q12 -32 6 -26Z" fill="${c}" ${S}/><path d="M2 -40 L-2 -48 L5 -44Z" fill="${c}" ${S1}/><circle cx="8" cy="-40" r="1.3" fill="${K}"/><path d="M14 -50 L18 -52 L15 -46" fill="#8a2b3b" ${S1}/>
+    <path d="M18 -58 q4 -3 0 -6 M23 -56 q4 -4 0 -8" stroke="${K}" stroke-width="1.2" fill="none"/>`,0,flip);
+  if(o.pose==="sit") return G(x,y,s,`<path d="M-12 0 Q-16 -16 -6 -24 L6 -24 Q14 -16 10 0Z" fill="${c}" ${S}/><path d="M10 -4 Q22 -6 20 -16" stroke="${K}" stroke-width="2" fill="none"/>
+    <circle cx="0" cy="-32" r="11" fill="${c}" ${S}/><path d="M-10 -36 L-14 -46 L-4 -40Z M10 -36 L14 -46 L4 -40Z" fill="${o.ear||"#a8703a"}" ${S1}/><ellipse cx="0" cy="-27" rx="6" ry="4.5" fill="${CREAM}" ${S1}/><circle cx="0" cy="-29" r="1.8" fill="${K}"/>
+    <circle cx="-4" cy="-34" r="1.5" fill="${K}"/><circle cx="4" cy="-34" r="1.5" fill="${K}"/><path d="M-2 -25 Q0 -22 2 -25" stroke="${K}" stroke-width="1" fill="none"/><path d="M-5 0 L-5 -10 M5 0 L5 -10" stroke="${K}" stroke-width="1.2"/>`,0,flip);
+  if(o.pose==="jump") return G(x,y,s,`<path d="M-18 -12 Q-20 -24 -6 -26 L8 -30 Q14 -30 14 -22 L10 -12Z" fill="${c}" ${S}/><path d="M-18 -14 Q-28 -20 -24 -28" stroke="${K}" stroke-width="2" fill="none"/>
+    <path d="M-14 -14 L-18 0 M-6 -14 L-4 0" stroke="${K}" stroke-width="5" stroke-linecap="round"/><path d="M-14 -14 L-18 -1 M-6 -14 L-4 -1" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M8 -26 L18 -32 M12 -22 L22 -26" stroke="${K}" stroke-width="5" stroke-linecap="round"/><path d="M8 -26 L18 -32 M12 -22 L22 -26" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="14" cy="-38" r="9" fill="${c}" ${S}/><path d="M8 -44 L6 -52 L13 -46Z" fill="${o.ear||"#a8703a"}" ${S1}/><ellipse cx="21" cy="-36" rx="5" ry="3.6" fill="${CREAM}" ${S1}/><circle cx="24" cy="-37" r="1.5" fill="${K}"/><circle cx="14" cy="-40" r="1.3" fill="${K}"/>`,0,flip);
+  return G(x,y,s,`<path d="M-16 -14 L-16 0 M-8 -14 L-8 0 M8 -14 L8 0 M14 -14 L14 0" stroke="${K}" stroke-width="5" stroke-linecap="round"/><path d="M-16 -14 L-16 -1 M-8 -14 L-8 -1 M8 -14 L8 -1 M14 -14 L14 -1" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M-20 -16 Q-20 -28 -6 -28 L10 -28 Q18 -26 18 -16 L16 -12 L-18 -12Z" fill="${c}" ${S}/><path d="M-20 -22 Q-30 -26 -26 -34" stroke="${K}" stroke-width="2" fill="none"/>
+    <circle cx="18" cy="-34" r="9" fill="${c}" ${S}/><path d="M12 -40 L10 -48 L17 -42Z" fill="${o.ear||"#a8703a"}" ${S1}/><ellipse cx="25" cy="-32" rx="5" ry="3.6" fill="${CREAM}" ${S1}/><circle cx="28" cy="-33" r="1.5" fill="${K}"/><circle cx="18" cy="-36" r="1.3" fill="${K}"/>`,0,flip);}
+function bigDog(x,y,s){return G(x,y,s,`<path d="M-30 0 Q-36 -30 -14 -38 Q0 -42 14 -36 Q30 -28 28 0Z" fill="#d9a05e" ${S}/>
+  <path d="M-22 -40 Q-30 -60 -12 -64 Q0 -70 12 -64 Q30 -60 22 -40 Q10 -30 0 -32 Q-10 -30 -22 -40Z" fill="#c98a4a" ${S}/>
+  <circle cx="0" cy="-52" r="15" fill="#d9a05e" ${S}/><path d="M-14 -58 L-20 -72 L-6 -64Z M14 -58 L20 -72 L6 -64Z" fill="#a8703a" ${S1}/>
+  <ellipse cx="0" cy="-44" rx="9" ry="6.5" fill="${CREAM}" ${S1}/><ellipse cx="0" cy="-48" rx="3" ry="2.2" fill="${K}"/>
+  <path d="M-7 -55 q2 2 4 0 M3 -55 q2 2 4 0" stroke="${K}" stroke-width="1.6" fill="none"/><path d="M-3 -41 Q0 -38 3 -41" stroke="${K}" stroke-width="1.2" fill="none"/>
+  <path d="M-12 0 L-12 -12 M12 0 L12 -12" stroke="${K}" stroke-width="1.4"/><path d="M28 -6 Q44 -10 40 -28" stroke="${K}" stroke-width="2.4" fill="none"/>`);}
+function tumbler(x,y,s,steam){return G(x,y,s,`${steam?`<path d="M-3 -24 q-4 -6 0 -10 q4 -4 0 -10 M4 -22 q-4 -6 0 -10" stroke="${WHITE}" stroke-width="1.6" fill="none"/>`:""}<path d="M-6 -16 L6 -16 L5 0 L-5 0Z" fill="#d3d8e2" ${S1}/><path d="M-4 -14 L-3.5 -2" stroke="${WHITE}" stroke-width="1.4"/><path d="M-12 0 L12 0 L10 6 L-10 6Z" fill="#b9c0cc" ${S1}/>`);}
+function laptop(x,y,s,glow=true){return G(x,y,s,`${glow?`<ellipse cx="0" cy="-10" rx="22" ry="15" fill="#bfe8ff" opacity=".45"/>`:""}<path d="M-12 -17 L12 -17 L10 0 L-10 0Z" fill="#3a3f5a" ${S1}/><rect x="-10.5" y="-15.5" width="21" height="13" rx="1" fill="#bfe8ff"/><rect x="-15" y="0" width="30" height="3.5" rx="1.4" fill="#aab0c4" ${S1}/>`);}
+function phone(x,y,s){return G(x,y,s,`<rect x="-6" y="-11" width="12" height="22" rx="2.5" fill="${K}"/><rect x="-4.5" y="-8.5" width="9" height="16" rx="1" fill="#bfe8ff"/>`);}
+function bubble(x,y,w,h,txt,fs=9,tail="left"){const tx=tail==="left"?x+12:x+w-20;return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" fill="${WHITE}" ${S}/><path d="M${tx} ${y+h-1} l4 8 l5 -8Z" fill="${WHITE}" ${S}/><rect x="${tx-1}" y="${y+h-3}" width="11" height="4" fill="${WHITE}"/>${T(x+w/2,y+h/2+fs*.36,txt,fs)}`;}
+function sunFace(x,y,r,rays=true){let s="";if(rays)for(let i=0;i<16;i++){const a=i*Math.PI/8,l=i%2?r+10:r+16;s+=`<path d="M${x+Math.cos(a-.12)*(r+2)} ${y+Math.sin(a-.12)*(r+2)} L${x+Math.cos(a)*l} ${y+Math.sin(a)*l} L${x+Math.cos(a+.12)*(r+2)} ${y+Math.sin(a+.12)*(r+2)}Z" fill="${YEL}" ${S1}/>`;}
+  return s+`<circle cx="${x}" cy="${y}" r="${r}" fill="${YEL}" ${S}/><path d="M${x-r*.42} ${y-r*.12} q${r*.14} ${-r*.16} ${r*.28} 0 M${x+r*.14} ${y-r*.12} q${r*.14} ${-r*.16} ${r*.28} 0" stroke="${K}" stroke-width="1.5" fill="none"/><path d="M${x-r*.32} ${y+r*.28} Q${x} ${y+r*.6} ${x+r*.32} ${y+r*.28}" stroke="${K}" stroke-width="1.6" fill="none"/><circle cx="${x-r*.55}" cy="${y+r*.2}" r="${r*.13}" fill="${PINK}" opacity=".7"/><circle cx="${x+r*.55}" cy="${y+r*.2}" r="${r*.13}" fill="${PINK}" opacity=".7"/>`;}
+function moonFace(x,y,r){return `<circle cx="${x}" cy="${y}" r="${r+7}" fill="#fff6c9" opacity=".35"/><path d="M${x} ${y-r} A${r} ${r} 0 1 0 ${x} ${y+r} A${r*.7} ${r*.9} 0 1 1 ${x} ${y-r}Z" fill="#fff1a8" ${S}/><path d="M${x-r*.62} ${y-r*.2} q2 2 4 0" stroke="${K}" stroke-width="1.4" fill="none"/><path d="M${x-r*.68} ${y+r*.3} q3 2 5 -1" stroke="${K}" stroke-width="1.4" fill="none"/>`;}
+function star(x,y,r,c=YEL,n=8){let p="";for(let i=0;i<n*2;i++){const a=i*Math.PI/n-Math.PI/2,rr=i%2?r*.42:r;p+=`${i?"L":"M"}${(x+Math.cos(a)*rr).toFixed(1)} ${(y+Math.sin(a)*rr).toFixed(1)} `;}return `<path d="${p}Z" fill="${c}" ${S1}/>`;}
+function cloud(x,y,s,c=WHITE){return G(x,y,s,`<path d="M-26 6 Q-32 -6 -18 -9 Q-14 -22 0 -18 Q10 -27 20 -14 Q33 -12 28 6Z" fill="${c}" ${S}/>`);}
+function rain(n,seed,x0=14,x1=186,y0=40,y1=230){let r=seed,o="";const R=()=>{r=(r*9301+49297)%233280;return r/233280;};
+  for(let i=0;i<n;i++){const x=x0+R()*(x1-x0),y=y0+R()*(y1-y0);o+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)} l-3 9" stroke="#e6f3ff" stroke-width="1.8" stroke-linecap="round"/>`;}return o;}
+function tree(x,y,s,c="#48a35a",fl){let f="";if(fl)for(let i=0;i<10;i++)f+=`<circle cx="${-16+(i*13)%34}" cy="${-50+((i*7)%26)}" r="2.8" fill="${fl}" ${S1}/>`;
+  return G(x,y,s,`<path d="M-4 0 L-3 -28 L3 -28 L4 0Z" fill="#8a5a3a" ${S}/><circle cx="-13" cy="-36" r="13" fill="${c}" ${S}/><circle cx="13" cy="-36" r="13" fill="${c}" ${S}/><circle cx="0" cy="-50" r="16" fill="${c}" ${S}/>${f}`);}
+function tower(x,y,w,h,c="#b9a8e6",win="#ffffff",lit){let s="";for(let r=7;r<h-6;r+=11)for(let q=5;q<w-4;q+=9)s+=`<rect x="${x+q}" y="${y-h+r}" width="5" height="6" rx="1" fill="${lit&&((r*7+q)%4)?YEL:win}" opacity="${lit?1:.85}"/>`;
+  return `<rect x="${x}" y="${y-h}" width="${w}" height="${h}" fill="${c}" ${S}/>${s}`;}
+function hills(y,c,c2){return `<path d="M0 ${y} Q40 ${y-50} 82 ${y-12} Q120 ${y-66} 162 ${y-20} Q186 ${y-36} 210 ${y-22} L210 300 L-10 300Z" fill="${c}" ${S}/>`+(c2?`<path d="M-10 ${y+16} Q60 ${y-16} 110 ${y+8} Q160 ${y-12} 210 ${y+6} L210 300 L-10 300Z" fill="${c2}" ${S}/>`:"");}
+function ground(y,c){return `<path d="M0 ${y} L200 ${y} L200 300 L0 300Z" fill="${c}" ${S}/>`;}
+function pillar(x,y,h,c,label,lc){return `<rect x="${x-9}" y="${y-h}" width="18" height="${h}" fill="${c}" ${S}/><rect x="${x-12}" y="${y-h-6}" width="24" height="7" rx="2" fill="${c}" ${S}/><rect x="${x-12}" y="${y-6}" width="24" height="7" rx="2" fill="${c}" ${S}/>${label?T(x,y-h+18,label,12,lc||K):""}`;}
+function vidhana(x,y,s,c="#fff1d6"){return G(x,y,s,`<rect x="-60" y="-20" width="120" height="20" fill="${c}" ${S}/><rect x="-40" y="-40" width="80" height="20" fill="${c}" ${S}/>
+  ${[-30,-18,-6,6,18,30].map(cx=>`<rect x="${cx-2}" y="-37" width="4" height="15" fill="${K}" opacity=".25"/>`).join("")}
+  <rect x="-12" y="-54" width="24" height="14" fill="${c}" ${S}/><path d="M-15 -54 A15 15 0 0 1 15 -54Z" fill="${c}" ${S}/><path d="M0 -69 L0 -77" ${S}/><circle cx="0" cy="-78" r="2.4" fill="${YEL}" ${S1}/>
+  <path d="M-38 -40 A7 7 0 0 1 -24 -40Z M24 -40 A7 7 0 0 1 38 -40Z" fill="${c}" ${S}/>`);}
+function scooter(x,y,s,c=WHITE,flip){return G(x,y,s,`<path d="M-24 -10 Q-26 -24 -10 -24 L8 -24 L14 -12 L22 -12 L28 -40 L32 -40" fill="none" ${S}/><path d="M-26 -8 Q-28 -26 -8 -26 L6 -26 Q10 -14 22 -12 L24 -8Z" fill="${c}" ${S}/><path d="M-20 -26 L2 -26 L0 -31 L-18 -31Z" fill="${K}"/><path d="M28 -40 L22 -10" stroke="${K}" stroke-width="3"/><path d="M24 -40 L34 -42" stroke="${K}" stroke-width="3" stroke-linecap="round"/><circle cx="-18" cy="-6" r="7" fill="${K}"/><circle cx="22" cy="-6" r="7" fill="${K}"/><circle cx="-18" cy="-6" r="2.5" fill="#cfd3dc"/><circle cx="22" cy="-6" r="2.5" fill="#cfd3dc"/>`,0,flip);}
+function horse(x,y,s){return G(x,y,s,`<path d="M-22 -18 L-26 0 M-14 -18 L-12 0 M14 -18 L12 0 M22 -18 L26 0" stroke="${K}" stroke-width="6" stroke-linecap="round"/><path d="M-22 -18 L-26 -1 M-14 -18 L-12 -1 M14 -18 L12 -1 M22 -18 L26 -1" stroke="${WHITE}" stroke-width="3" stroke-linecap="round"/>
+  <path d="M-28 -32 Q-30 -14 -20 -14 L22 -14 Q30 -16 28 -30 Q26 -40 10 -40 L-16 -40 Q-26 -40 -28 -32Z" fill="${WHITE}" ${S}/><path d="M-28 -34 Q-40 -30 -38 -16" stroke="${K}" stroke-width="3" fill="none"/>
+  <path d="M18 -38 L26 -60 Q30 -66 38 -62 L44 -52 Q46 -48 40 -46 L32 -48 L28 -34Z" fill="${WHITE}" ${S}/><path d="M24 -58 Q18 -50 18 -40" stroke="${YEL}" stroke-width="4" fill="none"/><circle cx="34" cy="-56" r="1.5" fill="${K}"/><path d="M28 -64 L28 -70 L32 -64" fill="${WHITE}" ${S1}/>`);}
+function crayfish(x,y,s){return G(x,y,s,`<path d="M-4 0 Q-6 -12 0 -22 Q6 -12 4 0Z" fill="${RED}" ${S}/><path d="M-3 -6 h6 M-3.5 -11 h7 M-2.5 -16 h5" stroke="${K}" stroke-width="1"/><path d="M-3 -20 Q-14 -30 -10 -36 Q-4 -30 -2 -22 M3 -20 Q14 -30 10 -36 Q4 -30 2 -22" fill="${RED}" ${S1}/><path d="M-1 -22 L-4 -30 M1 -22 L4 -30" ${S1}/><circle cx="-2" cy="-21" r="1" fill="${K}"/><circle cx="2" cy="-21" r="1" fill="${K}"/>`);}
+function foam(x,y,w){let s="";for(let i=0;i<Math.round(w/9);i++){const cx=x+i*9+(i%2)*3,cy=y-(i%3)*3;s+=`<circle cx="${cx}" cy="${cy}" r="${6+(i%3)}" fill="${WHITE}" ${S1}/>`;}return s;}
+function kite(x,y,s,flip){return G(x,y,s,`<path d="M0 0 Q-14 -8 -26 -2 Q-14 -2 -6 4Z M0 0 Q14 -8 26 -2 Q14 -2 6 4Z" fill="#a8703a" ${S1}/><ellipse cx="0" cy="2" rx="4.5" ry="6" fill="#c98a4a" ${S1}/><circle cx="0" cy="-3" r="3.6" fill="${WHITE}" ${S1}/><path d="M2.5 -3 L6 -2 L2.5 -1.5Z" fill="${YEL}"/>`,0,flip);}
+function megaphone(x,y,s){return G(x,y,s,`<path d="M0 -4 L22 -15 L22 15 L0 4Z" fill="${YEL}" ${S}/><rect x="-7" y="-5" width="8" height="10" rx="1" fill="${YEL}" ${S}/><path d="M28 -11 l7 -5 M29 0 l8 0 M28 11 l7 5" ${S}/>`);}
+function flag(x,y,s,c,inner,flip){return G(x,y,s,`<path d="M0 0 L0 -60" stroke="${K}" stroke-width="2.4"/><path d="M0 -60 Q14 -66 30 -58 Q22 -50 30 -40 Q14 -46 0 -40Z" fill="${c}" ${S}/>${inner||""}`,0,flip);}
+function rose(x,y,s){return G(x,y,s,`<circle cx="0" cy="0" r="5" fill="${WHITE}" ${S1}/><path d="M-2 -1 q2 -3 4 0 q-2 3 -4 0" stroke="${K}" stroke-width=".8" fill="none"/>`);}
+function cake(x,y,s){return G(x,y,s,`<rect x="-20" y="-18" width="40" height="18" rx="3" fill="#ffe1ec" ${S}/><path d="M-20 -18 Q-15 -10 -10 -18 Q-5 -10 0 -18 Q5 -10 10 -18 Q15 -10 20 -18" fill="${PINK}" ${S1}/><rect x="-1.6" y="-30" width="3.2" height="12" fill="${WHITE}" ${S1}/><path d="M0 -38 q4 4 0 8 q-4 -4 0 -8Z" fill="${YEL}" ${S1}/><rect x="-26" y="0" width="52" height="3.5" rx="1.5" fill="#d3d8e2" ${S1}/>`);}
+function wreath(cx,cy,rx,ry){let s=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="#2f7a3a" stroke-width="7"/>`;for(let i=0;i<34;i++){const a=i/34*Math.PI*2;const x=cx+rx*Math.cos(a),y=cy+ry*Math.sin(a);
+  s+=i%3===0?`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${WHITE}" ${S1}/>`:`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="5" ry="2.4" fill="#48a35a" transform="rotate(${(a*180/Math.PI+90).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" ${S1}/>`;}return s;}
+function infinity(x,y,s,c=YEL){return G(x,y,s,`<path d="M0 0 C-6 -8 -16 -8 -16 0 C-16 8 -6 8 0 0 C6 -8 16 -8 16 0 C16 8 6 8 0 0Z" fill="none" stroke="${K}" stroke-width="5"/><path d="M0 0 C-6 -8 -16 -8 -16 0 C-16 8 -6 8 0 0 C6 -8 16 -8 16 0 C16 8 6 8 0 0Z" fill="none" stroke="${c}" stroke-width="2.6"/>`);}
+function coin(x,y,s){return G(x,y,s,`<circle r="8" fill="${YEL}" ${S1}/>${star(0,0,5,"#ffe39a",5)}`);}
+function knife(x,y,s,r=0){return G(x,y,s,`<path d="M-2 0 L-2 -20 Q4 -26 4 -14 L2 0Z" fill="#d3d8e2" ${S1}/><rect x="-3" y="0" width="5" height="9" rx="1" fill="#8a5a3a" ${S1}/>`,r);}
+function bottle(x,y,s,r=0){return G(x,y,s,`<path d="M-4 -18 L4 -18 L5 0 L-5 0Z" fill="#bfe8ff" ${S1}/><rect x="-2.6" y="-22" width="5.2" height="4" fill="${BLU}" ${S1}/>`,r);}
+function key(x,y,s,r=0){return G(x,y,s,`<circle cx="0" cy="-12" r="6" fill="none" stroke="${K}" stroke-width="4.6"/><circle cx="0" cy="-12" r="6" fill="none" stroke="${YEL}" stroke-width="2.4"/><path d="M0 -6 L0 12 M0 5 L5 5 M0 10 L4 10" stroke="${K}" stroke-width="4.4"/><path d="M0 -6 L0 12 M0 5 L5 5 M0 10 L4 10" stroke="${YEL}" stroke-width="2.2"/>`,r);}
+function selfie(){return `<path d="M0 0 L0 -34" stroke="${K}" stroke-width="3"/>${phone(0,-38,.8)}`;}
+function chain(x1,y1,x2,y2){return `<path d="M${x1} ${y1} Q${(x1+x2)/2} ${Math.max(y1,y2)+10} ${x2} ${y2}" stroke="${K}" stroke-width="3" fill="none" stroke-dasharray="5 2"/>`;}
+function tables(x,y,w,c="#c98a4a"){return `<rect x="${x}" y="${y}" width="${w}" height="9" rx="2" fill="${c}" ${S}/><path d="M${x+4} ${y+9} L${x+4} ${y+40} M${x+w-4} ${y+9} L${x+w-4} ${y+40}" stroke="${K}" stroke-width="3"/>`;}
+function road(top,c="#59566e"){return `<path d="M92 ${top} L108 ${top} L196 240 L4 240Z" fill="${c}" ${S}/><path d="M100 ${top+6} L100 ${top+14} M100 ${top+24} L100 ${top+36} M100 ${top+48} L100 ${top+66}" stroke="${YEL}" stroke-width="3"/>`;}
+function bus(x,y,s,flip){return G(x,y,s,`<rect x="-34" y="-34" width="68" height="28" rx="5" fill="${BLU}" ${S}/>${[-26,-12,2,16].map(a=>`<rect x="${a}" y="-29" width="10" height="9" rx="1.5" fill="${SKY}" ${S1}/>`).join("")}<path d="M-34 -14 L34 -14" stroke="${WHITE}" stroke-width="2.5"/><circle cx="-20" cy="-5" r="6" fill="${K}"/><circle cx="20" cy="-5" r="6" fill="${K}"/>`,0,flip);}
+function pot(x,y,s,r=0){return G(x,y,s,`<path d="M-7 -14 Q-10 -6 -7 0 L7 0 Q10 -6 7 -14Z" fill="#c9a24a" ${S1}/><rect x="-4" y="-18" width="8" height="4" fill="#c9a24a" ${S1}/>`,r);}
+function sunflower(x,y,s){let p="";for(let i=0;i<10;i++){const a=i*36;p+=`<ellipse cx="0" cy="-9" rx="3.4" ry="6.5" fill="${YEL}" transform="rotate(${a})" ${S1}/>`;}return G(x,y,s,`<path d="M0 0 L0 30" stroke="#2f7a3a" stroke-width="3"/>${p}<circle r="5" fill="#8a5a3a" ${S1}/>`);}
+
+// ---------- scenes: Rider-Waite compositions, redrawn in Bengaluru ----------
+const SCENES={
+ fool:()=>({sky:["#8fd3f5","#dff3fb"],art:
+  sunFace(160,72,15)+cloud(46,80,.8)+tower(26,170,18,52,"#c9b6f2")+tower(48,170,14,38,"#b39be6")+tower(66,170,16,60,"#c9b6f2")+
+  `<path d="M0 236 L0 178 Q60 168 128 176 L138 236Z" fill="#7cc46c" ${S}/><path d="M128 176 L140 182 L136 236" fill="#8a7a6a" ${S}/>`+
+  `<rect x="132" y="168" width="34" height="8" rx="2" fill="#ff8a3d" ${S1}/><path d="M136 176 L134 188 M162 176 L164 188" ${S}/>`+T(149,174.5,"WIP",6,WHITE)+
+  ch(106,180,1,{top:"#ffb84d",bot:"#3d6fd1",legs:"walk",face:"up",hair:"curly",armR:[150,175],holdR:`<path d="M0 0 L22 -18" stroke="${K}" stroke-width="2.4"/><rect x="16" y="-28" width="16" height="12" rx="2" fill="${RED}" ${S1}/>`,armL:[40,70],holdL:rose(0,-4,.8)})+
+  dog(70,184,.8,{pose:"jump"})}),
+ magician:()=>({sky:["#ffd36b","#fff1c4"],art:
+  `<path d="M14 54 Q40 68 66 54 Q92 68 118 54 Q144 68 170 54 Q178 58 186 54" fill="none" stroke="#ff8a3d" stroke-width="6" stroke-dasharray="5 2"/>`+
+  infinity(100,80,1.2)+
+  ch(100,196,1.3,{top:RED,outfit:"hoodie",bot:"#3b4a8c",hair:"short",face:"grin",armR:[170,175],holdR:selfie(),armL:[25,20]})+
+  `<rect x="22" y="182" width="156" height="14" rx="3" fill="#a96bd8" ${S}/><rect x="28" y="196" width="144" height="40" fill="#8a52c2" ${S}/>`+
+  tumbler(44,182,1,true)+knife(74,182,1,-20)+coin(128,174,1.1)+G(156,182,.9,`<path d="M0 0 L0 -22" stroke="#8a5a3a" stroke-width="3"/><path d="M0 -22 q-2 -6 0 -10" stroke="#bbb" stroke-width="1.2" fill="none"/>`)+
+  `<path d="M28 236 L172 236" stroke="${YEL}" stroke-width="2"/>`}),
+ priestess:()=>({sky:["#2c3a8c","#4f5fbf"],art:
+  `<rect x="34" y="62" width="132" height="120" fill="#ffefc7" ${S}/>`+[[60,82],[100,82],[140,82],[80,112],[120,112],[60,142],[100,142],[140,142]].map(([x,y],i)=>i%2?
+    `<ellipse cx="${x}" cy="${y}" rx="11" ry="5" fill="#f2b04e" ${S1}/>`:`<circle cx="${x}" cy="${y}" r="7" fill="${WHITE}" ${S1}/><circle cx="${x}" cy="${y}" r="2.4" fill="${K}"/>`).join("")+
+  pillar(30,226,166,"#2a2a44","B",WHITE)+pillar(170,226,166,"#e9edf5","J",K)+
+  `<rect x="66" y="180" width="68" height="22" rx="3" fill="#6b5fb0" ${S}/>`+
+  ch(100,212,1.25,{outfit:"saree",top:BLU,blouse:"#2a3a8c",border:YEL,hair:"bun",jasmine:true,bindi:true,legs:"sit",face:"calm",armL:[30,80],armR:[30,80],
+    holdL:`<rect x="-2" y="-6" width="26" height="9" rx="4" fill="${WHITE}" ${S1}/>`})+
+  moonFace(100,222,9).replace(/fill="#fff6c9"/,'fill="#fff6c9"')}),
+ empress:()=>({sky:["#a8e2c4","#eafbf0"],art:
+  tree(30,150,1,"#3d9a52")+tree(70,140,.8,"#4cb062")+tree(176,150,1.05,"#3d9a52")+
+  `<path d="M0 150 Q100 136 200 150 L200 236 L0 236Z" fill="#9ad67a" ${S}/>`+
+  `<path d="M38 210 L170 196 L176 222 L34 236Z" fill="#ff8a8a" ${S}/><path d="M48 212 L166 200 M44 224 L172 210" stroke="${WHITE}" stroke-width="2"/>`+
+  ch(108,206,1.25,{outfit:"saree",top:"#ff6b9a",blouse:"#d64a7a",border:YEL,hair:"long",legs:"sit",bindi:true,face:"closed",
+    crown:[-12,-8,-4,0,4,8,12].map((a,i)=>`<circle cx="${a}" cy="${-74-(i%2)*3}" r="2.6" fill="#ff9a2e" ${S1}/>`).join(""),
+    armR:[150,170],holdR:`<path d="M-3 -2 Q0 -20 4 -2Z" fill="${YEL}" ${S1}/><path d="M-3 -2 Q0 -20 4 -2" stroke="#2f7a3a" stroke-width="1.5" fill="none"/>`,armL:[40,90]})+
+  `<path d="M40 184 Q40 170 52 172 Q64 170 64 184 Q64 196 52 204 Q40 196 40 184Z" fill="${PINK}" ${S}/>`+T(52,190,"♀",12,K)+
+  [[24,226],[60,232],[150,232],[180,222]].map(([x,y])=>`<path d="M${x} ${y} l-3 -16 M${x} ${y} l0 -18 M${x} ${y} l3 -16" stroke="#c9a24a" stroke-width="2.4"/>`).join("")}),
+ emperor:()=>({sky:["#ff9a5c","#ffd6a5"],art:
+  tower(14,190,26,96,"#ffb07a",WHITE)+tower(42,190,22,120,"#ff9a6a",WHITE)+tower(140,190,24,110,"#ff9a6a",WHITE)+tower(166,190,22,80,"#ffb07a",WHITE)+
+  `<path d="M48 236 L48 128 Q100 112 152 128 L152 236Z" fill="#9aa3b8" ${S}/>`+
+  [[56,132],[144,132]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="9" fill="#d6dae6" ${S}/><path d="M${x-8} ${y-4} q-6 6 0 10 M${x+8} ${y-4} q6 6 0 10" stroke="${K}" stroke-width="1.6" fill="none"/>`).join("")+
+  ch(100,226,1.45,{top:RED,outfit:"kurta",bot:"#8a2b3b",legs:"sit",hair:"bald",beard:true,mustache:true,mustacheC:"#d8d8e6",armR:[50,150],holdR:key(0,-6,1.1),armL:[50,150],
+    holdL:`<circle cx="0" cy="-8" r="8" fill="${YEL}" ${S1}/>${T(0,-4.5,"₹",10)}`,crown:`<path d="M-11 -70 L-11 -80 L-5 -74 L0 -82 L5 -74 L11 -80 L11 -70Z" fill="${YEL}" ${S1}/>`})+
+  `<rect x="140" y="140" width="40" height="26" rx="2" fill="${WHITE}" ${S}/>`+T(160,151,"TO-LET",7,RED)+T(160,161,"10 mo. adv.",5.5)}),
+ hierophant:()=>({sky:["#b6a4ee","#e7defc"],art:
+  pillar(34,206,150,"#9890b8")+pillar(166,206,150,"#9890b8")+
+  bubble(48,56,62,18,"Good morning",7)+bubble(98,80,58,18,"Tank 10–2",7,"right")+
+  ch(100,186,1.25,{top:WHITE,outfit:"kurta",bot:WHITE,hair:"bald",glasses:true,mustache:true,legs:"sit",armR:[160,170],holdR:phone(0,-8,.85),armL:[40,60],
+    crown:`<path d="M-11 -71 Q0 -90 11 -71Z" fill="${RED}" ${S1}/>`})+
+  `<rect x="60" y="186" width="80" height="12" fill="#6e65a0" ${S}/>`+
+  ch(66,236,1.05,{top:"#ff8a3d",bot:"#3b4a8c",legs:"kneel",hair:"bun",face:"calm"})+ch(134,236,1.05,{top:GRN,bot:"#3b4a8c",legs:"kneel",hair:"short",face:"calm"},true)+
+  key(92,224,.9,-35)+key(108,224,.9,35)}),
+ lovers:()=>({sky:["#ffb4a2","#ffe7dc"],art:
+  sunFace(100,74,20)+cloud(56,108,1.1)+cloud(146,108,1.1)+
+  `<rect x="44" y="84" width="112" height="28" rx="12" fill="${PUR}" ${S}/>`+[56,76,96,116,136].map(a=>`<rect x="${a}" y="90" width="12" height="9" rx="2" fill="${SKY}" ${S1}/>`).join("")+`<rect x="44" y="102" width="112" height="4" fill="${GRN}"/>`+
+  `<path d="M70 112 Q60 128 64 140 M130 112 Q140 128 136 140" stroke="${YEL}" stroke-width="2" stroke-dasharray="3 3" fill="none"/>`+
+  tree(30,236,1.1,"#2f8a4a",RED)+tree(172,236,1.1,"#3d9a52",YEL)+ground(220,"#9ad67a")+
+  ch(70,232,1.25,{top:CREAM,outfit:"kurta",bot:CREAM,hair:"short",garland:"#ffd24a",face:"grin",armR:[60,80],crown:`<path d="M-12 -70 Q0 -84 12 -70Z" fill="${YEL}" ${S1}/>`})+
+  ch(132,232,1.25,{outfit:"saree",top:RED,blouse:"#c23a2a",border:YEL,hair:"bun",jasmine:true,bindi:true,garland:"#ffd24a",face:"grin",armL:[60,80]})}),
+ chariot:()=>({sky:["#9ad8f0","#e3f6fb"],art:
+  tower(16,150,22,70,"#c9b6f2")+tower(40,150,18,50,"#b39be6")+tower(144,150,20,60,"#b39be6")+tower(166,150,20,78,"#c9b6f2")+ground(150,"#8a87a6")+
+  autoFront(100,212,1.6,{stars:true,driver:`<circle cx="0" cy="-48" r="7.5" fill="${SK2}" ${S1}/><path d="M-6 -42 Q0 -46 6 -42" stroke="${K}" fill="none"/><path d="M-8 -54 Q0 -60 8 -54Z" fill="${K}"/>`+
+    `<path d="M-4 -46 h8" stroke="${K}" stroke-width="1.6"/><path d="M-12 -40 Q0 -36 12 -40 L12 -38 L-12 -38Z" fill="#c9a24a"/>`})+
+  cow(52,234,.95,{sit:true,c:"#3a3a52",horn:RED})+cow(148,234,.95,{sit:true,c:"#f4f1ea",horn:BLU},true)}),
+ strength:()=>({sky:["#ffe08a","#fff6d6"],art:
+  hills(176,"#a8d98a")+infinity(72,72,1)+
+  bigDog(126,228,1.3)+
+  ch(66,232,1.3,{outfit:"saree",top:WHITE,blouse:"#ff8fa3",border:"#ff8fa3",hair:"long",bindi:true,face:"calm",armR:[70,40,11,13],armL:[30,60],
+    crown:[-10,-5,0,5,10].map(a=>`<circle cx="${a}" cy="-74" r="2.4" fill="${RED}" ${S1}/>`).join("")})+
+  `<path d="M74 170 Q100 158 118 176" stroke="${RED}" stroke-width="3" stroke-dasharray="3 2" fill="none"/>`+
+  G(92,224,1,`<path d="M-8 0 L8 0 L6 -5 L-6 -5Z" fill="#e6b06a" ${S1}/>`)}),
+ hermit:()=>({sky:["#1f2366","#3b3f99"],art:
+  [[30,60,3],[60,90,2.4],[150,58,2.8],[176,96,2],[118,70,1.8]].map(([x,y,r])=>star(x,y,r,"#fff1a8",4)).join("")+
+  tower(54,236,92,96,"#5a5ea8","#2b2f6b",true)+`<path d="M48 140 L152 140" stroke="${K}" stroke-width="3"/><path d="M50 140 L50 130 L150 130 L150 140" fill="none" ${S1}/>`+
+  ch(100,140,1.35,{top:"#8a8fb0",outfit:"hoodie",bot:"#5a5e7a",hair:"long",hairC:"#d8d8e6",beard:true,face:"calm",armL:[60,140],
+    holdL:`<g transform="translate(-6 -2)">${laptop(0,0,1.1)}</g>${star(-6,-10,4,"#fff1a8",6)}`,armR:[20,10],holdR:`<path d="M0 0 Q6 30 -20 58" stroke="${K}" stroke-width="2" fill="none"/>`,
+    crown:`<path d="M-14 -62 Q-16 -82 0 -82 Q16 -82 14 -62 Q10 -74 0 -74 Q-10 -74 -14 -62Z" fill="#8a8fb0" ${S1}/>`})}),
+ wheel:()=>({sky:["#7fc7f2","#d6effc"],art:
+  cloud(36,64,.8)+cloud(166,70,.8)+
+  `<circle cx="100" cy="146" r="56" fill="#ffefc7" ${S}/><circle cx="100" cy="146" r="56" fill="none" stroke="#7a7790" stroke-width="12"/><circle cx="100" cy="146" r="56" fill="none" stroke="${YEL}" stroke-width="1.6" stroke-dasharray="6 5"/>`+
+  [0,45,90,135].map(a=>`<path d="M${100+40*Math.cos(a*Math.PI/180)} ${146+40*Math.sin(a*Math.PI/180)} L${100-40*Math.cos(a*Math.PI/180)} ${146-40*Math.sin(a*Math.PI/180)}" stroke="#7a7790" stroke-width="3"/>`).join("")+
+  `<rect x="90" y="122" width="20" height="46" rx="5" fill="${K}"/><circle cx="100" cy="132" r="5" fill="#ff5a4a"/><circle cx="100" cy="145" r="5" fill="#5a4a14"/><circle cx="100" cy="158" r="5" fill="#14361a"/>`+
+  ch(100,92,.8,{outfit:"khaki",top:"#d9c08a",bot:"#d9c08a",legs:"sit",hair:"cap",capC:WHITE,mustache:true,armR:[80,150],holdR:`<rect x="-2" y="-2" width="7" height="3" fill="${K}"/>`})+
+  autoSide(46,204,.42,{},true)+bus(156,112,.45)+
+  cow(36,232,.6,{})+dog(170,232,.7,{pose:"sit"})+kite(164,58,.9)+ch(36,96,.55,{top:BLU,hair:"short",armL:[60,140],holdL:phone(0,-4,.7)})}),
+ justice:()=>({sky:["#b28ee8","#e6d9fb"],art:
+  `<path d="M36 52 L164 52 L164 210 L36 210Z" fill="#7a3fb8" ${S}/><path d="M36 52 Q58 90 36 128 M164 52 Q142 90 164 128" fill="#9a5fd8" ${S1}/>`+
+  pillar(30,226,170,"#c9c3dc")+pillar(170,226,170,"#c9c3dc")+
+  `<rect x="58" y="176" width="84" height="40" rx="6" fill="${GRN}" ${S}/><rect x="58" y="176" width="84" height="10" fill="${YEL}" ${S1}/>`+
+  ch(100,212,1.35,{outfit:"khaki",top:"#d9c08a",bot:"#d9c08a",legs:"sit",hair:"short",mustache:true,face:"calm",
+    armR:[160,180],holdR:`<rect x="-4" y="-28" width="12" height="16" rx="2" fill="${K}"/>${T(2,-17,"₹40",5.5,"#ff5a4a")}<path d="M0 -12 L0 0" stroke="${K}" stroke-width="2.4"/><path d="M2 -42 L10 -42 L8 -28 L4 -28Z" fill="${RED}" ${S1}/>`,
+    armL:[60,20],holdL:`<path d="M0 0 L0 -6 M-18 -6 L18 -6" stroke="${YEL}" stroke-width="2.4"/><path d="M-18 -6 L-24 6 L-12 6Z M18 -6 L12 6 L24 6Z" fill="${YEL}" ${S1}/>${coin(-18,4,.5)}${T(18,9,"+20",6)}`})}),
+ hanged:()=>({sky:["#aee0ef","#eef8fb"],art:
+  `<rect x="36" y="60" width="128" height="14" fill="#d8ccb4" ${S}/><rect x="92" y="74" width="16" height="162" fill="#d8ccb4" ${S}/>`+
+  `<path d="M36 60 L36 54 M50 60 L50 50 M150 60 L150 52 M164 60 L164 48" stroke="#8a8a9a" stroke-width="2"/>`+
+  `<path d="M126 74 L126 90" stroke="${K}" stroke-width="2"/>`+
+  G(126,90,1.2,ch(0,0,1,{top:"#4cb062",bot:"#3d6fd1",legs:"four",halo:true,face:"calm",hair:"short",armL:[20,80],armR:[20,80]}),180)+
+  ground(214,"#c9b48a")+`<rect x="16" y="190" width="58" height="24" rx="3" fill="${YEL}" ${S}/>`+T(45,201,"METRO",8)+T(45,210,"COMING SOON",6,RED)}),
+ death:()=>({sky:["#ff9a7a","#ffe1c4"],art:
+  sunFace(100,150,18,false)+tower(26,170,30,110,"#5a4a7a",WHITE,true)+tower(144,170,30,110,"#5a4a7a",WHITE,true)+ground(170,"#8a87a6")+
+  scooter(100,212,1.25,WHITE)+
+  ch(94,186,1.1,{outfit:"blazer",top:K,bot:K,legs:"sit",hair:"bob",hair:"long",face:"smile",armR:[70,120],armL:[150,175],
+    holdL:flag(0,4,.8,K,rose(15,-50,1),false)})+
+  cake(46,232,.9)+G(150,232,1,`<rect x="-14" y="-10" width="28" height="10" rx="2" fill="${WHITE}" ${S1}/><path d="M-8 -10 Q0 -26 8 -10" stroke="${BLU}" stroke-width="2" fill="none"/>`)+
+  ch(176,236,.8,{top:BLU,legs:"kneel",hair:"short",face:"closed"},true)}),
+ temperance:()=>({sky:["#ffd08a","#fff2d8"],art:
+  sunFace(150,96,12)+hills(150,"#c9b6f2")+`<path d="M150 150 Q120 190 160 236 L176 236 Q150 190 158 150Z" fill="#e8d6a5" ${S1}/>`+
+  ground(200,"#9ad67a")+`<path d="M14 214 Q60 198 96 214 L96 236 L14 236Z" fill="#6ec3e8" ${S}/>`+
+  [[30,196],[42,192],[22,202]].map(([x,y])=>`<path d="M${x} ${y} l0 -16" stroke="#2f7a3a" stroke-width="2"/><ellipse cx="${x}" cy="${y-18}" rx="4" ry="6" fill="${PUR}" ${S1}/>`).join("")+
+  ch(96,226,1.35,{outfit:"saree",top:WHITE,blouse:"#ffcf7a",border:"#ffcf7a",wings:true,hair:"bun",jasmine:true,bindi:true,face:"calm",
+    chest:`<path d="M-5 -38 L5 -38 L0 -30Z" fill="${YEL}" ${S1}/>`,armL:[150,150],holdL:tumbler(0,6,.9).replace("<g ","<g "),armR:[60,40],holdR:G(4,0,.9,`<path d="M-12 0 L12 0 L10 6 L-10 6Z" fill="#b9c0cc" ${S1}/>`)})+
+  `<path d="M74 140 Q76 176 106 194" stroke="#a8673a" stroke-width="4" fill="none"/><path d="M74 140 Q76 176 106 194" stroke="#e0b07a" stroke-width="1.6" fill="none"/>`}),
+ devil:()=>({sky:["#2a1f4a","#4a2f6a"],art:
+  [[40,70],[160,64],[30,120],[170,118]].map(([x,y],i)=>i%2?`<g transform="translate(${x} ${y})"><rect x="-10" y="-8" width="20" height="16" rx="4" fill="${BLU}" ${S1}/><path d="M-4 3 v-5 h3 v-3 l4 0 l0 3 h2 v5Z" fill="${WHITE}"/></g>`:
+    `<path d="M${x} ${y+6} C${x-12} ${y-4} ${x-8} ${y-12} ${x-3} ${y-12} C${x-1} ${y-12} ${x} ${y-9} ${x} ${y-8} C${x} ${y-9} ${x+1} ${y-12} ${x+3} ${y-12} C${x+8} ${y-12} ${x+12} ${y-4} ${x} ${y+6}Z" fill="${RED}" ${S1}/>`).join("")+
+  `<rect x="70" y="152" width="60" height="84" fill="#5a4a7a" ${S}/><rect x="64" y="146" width="72" height="10" rx="2" fill="${YEL}" ${S}/>`+
+  `<circle cx="100" cy="84" r="34" fill="#fff6c9" opacity=".2"/>`+
+  ch(100,148,1.2,{top:"#1f3d78",outfit:"blazer",hair:"short",horns:true,face:"grin",armR:[160,175],holdR:phone(0,-6,.9),armL:[40,120],holdL:`<path d="M0 0 L0 14" stroke="${K}" stroke-width="2.5"/><circle cx="0" cy="18" r="5" fill="${YEL}" ${S1}/>`})+
+  bubble(30,54,70,18,"Humbled to…",7)+
+  ch(50,236,1,{top:"#8a7aa8",hair:"short",face:"worried",horns:true})+ch(150,236,1,{top:"#8a7aa8",hair:"long",face:"worried",horns:true},true)+
+  chain(56,196,74,206)+chain(144,196,126,206)}),
+ tower:()=>({sky:["#3a4060","#6a7090"],art:
+  cloud(56,64,1.1,"#9aa2be")+cloud(148,58,1,"#aab0c8")+`<path d="M122 44 L104 92 L118 92 L98 136 L134 82 L120 82 L134 44Z" fill="${YEL}" ${S}/>`+rain(40,11)+
+  tower(64,214,72,140,"#8fb8d8","#d6ecfa")+`<path d="M60 74 L140 74" stroke="${K}" stroke-width="2"/>`+
+  G(136,62,1,`<rect x="-14" y="-8" width="40" height="14" rx="3" fill="${RED}" ${S1}/>${T(6,2.5,"TECHPARK",6.5,WHITE)}`,20)+
+  `<path d="M70 120 l8 -10 l4 8 l6 -12" stroke="#ff8a3d" stroke-width="4" fill="none"/>`+
+  ch(40,150,.85,{top:YEL,hair:"short",face:"o",armL:[150,150],armR:[150,150],rot:-30,legs:"walk"})+ch(166,130,.85,{top:PINK,hair:"long",face:"o",armL:[150,150],armR:[150,150],rot:28,legs:"walk",holdR:laptop(0,0,.6,false)})+
+  `<path d="M14 214 L186 214 L186 236 L14 236Z" fill="#6ab4e0" ${S}/><path d="M24 222 q8 -4 16 0 M120 228 q8 -4 16 0" stroke="${WHITE}" stroke-width="1.6" fill="none"/>`}),
+ star:()=>({sky:["#5a4ab8","#ffb08a"],art:
+  star(100,82,18,YEL,8)+[[40,64],[62,96],[150,62],[168,96],[30,118],[172,128],[110,124]].map(([x,y])=>star(x,y,6,"#fff1a8",8)).join("")+
+  hills(190,"#6a5ab0","#4a4a8c")+`<path d="M14 210 Q100 196 186 210 L186 236 L14 236Z" fill="#6ec3e8" ${S}/>`+
+  tree(176,190,.7,"#3d9a52")+kite(176,136,.6)+
+  ch(84,214,1.3,{top:"#ff8fa3",outfit:"tee",bot:"#3b4a8c",legs:"kneel",hair:"long",face:"calm",armL:[40,60],holdL:bottle(0,0,1,150),armR:[70,90],holdR:bottle(0,0,1,-150)})+
+  `<path d="M58 210 Q56 220 60 228" stroke="#bfe8ff" stroke-width="3" fill="none"/><path d="M114 210 Q122 214 126 222" stroke="#bfe8ff" stroke-width="3" fill="none"/>`}),
+ moon:()=>({sky:["#1f2a66","#4a5aa8"],art:
+  moonFace(100,82,24)+[[36,60],[164,64],[60,104],[146,104]].map(([x,y])=>star(x,y,2.4,"#fff1a8",4)).join("")+
+  tower(16,170,26,90,"#3a3f7a","#ffe08a",true)+tower(158,170,26,90,"#3a3f7a","#ffe08a",true)+
+  `<path d="M100 142 Q86 170 104 190 Q120 206 100 236 L114 236 Q132 206 116 190 Q100 170 106 142Z" fill="#c9b48a" ${S1}/>`+
+  ground(186,"#4a8a5a")+dog(56,202,.9,{pose:"howl"})+dog(144,202,.9,{pose:"howl",c:"#9a9aaa"},true)+
+  `<path d="M14 214 Q100 202 186 214 L186 236 L14 236Z" fill="#5a7fbf" ${S}/>`+foam(24,214,150)+crayfish(100,230,.95)}),
+ sun:()=>({sky:["#8fd3f5","#e3f6fb"],art:
+  sunFace(100,86,26)+`<rect x="14" y="160" width="172" height="34" fill="#e88a5a" ${S}/>`+[30,50,70,90,110,130,150,170].map(x=>`<path d="M${x-10} 172 L${x+10} 172 M${x-10} 184 L${x+10} 184" stroke="#b85a3a" stroke-width="1"/>`).join("")+
+  [30,62,138,170].map((x,i)=>sunflower(x,150-(i%2)*8,1)).join("")+ground(194,"#9ad67a")+
+  horse(100,232,1.25)+
+  ch(96,196,.9,{top:YEL,outfit:"tee",bot:"#3d6fd1",legs:"sit",hair:"curly",face:"grin",crown:[-8,-3,2,7].map(a=>`<circle cx="${a}" cy="-76" r="2.6" fill="${RED}" ${S1}/>`).join(""),armL:[150,160],holdL:flag(0,4,.75,RED)})}),
+ judgement:()=>({sky:["#8fb8f0","#dfeafc"],art:
+  cloud(100,82,2.3)+
+  ch(84,112,.95,{outfit:"blazer",top:BLU,bot:K,wings:true,hair:"short",glasses:true,face:"o",armR:[90,80],armL:[90,70],legs:"stand"})+megaphone(110,74,.9)+
+  flag(140,104,.55,WHITE,T(16,-46,"★★★★☆",8,RED))+
+  ground(186,"#7a8ab0")+[[44,212],[100,218],[156,212]].map(([x,y],i)=>`<rect x="${x-24}" y="${y-8}" width="48" height="30" fill="#9aa0c0" ${S}/><rect x="${x-24}" y="${y-14}" width="48" height="7" fill="#b8bed8" ${S1}/>`+
+    ch(x,y+2,.95,{top:["#ff8a3d",PINK,GRN][i],hair:["short","long","curly"][i],face:"up",armL:[160,170],armR:[160,170]})).join("")}),
+ world:()=>({sky:["#a8e2f2","#f2fbe9"],art:
+  wreath(100,140,40,70)+
+  ch(100,186,1.15,{outfit:"saree",top:PUR,blouse:"#5a3ab0",border:YEL,hair:"long",bindi:true,legs:"stand",face:"grin",armL:[150,120],armR:[110,150],
+    holdL:`<path d="M0 0 Q-10 10 -4 22" stroke="${RED}" stroke-width="2.4" fill="none"/>`,holdR:`<path d="M0 0 Q10 10 4 22" stroke="${RED}" stroke-width="2.4" fill="none"/>`})+
+  bubble(108,60,58,22,"ಗೊತ್ತಿಲ್ಲ!",10,"left")+
+  autoSide(38,86,.42)+kite(164,98,1)+cow(42,232,.6,{horn:RED})+dog(162,232,.75,{pose:"sit"})}),
+ empty:()=>({sky:["#ffc46a","#fff0c8"],art:
+  sunFace(100,150,22)+hills(170,"#9ad67a")+road(166)+tree(30,212,.8)+tree(174,220,.7)+
+  `<rect x="140" y="164" width="4" height="48" fill="#6a6a7a" ${S1}/><rect x="114" y="140" width="58" height="26" rx="3" fill="${GRN}" ${S}/>`+T(143,152,"CHENNAI",9,WHITE)+T(143,161,"WELCOMES YOU",5.5,WHITE)+
+  star(50,72,5,"#fff1a8")+star(152,64,5,"#fff1a8")+star(100,58,7,"#fff1a8")})
+};
+
+// ===== deck =====
+// [scene, name, tarot, num, accent, kw, tarotLink, upright, reversed, tu, tr, chaos]
+const D=[
+ ["fool", "The New Joinee", "The Fool", "0", "#ffb84d", "Fresh starts, total naivety", "Tarot's Fool walks off a cliff with a dog. Ours steps off the airport bus into a pothole.", "New start. Pack more than one jacket.", "You've stopped noticing the city. Be a tourist this week.", 1, 0, 4],
+ ["magician", "The Founder", "The Magician", "I", "#ef5b3b", "Something from nothing", "The Magician has all four suits on his table. The Founder has coffee, a knife, a coin and Wi-Fi.", "You have what you need. Start.", "Fewer decks. More product.", 2, -1, 6],
+ ["priestess", "The Darshini Coffee Aunty", "The High Priestess", "II", "#3d6fd1", "Quiet knowing", "She sits between two pillars with a scroll. Ours holds the darshini bill.", "She knows your order before you speak. You know your answer too.", "Stop polling the group chat. Trust your first instinct.", 1, -1, 2],
+ ["empress", "Cubbon Park Sunday", "The Empress", "III", "#ff6b9a", "Abundance and rest", "The Empress lounges in a wheat field. Ours is on a mat in Cubbon Park with a bhutta.", "Rest. Eat well. Let things grow.", "When did you last touch grass?", 2, -1, 2],
+ ["emperor", "The Landlord", "The Emperor", "IV", "#ff7a3d", "Authority and structure", "The Emperor sits on a stone throne holding an ankh. The landlord holds your keys.", "Someone else makes the rules. Get it in writing.", "Full deposit back. Frame the receipt.", -1, 3, 5],
+ ["hierophant", "The Society WhatsApp Admin", "The Hierophant", "V", "#9890b8", "Rules and tradition", "The Hierophant blesses two followers. The admin blesses two residents, phone in hand.", "Annoying rules. Useful ones too.", "Mute the group.", 0, 1, 4],
+ ["lovers", "The Metro Bride", "The Lovers", "VI", "#ff8a6a", "Choosing what matters", "An angel hovers over two lovers. Here it's a purple metro train.", "Get to the person on time. Style can wait.", "Waiting for the decorated car? You'll miss the muhurtham.", 2, -1, 5],
+ ["chariot", "The Auto Anna", "The Chariot", "VII", "#2f9e5b", "Willpower in motion", "Two sphinxes pull the Chariot. Two cows block the auto.", "Two cows, one gap. He'll make it. So will you.", "Revving at a red light. Let the cows cross.", 2, -1, 8],
+ ["strength", "Swalpa Adjust Maadi", "Strength", "VIII", "#ffb020", "Gentle patience", "A woman calmly holds a lion's jaw. Ours handles the biggest street dog on the block.", "Gentle wins this one.", "Stop adjusting. Keep your seat.", 2, -1, 3],
+ ["hermit", "The WFH Hermit", "The Hermit", "IX", "#5a5ea8", "Solitude", "The Hermit holds a lantern on a mountain. Ours holds a laptop on the terrace at 2am.", "The quiet is working. Use it to think.", "The delivery guy isn't a social life. Go out.", 1, -1, 2],
+ ["wheel", "The Silk Board Signal", "Wheel of Fortune", "X", "#7a7790", "Cycles", "The Wheel of Fortune keeps turning. So does Silk Board.", "Red, green, red. It's moving. Slowly.", "Stuck in a loop. Take the next U-turn.", 0, -2, 9],
+ ["justice", "Meter Mele Ippatthu", "Justice", "XI", "#7a3fb8", "Fair deals", "Justice holds a sword and scales. The auto anna holds a meter and a +20.", "Know your fare before you get in.", "You paid double and said nothing. Speak up.", 1, -2, 6],
+ ["hanged", "The Metro Coming Soon", "The Hanged Man", "XII", "#4cb062", "Waiting, new angles", "The Hanged Man waits upside down, calm. Ours hangs from an unfinished metro beam.", "Still waiting. Try seeing it from the other side.", "Stop waiting for the metro. Take the bus.", 0, -1, 5],
+ ["death", "The Last Working Day", "Death", "XIII", "#1d1a3a", "Endings, done gracefully", "Death carries a black flag with a white rose. So does HR, on a white scooter.", "Something ends. Eat the cake. Move on.", "It already had its last day. Let it go.", 0, -2, 6],
+ ["temperance", "The Filter Coffee Pour", "Temperance", "XIV", "#ffcf7a", "Balance", "Temperance pours between two cups. Ours pulls filter coffee a metre long.", "Not too hot, not too strong. Find the middle.", "Too much decoction. Dilute something.", 2, -1, 2],
+ ["devil", "The LinkedIn Post", "The Devil", "XV", "#ef5b3b", "Vanity and attachment", "The Devil chains two people to his pedestal. Ours chains them to likes.", "Humbled to announce? Check who it's for.", "You logged off. Nothing broke.", -2, 2, 7],
+ ["tower", "The 4pm Downpour", "The Tower", "XVI", "#3a4060", "Sudden upheaval", "Lightning hits the Tower. Here it hits a tech park at 4pm.", "Clear at 3:55. Lake by 4:05. Have a plan B.", "The storm missed you. Go out.", -3, 2, 10],
+ ["star", "Nandi Hills Sunrise", "The Star", "XVII", "#5a4ab8", "Hope", "The Star pours water under one big star. Ours does it at Nandi Hills before sunrise.", "The 4am alarm was worth it. Keep going.", "Fog today. Go back next weekend.", 3, -1, 3],
+ ["moon", "The Bellandur Foam", "The Moon", "XVIII", "#4a5aa8", "Illusion", "The Moon has two howling dogs and a crayfish. Bellandur has all three, plus foam.", "Fluffy, white, and not what it looks like. Look twice.", "The foam's clearing. Look underneath.", -2, 1, 8],
+ ["sun", "December Weather", "The Sun", "XIX", "#ffc83d", "Joy", "A child rides a white horse under the Sun. Ours is on a Cubbon Park pony.", "Cool mornings, good days. Enjoy it.", "It's lovely out. Close the laptop.", 3, 0, 1],
+ ["judgement", "The Appraisal Cycle", "Judgement", "XX", "#3d6fd1", "Reckoning", "An angel's trumpet wakes the dead. A manager's horn wakes the cubicles.", "Your work's being reviewed. Write your own summary first.", "You're harder on yourself than your manager is.", 1, -1, 7],
+ ["world", "Speaking Kannada Right", "The World", "XXI", "#7a52cc", "Belonging", "The World dances inside a wreath. Ours dances inside a mango-leaf thoran.", "You said gottilla and nobody switched to English. You're home.", "Nearly there. Keep practising on the auto anna.", 3, 1, 2]
+];
+const DECK=D.map(c=>({scene:c[0],name:c[1],tarot:c[2],num:c[3],accent:c[4],kw:c[5],link:c[6],up:c[7],rev:c[8],tu:c[9],tr:c[10],chaos:c[11],kind:"major"}));
+const RARE={scene:"empty",name:"The Empty Road",tarot:"Not in any deck",num:"23",accent:"#2f9e5b",kw:"You have reached Chennai",
+  link:"Not in any tarot deck. Not in Bengaluru either.",
+  up:"No traffic. No horns. Either a miracle, or you've left the state.",rev:"",tu:3,tr:3,chaos:10,kind:"rare"};
+
+const AREAS={"Koramangala":"where every third table is a pitch meeting","Indiranagar":"somewhere between a brewery and 100 Feet Road",
+ "Whitefield":"two hours from everywhere, including Whitefield","HSR Layout":"where your startup idea is already registered",
+ "Jayanagar":"where the 4th Block aunties will hear about this","Malleswaram":"where the coffee is older than your company",
+ "Electronic City":"just after the toll, just before the jam","Marathahalli":"on the bridge, still waiting"};
+
+
+
+// soften every colour in the artwork so the deck reads like a printed set
+const MUTE={};
+function muteHex(h){let r=parseInt(h.slice(0,2),16)/255,g=parseInt(h.slice(2,4),16)/255,b=parseInt(h.slice(4,6),16)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let H=0,Sx=0,L=(mx+mn)/2;
+  if(mx!==mn){const d=mx-mn;Sx=L>.5?d/(2-mx-mn):d/(mx+mn);H=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;H/=6;}
+  if(L<.28) return "#"+h;
+  if(L>.96) return "#fbf9f4";
+  Sx*=.66;L=Math.min(.92,L*.88+.09);
+  const q=L<.5?L*(1+Sx):L+Sx-L*Sx,p=2*L-q,f=t=>{t=(t+1)%1;return t<1/6?p+(q-p)*6*t:t<1/2?q:t<2/3?p+(q-p)*(2/3-t)*6:p;};
+  return "#"+[f(H+1/3),f(H),f(H-1/3)].map(v=>Math.round(v*255).toString(16).padStart(2,"0")).join("");}
+function mute(svg){return svg.replace(/#([0-9a-fA-F]{6})\b/g,(m,h)=>MUTE[h]||(MUTE[h]=muteHex(h)));}
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+let uid=0;
+function cardSVG(c){
+  const id="c"+(uid++),sc=SCENES[c.scene]();
+  const words=c.name.split(" ");let lines=[c.name];
+  if(c.name.length>16){let best=1,bd=99;for(let i=1;i<words.length;i++){const d=Math.abs(words.slice(0,i).join(" ").length-words.slice(i).join(" ").length);if(d<bd){bd=d;best=i;}}lines=[words.slice(0,best).join(" "),words.slice(best).join(" ")];}
+  const fs=Math.min(21,Math.floor(330/Math.max(...lines.map(l=>l.length))));
+  const tx=(y,t)=>`<text x="100" y="${y}" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-size="${fs}" fill="#2f2c3d">${esc(t)}</text>`;
+  const nm=lines.length===1?tx(277+fs*.3,lines[0]):tx(268+fs*.2,lines[0])+tx(268+fs*1.15,lines[1]);
+  return `<svg viewBox="0 0 200 340" role="img" aria-label="${esc(c.name)}, ${esc(c.tarot)}">
+   <defs><linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mute(sc.sky[0])}"/><stop offset="1" stop-color="${mute(sc.sky[1])}"/></linearGradient>
+   <clipPath id="${id}c"><rect x="16" y="40" width="168" height="194" rx="3"/></clipPath></defs>
+   <rect x="1" y="1" width="198" height="338" rx="10" fill="#fdfbf6" stroke="#d6d0c2" stroke-width="1"/>
+   <rect x="9" y="9" width="182" height="322" rx="5" fill="none" stroke="#c9a35e" stroke-width=".7" opacity=".8"/>
+   <text x="100" y="29" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-size="15" fill="#8a8592">${c.num}</text>
+   <path d="M58 25 L74 25 M126 25 L142 25" stroke="#c9a35e" stroke-width=".7"/>
+   <g clip-path="url(#${id}c)"><rect x="0" y="0" width="200" height="300" fill="url(#${id}s)"/>${sc.art}</g>
+   <rect x="16" y="40" width="168" height="194" rx="3" fill="none" stroke="#3a364d" stroke-width="1.2"/>
+   ${nm}
+   <text x="100" y="316" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="600" font-size="7.5" letter-spacing="2" fill="#9a95a2">${esc(c.tarot.toUpperCase())}</text>
+  </svg>`.replace(/<g clip-path[\s\S]*?<\/g>\s*<rect x="16"/,m=>mute(m));
+}
+function backSVG(){let l="";for(let i=-340;i<340;i+=14)l+=`<path d="M${i} 0 L${i+340} 340 M${i+340} 0 L${i} 340" stroke="#c9a35e" stroke-width=".5" opacity=".45"/>`;
+  return `<svg viewBox="0 0 200 340" aria-hidden="true"><defs><clipPath id="bk${uid++}"><rect x="10" y="10" width="180" height="320" rx="6"/></clipPath></defs>
+   <rect x="1" y="1" width="198" height="338" rx="10" fill="#525d86" stroke="#3f4970" stroke-width="1"/>
+   <g clip-path="url(#bk${uid-1})">${l}</g><rect x="10" y="10" width="180" height="320" rx="6" fill="none" stroke="#c9a35e" stroke-width=".8"/>
+   <circle cx="100" cy="170" r="34" fill="#525d86" stroke="#c9a35e" stroke-width=".8"/><circle cx="100" cy="170" r="28" fill="none" stroke="#c9a35e" stroke-width=".5"/>
+   <text x="100" y="180" text-anchor="middle" font-family="'Noto Sans Kannada',sans-serif" font-size="28" fill="#e2c88f">ನ</text></svg>`;}
+
+const REDUCED=matchMedia("(prefers-reduced-motion: reduce)").matches,FINE=matchMedia("(pointer:fine)").matches;
+function addTilt(el){if(REDUCED||!FINE)return;
+  el.addEventListener("pointermove",e=>{const r=el.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+    el.classList.add("tilting");el.style.setProperty("--ry",((px-.5)*12)+"deg");el.style.setProperty("--rx",((.5-py)*12)+"deg");el.style.setProperty("--gx",(px*100).toFixed(1)+"%");el.style.setProperty("--gy",(py*100).toFixed(1)+"%");});
+  el.addEventListener("pointerleave",()=>{el.classList.remove("tilting");el.style.setProperty("--rx","0deg");el.style.setProperty("--ry","0deg");});}
+function addMagnet(el){if(REDUCED||!FINE||!el)return;
+  el.addEventListener("pointermove",e=>{if(el.classList.contains("holding"))return;const r=el.getBoundingClientRect();el.style.translate=`${((e.clientX-r.left-r.width/2)*.14).toFixed(1)}px ${((e.clientY-r.top-r.height/2)*.22).toFixed(1)}px`;});
+  el.addEventListener("pointerleave",()=>{el.style.translate="";});}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function rand(n){return Math.floor(Math.random()*n);}
+
+
+// scroll reveal: only things below the first screen start hidden
+(function(){if(REDUCED||!("IntersectionObserver" in window))return;const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove("pre");io.unobserve(e.target);}}),{threshold:.12});
+  document.querySelectorAll(".reveal").forEach(el=>{if(el.getBoundingClientRect().top>innerHeight){el.classList.add("pre");io.observe(el);}});})();
+
+// areas
+let area="Koramangala";const areasEl=document.getElementById("areas");
+Object.keys(AREAS).forEach(a=>{const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=a;b.setAttribute("aria-pressed",a===area?"true":"false");
+  b.onclick=()=>{area=a;[...areasEl.children].forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));};areasEl.appendChild(b);});
+
+// ===== interpretation engine =====
+// Per card: number, element (Golden Dawn attribution), yes/no lean, topic readings, and one action.
+const LORE={
+ fool:{n:0,el:"air",yn:"yes",love:"Something new. Go slow on the plans.",work:"Take the leap. Learn on the way.",money:"New place? Read the agreement first.",self:"You're allowed to be new at this.",act:"Say yes to one thing you'd normally overthink."},
+ magician:{n:1,el:"air",yn:"yes",love:"Say it clearly. They're listening.",work:"Ship something this week.",money:"Use what you have first.",self:"Pick one thing. Finish it.",act:"Finish one task by Wednesday."},
+ priestess:{n:2,el:"water",yn:"maybe",love:"Watch what they do. Ignore the texts.",work:"Listen more in meetings.",money:"Wait for the full picture.",self:"Your gut is usually right.",act:"Sleep on it once."},
+ empress:{n:3,el:"earth",yn:"yes",love:"Let it be easy.",work:"Creative work grows. Don't force it.",money:"Spend on making home nice.",self:"Rest is the work this week.",act:"Do one slow, nice thing for yourself."},
+ emperor:{n:4,el:"fire",yn:"yes",love:"Talk about the rules.",work:"Find who decides. Talk to them.",money:"Get it in writing.",self:"Some discipline would help.",act:"Write three rules. Keep them."},
+ hierophant:{n:5,el:"earth",yn:"yes",love:"Family's watching. Commitment's on the table.",work:"Follow the process. Find a mentor.",money:"Pick the safe option.",self:"Ask someone who's done it.",act:"Ask someone older one honest question."},
+ lovers:{n:6,el:"air",yn:"maybe",love:"Real connection. Real choice.",work:"Two paths. Pick the braver one.",money:"Two options. Check the EMI, then your gut.",self:"Be the same person everywhere.",act:"Make the call you've been putting off."},
+ chariot:{n:7,el:"water",yn:"yes",love:"They're busy chasing their own goals.",work:"Push through. You'll get there.",money:"Things move fast. Be ready.",self:"Pick a direction. Commit.",act:"Set a deadline. Tell someone."},
+ strength:{n:8,el:"fire",yn:"yes",love:"Don't chase. Be patient.",work:"Firm and kind beats loud.",money:"Slow saving wins.",self:"You're tougher than this week.",act:"Wait ten seconds before you reply."},
+ hermit:{n:9,el:"earth",yn:"no",love:"Know what you want first.",work:"Fewer meetings. More thinking.",money:"Don't splurge this week.",self:"Quiet helps. Hiding doesn't.",act:"Two hours, phone in another room."},
+ wheel:{n:10,el:"fire",yn:"maybe",love:"Timing matters more than effort.",work:"A change is coming. Roll with it.",money:"Don't decide on a bad week.",self:"This will pass.",act:"Notice one thing that got better."},
+ justice:{n:11,el:"air",yn:"maybe",love:"Is the effort equal?",work:"Make your case with facts.",money:"Read the fine print.",self:"Own your part.",act:"Write both sides before you pick."},
+ hanged:{n:12,el:"water",yn:"maybe",love:"On pause. Look at it differently.",work:"Stuck for now. Rethink it.",money:"Hold off.",self:"Let go of the plan.",act:"Ask a friend how they'd see it."},
+ death:{n:13,el:"water",yn:"no",love:"Something's ending. Make room.",work:"This chapter's done.",money:"Cancel what you don't use.",self:"You're changing. Let it feel weird.",act:"End one thing you only keep out of habit."},
+ temperance:{n:14,el:"fire",yn:"yes",love:"Meet in the middle.",work:"Blend both ideas. Be patient.",money:"Not too tight, not too loose.",self:"Push a bit. Rest a bit.",act:"Do one thing at half speed."},
+ devil:{n:15,el:"earth",yn:"no",love:"Notice what you keep going back to.",work:"What's actually keeping you there?",money:"Stop spending to feel better.",self:"A habit has a hold on you.",act:"Delete one app for a week."},
+ tower:{n:16,el:"fire",yn:"no",love:"The truth comes out. The air clears.",work:"Something wobbles. Better now than later.",money:"Keep a buffer.",self:"Wake-up call. A useful one.",act:"Fix the thing you keep patching."},
+ star:{n:17,el:"air",yn:"yes",love:"Open up again. Gently.",work:"Keep going. Someone will notice.",money:"It's recovering. Stick to the plan.",self:"You're healing. Slowly counts.",act:"Write what you'd do if it worked."},
+ moon:{n:18,el:"water",yn:"maybe",love:"Mixed signals. Don't assume the worst.",work:"Ask before you assume.",money:"Too good to be true? Check.",self:"Anxiety is telling stories.",act:"For every worry, write one fact."},
+ sun:{n:19,el:"fire",yn:"yes",love:"Warm and easy. Enjoy it.",work:"People are noticing. Show more.",money:"Good week. Celebrate a little.",self:"Let yourself enjoy this.",act:"One hour outside. No phone."},
+ judgement:{n:20,el:"fire",yn:"maybe",love:"Old patterns show up. Choose differently.",work:"Tell your story before they do.",money:"Look at where the money goes.",self:"Something bigger is calling.",act:"List what you're proud of this year."},
+ world:{n:21,el:"earth",yn:"yes",love:"It comes together.",work:"Finish strong. Take the win.",money:"Goal's close. Mark it.",self:"Look at where you were last year.",act:"Celebrate something you finished."}
+};
+const EL={fire:{name:"Fire",what:"drive and action"},water:{name:"Water",what:"feelings and people"},air:{name:"Air",what:"thinking and talking"},earth:{name:"Earth",what:"money and home"}};
+const OPP={fire:"water",water:"fire",air:"earth",earth:"air"};
+const PAIRS=[
+ [["tower","star"],"Tower and Star. It breaks, then you rebuild better."],
+ [["death","sun"],"Death and Sun. An ending that feels like relief."],
+ [["death","fool"],"Death and Fool. Clean ending, fresh start."],
+ [["devil","lovers"],"Devil and Lovers. A tempting choice. Does it free you or tie you?"],
+ [["moon","sun"],"Moon and Sun. The fog clears."],
+ [["hermit","lovers"],"Hermit and Lovers. Know your own mind before you commit."],
+ [["magician","chariot"],"Magician and Chariot. Build it, then launch it."],
+ [["tower","death"],"Tower and Death. A big clear-out."],
+ [["star","world"],"Star and World. A long-held hope comes good."],
+ [["wheel","justice"],"Wheel and Justice. What goes around comes around."],
+ [["emperor","empress"],"Emperor and Empress. Rules and warmth, in balance."],
+ [["hanged","wheel"],"Hanged Man and Wheel. Wait for the turn."],
+ [["priestess","moon"],"High Priestess and Moon. Something's hidden. Your gut knows."],
+ [["temperance","strength"],"Temperance and Strength. Patience is the plan."]
+];
+const ROWS=[[1,7,"about you"],[8,14,"about you and other people"],[15,21,"about big change"]];
+
+function readQuestion(raw){
+  const q=(raw||"").trim(),t=" "+q.toLowerCase().replace(/[^a-z0-9' ]/g," ")+" ",has=re=>re.test(t);
+  const topics={
+    love:has(/ (love|date|dating|crush|boyfriend|girlfriend|bf|gf|partner|ex|marry|marriage|wedding|relationship|text him|text her|situationship|single|hinge|bumble|tinder|propose|breakup|break up) /),
+    work:has(/ (job|work|boss|manager|office|promotion|appraisal|interview|offer|startup|career|client|freelance|project|resign|quit|hire|hired|team|business|pitch|founder|layoff) /),
+    money:has(/ (money|salary|rent|deposit|flat|house|apartment|landlord|invest|loan|emi|buy|save|savings|pg|move|shift|home|stocks|debt|spend) /),
+    family:has(/ (mom|mum|amma|dad|appa|parents|family|sister|brother|friend|friends|roommate|flatmate|cousin) /),
+    self:has(/ (happy|health|gym|run|weight|anxious|anxiety|stress|burnout|sleep|myself|confidence|lonely|purpose) /)};
+  const order=["love","work","money","family","self"];let topic=order.find(k=>topics[k]);
+  const first=t.trim().split(" ")[0]||"";
+  const yn=/^(will|should|is|are|am|do|does|did|can|could|would|shall|has|have|was)$/.test(first);
+  const should=/^(should|shall)$/.test(first)||has(/ should i /);
+  const willq=/^(will|when)$/.test(first);
+  const either=yn&&has(/ or /);
+  const other=has(/ (he|she|they|him|her|them|his|their|my ex|my boss|my manager|my landlord) /)&&has(/ (think|feel|feels|like|likes|love|loves|miss|misses|text|call|come back|want|wants|reply|care|cheat|notice) /);
+  const anxious=has(/ (worried|worry|scared|nervous|anxious|afraid|panic|stress|stressed|overthinking|scary) /);
+  const absolute=has(/ (ever|never|always|nothing|nobody|no one|everything) /);
+  const longing=has(/ (miss|back|again|come back|return|still) /);
+  const fed=has(/ (sick of|tired|hate|fed up|done with|annoyed|frustrated) /);
+  if(!topic) topic=other||has(/ (he|she|him|her|text|call|reply) /)?"love":(q?"self":"week");
+  return {q,topic,yn,should,willq,either,other,anxious,absolute,longing,fed};
+}
+const PLACES={
+ "Koramangala":{c:"stuck at the 80 Feet Road signal",h:"in a café full of pitch decks",he:"on a late walk to the 5th Block bakery"},
+ "Indiranagar":{c:"down 100 Feet Road",h:"over a laptop at a brewery",he:"on a slow walk down 12th Main"},
+ "Whitefield":{c:"on the long ITPL commute",h:"in a tech park cafeteria",he:"back home behind the society gate"},
+ "HSR Layout":{c:"on the Outer Ring Road stretch",h:"in a startup that has pivoted twice",he:"over dosa on 27th Main"},
+ "Jayanagar":{c:"around 4th Block",h:"between errands at the shopping complex",he:"with the aunties who already know"},
+ "Malleswaram":{c:"down Sampige Road",h:"over filter coffee at the old darshini",he:"at the 8th Cross flower market"},
+ "Electronic City":{c:"on the elevated tollway",h:"on a campus with its own food court",he:"on the long ride home"},
+ "Marathahalli":{c:"on the bridge",h:"in an office facing the ORR",he:"over late-night biryani"}
+};
+const ADV={"fool": {"love": "Say yes to the date. Pick a café with parking. You're new here.", "work": "Take the leap. Keep your laptop charger and a backup plan.", "money": "Before you sign, ask the landlord about the deposit. Twice.", "self": "Explore a new area this weekend. Silk Board does not count.", "rev": "You're not new anymore. Plan the leap before you take it."}, "magician": {"love": "Text first. Clearly. Not 'hey' followed by nothing.", "work": "Ship it by Friday, before your idea becomes someone else's startup.", "money": "Use what you have. You don't need a fourth kurta from Commercial Street.", "self": "Pick one project. Finish it before the next brewery opens.", "rev": "Close nine tabs. Open one. Finish it."}, "priestess": {"love": "Don't send the paragraph. Watch what they do this week.", "work": "Say less in standup. Notice who's quietly panicking.", "money": "Wait. The flat with 'very good ventilation' has no windows.", "self": "Trust your gut. It found the best darshini. It can handle this.", "rev": "Stop polling the group chat. Ask yourself, over filter coffee."}, "empress": {"love": "Cook for them. Or order from the place everyone pretends they discovered.", "work": "Let the idea grow. Don't pitch it at the next networking mixer.", "money": "Spend a little on home. Plants count. Seventeen plants do not.", "self": "Sunday in Cubbon Park. Bring a mat. Leave the laptop.", "rev": "When did you last touch grass? Lalbagh is open."}, "emperor": {"love": "Talk about where this is going. With words, not Instagram stories.", "work": "Find who actually decides. It's never the loudest person in the meeting.", "money": "Get the rent agreement on stamp paper. Read clause 14.", "self": "Set three rules. Rule one: leave before the traffic does.", "rev": "Your deposit's coming back. Frame the receipt."}, "hierophant": {"love": "Introduce them to one relative. Start with the cool cousin.", "work": "Follow the process. Fill the form. Then follow up in person, with snacks.", "money": "Pick the boring, safe option. Appa will be thrilled.", "self": "Ask someone older how they did it. Sit through all 40 minutes of the answer.", "rev": "Mute the society group. The water tank will survive without you."}, "lovers": {"love": "Choose. Then tell them before they see it on your status.", "work": "Two offers? Pick the better commute. Month three you will thank you.", "money": "Pick the flat near the metro over the flat with a view of the metro.", "self": "Be the same person at the brewery and at your parents' house.", "rev": "Waiting for a perfect sign? This is it. Decide."}, "chariot": {"love": "They're busy. Be busy too. Meet halfway, ideally near a metro station.", "work": "Book the 7am cab and push through the week. You'll make it.", "money": "Move fast on the flat. Good ones vanish like autos at Majestic.", "self": "Set a deadline. Tell your most annoying friend so they keep asking.", "rev": "Stop revving. Honking won't get you through Silk Board faster."}, "strength": {"love": "Be patient. No triple texts. Even the gate dog waits for his biscuit.", "work": "Handle the difficult colleague kindly and firmly, filter coffee in hand.", "money": "Save slowly. Skip one brunch a week. One. Not all of them.", "self": "Before you reply, wait one full Silk Board signal.", "rev": "Stop adjusting for everyone. Keep the window seat."}, "hermit": {"love": "Take a weekend alone before you decide. Nandi Hills, solo.", "work": "Block two hours. Status: in a meeting. You're not.", "money": "Skip the splurge. The mall sale comes back. It always does.", "self": "Log off for one evening. The internet won't notice. Promise.", "rev": "Leave the flat. The delivery guy is not your friend group."}, "wheel": {"love": "Timing's off. Wait for the green. It comes, like the Silk Board signal. Eventually.", "work": "Change is coming. Update your CV quietly. Just in case.", "money": "No big money moves on a bad week. Wait for payday.", "self": "This phase will pass. So will the bus. Catch the next one.", "rev": "Stuck in a loop? Take the U-turn. There's always one. Eventually."}, "justice": {"love": "Check if the effort's equal. Who's always crossing the city to meet?", "work": "Make your case with numbers. Screenshots of wins, not vibes.", "money": "Read the fine print. Then ask about maintenance charges. Then ask again.", "self": "Own your part. Then let it go. Unlike your landlord with the deposit.", "rev": "You agreed to meter plus fifty. Next time, walk to the next auto."}, "hanged": {"love": "Wait. See it from their side. Maybe their Wi-Fi really was down.", "work": "Stuck? Pause and rethink. The metro took years too.", "money": "Hold off. The price will be the same next month.", "self": "Drop the plan. Take a random bus. See where it goes.", "rev": "Stop waiting for the metro line to open. Take the bus today."}, "death": {"love": "If it's over, let it be over. Mute. Don't stalk.", "work": "Draft the resignation. You don't have to send it. Yet.", "money": "Cancel three subscriptions you forgot you pay for.", "self": "Clear one shelf. Donate the jackets you bought for 'Bangalore winter'.", "rev": "It already had its last working day. Return the laptop. Move on."}, "temperance": {"love": "Meet in the middle. Literally. Halfway between your two layouts.", "work": "Blend both ideas. Pour slowly, like good filter coffee.", "money": "Spend half, save half. Not too tight. Not too loose.", "self": "Work on weekdays. Rest on weekends. Revolutionary, we know.", "rev": "Too much decoction. Cut one thing down by half."}, "devil": {"love": "Is it love, or just very good Instagram stories? Check.", "work": "Golden handcuffs? Price out freedom. Probably one less brunch.", "money": "Delete the food delivery app for a week. You will survive. Probably.", "self": "Log off LinkedIn for a week. Nobody needs to be humbled that often.", "rev": "You logged off and nothing broke. Stay logged off."}, "tower": {"love": "Have the honest talk. Better a storm now than a flood later.", "work": "Something will break. Back up your files before 4pm.", "money": "Build an emergency fund. Bengaluru rain doesn't send a calendar invite.", "self": "Fix the thing you keep patching. You know the one.", "rev": "The storm missed you. Go out before 4pm anyway."}, "star": {"love": "Open up again. Gently. Like a Nandi Hills sunrise, worth the early alarm.", "work": "Keep going. Someone important is noticing, even on mute.", "money": "It's recovering. Stick to the plan. Skip the impulse buy.", "self": "Write down the dream. Then the first step. Then do the step.", "rev": "Fogged out? Go back next weekend. The view isn't going anywhere."}, "moon": {"love": "Don't decode the 'k'. Ask what they meant.", "work": "Ask before you assume. That email probably wasn't passive-aggressive.", "money": "Too good to be true? It's Bellandur foam. Check twice.", "self": "For every worry, write one fact. Facts win.", "rev": "The foam's clearing. Now look at what's really there."}, "sun": {"love": "Plan a sunny date. Cubbon Park, ice cream, phones away.", "work": "Show your work. Post the win. Humbly. Ish.", "money": "Treat yourself a little. The good dosa, not a new car.", "self": "An hour outside, no phone. December weather is the city's apology.", "rev": "It's lovely out. Close the laptop. Go."}, "judgement": {"love": "Old pattern showing up? Do the opposite this time.", "work": "Write your own appraisal summary before your manager does.", "money": "Check where last month's money went. Yes, all those midnight biryanis.", "self": "List what you're proud of. Read it before your next overthinking session.", "rev": "Go easy on yourself. Your manager already forgot."}, "world": {"love": "It's coming together. Say the thing. Book the trip.", "work": "Finish strong. Take the win. Then take leave.", "money": "The goal's close. Mark it. Small party, big savings.", "self": "Celebrate something you finished. Out loud. In Kannada if you can.", "rev": "Nearly there. One last push, like the final stretch to Electronic City."}};
+const ASKED={};
+const POSKEY=["commute","hustle","heart"];
+function topicCardIndex(topic){return topic==="love"||topic==="family"?2:topic==="work"||topic==="money"?1:topic==="self"?2:1;}
+function lean(v,rev){if(!rev)return v;return v==="yes"?"maybe":v==="maybe"?"no":"no";}
+function interpret(cards,area,raw){
+  const Q=readQuestion(raw),L=cards.map(c=>c.card.kind==="rare"?null:LORE[c.card.scene]);
+  const tkey=Q.topic==="week"||Q.topic==="family"?(Q.topic==="family"?"love":"self"):Q.topic;
+  const out={open:[],story:[],patterns:[],answer:null,hidden:null,close:[]};
+  const norm=Q.q.toLowerCase().replace(/[^a-z ]/g,"").trim();
+  const repeat=norm&&ASKED[norm];if(norm)ASKED[norm]=(ASKED[norm]||0)+1;
+
+  // 1. meet the person where they are
+  if(!Q.q) out.open.push("No question, so this is a general read of your week.");
+  else{
+    if(repeat) out.open.push("Asked this already? Go with the first answer.");
+    if(Q.other) out.open.push("The cards can't read their mind. This reading is about your side.");
+    if(Q.anxious) out.open.push("Breathe. The cards show a lean. That's all.");
+    else if(Q.fed) out.open.push("You sound fed up. You probably know what has to change.");
+    else if(Q.longing) out.open.push("Sounds like you miss someone. Read with that in mind.");
+    if(Q.willq&&!Q.other) out.open.push("You get a lean. What you do can still change it.");
+    if(Q.should) out.open.push("Should you? The marked card answers it. The other two show what's around it.");
+    if(Q.either) out.open.push("The cards won't pick. They'll show which way you lean.");
+    if(Q.absolute) out.open.push("Never and always are big words. This is one week.");
+  }
+
+  out.open=out.open.slice(0,2);
+
+  // 2. one story: your neighbourhood, your question and the three cards, read together
+  const PL=PLACES[area]||PLACES.Koramangala,ti=topicCardIndex(Q.topic);
+  const natural=["self","work","love"];
+  const keyFor=i=>(Q.q&&i===ti)?tkey:(i===0&&tkey==="money"?"money":natural[i]);
+  const ref=c=>`<i>${esc(c.card.name)}</i>${c.rev?" (reversed)":""}`;
+  const lineFor=i=>{const l=L[i];if(!l)return "An empty road, of all things. Enjoy it while it lasts.";let t=l[keyFor(i)]||l.self;if(cards[i].rev)t+=" Reversed, so it plays out more in your head than around you.";return t;};
+  const tie=i=>(Q.q&&i===ti)?` <span class="tie">This one answers your question.</span>`:"";
+  const cap=x=>x.charAt(0).toUpperCase()+x.slice(1);
+  out.story.push(`${esc(area)}, ${esc(AREAS[area])}.`);
+  out.story.push(`${cap(PL.c)}, you meet ${ref(cards[0])}. ${esc(lineFor(0))}${tie(0)}`);
+  out.story.push(`${cap(PL.h)}, it's ${ref(cards[1])}. ${esc(lineFor(1))}${tie(1)}`);
+  out.story.push(`And ${PL.he}, ${ref(cards[2])} turns up. ${esc(lineFor(2))}${tie(2)}`);
+  out.ti=ti;
+
+  // 3. patterns a reader would look for. Each note remembers which cards it is about.
+  const P=(html,idx)=>out.patterns.push({html,idx});
+  const ix=[0,1,2].filter(i=>L[i]);const elOf=i=>L[i].el;const els=ix.map(elOf);
+  const count={};els.forEach(e=>count[e]=(count[e]||0)+1);
+  const dom=Object.keys(count).find(e=>count[e]>=2);
+  if(dom) P(`<b>Mostly ${EL[dom].name}.</b> ${count[dom]===3?"All three cards":"Two cards"} point to ${EL[dom].what}. That's your week.`,ix.filter(i=>elOf(i)===dom));
+  const clash=els.find(e=>els.includes(OPP[e]));
+  if(clash) P(`<b>${EL[clash].name} vs ${EL[OPP[clash]].name}.</b> These elements cancel out. Expect to feel pulled both ways.`,ix.filter(i=>elOf(i)===clash||elOf(i)===OPP[clash]));
+  const missing=["earth","fire","water","air"].find(e=>!els.includes(e)&&(tkey==="money"?e==="earth":tkey==="love"?e==="water":tkey==="work"?e==="fire":true));
+  if(missing&&!dom) P(`<b>No ${EL[missing].name}.</b> You could use more ${EL[missing].what}.`,[]);
+  const revIdx=[0,1,2].filter(i=>cards[i].rev);
+  if(revIdx.length>=2) P(`<b>${revIdx.length} reversed.</b> A week for thinking. Hold the big moves.`,revIdx);
+  else if(revIdx.length===0&&ix.length===3) P("<b>All upright.</b> Nothing's blocked. Go.",[0,1,2]);
+  const nums=ix.map(i=>L[i].n);
+  const rowHits=ROWS.map(r=>ix.filter(i=>L[i].n>=r[0]&&L[i].n<=r[1]));const ri=rowHits.findIndex(h=>h.length>=2);
+  if(ri>=0) P(`<b>Row ${ri+1} of the Fool's Journey.</b> This week is ${ROWS[ri][2]}.`,rowHits[ri]);
+  const fi=ix.find(i=>L[i].n===0);if(fi!==undefined) P("<b>The Fool showed up.</b> You're at the start of something.",[fi]);
+  if(nums.length===3){if(nums[0]<nums[1]&&nums[1]<nums[2]) P("<b>Numbers rising.</b> Steady progress.",[0,1,2]);
+    else if(nums[0]>nums[1]&&nums[1]>nums[2]) P("<b>Numbers falling.</b> You'll circle back before moving on.",[0,1,2]);}
+  PAIRS.forEach(([p,txt])=>{const a=ix.find(i=>cards[i].card.scene===p[0]),b=ix.find(i=>cards[i].card.scene===p[1]);if(a!==undefined&&b!==undefined)P(`<b>Known pair.</b> ${txt}`,[a,b]);});
+
+  
+// 4. quintessence: add the numbers, reduce to 21 or less
+  if(nums.length){let s=nums.reduce((a,b)=>a+b,0),steps=[s];while(s>21){s=String(s).split("").reduce((a,b)=>a+ +b,0);steps.push(s);}
+    const scene=Object.keys(LORE).find(k=>LORE[k].n===s);const hc=DECK.find(d=>d.scene===scene);
+    out.hidden={card:hc,steps,line:LORE[scene][tkey]||LORE[scene].self};}
+
+  // 5. a weighted yes/no when the question asks for one
+  if(Q.yn&&!Q.either){const ti=topicCardIndex(Q.topic);let sc=0,w=0,decider=null,dw=0;
+    cards.forEach((c,i)=>{const l=L[i];const v=l?lean(l.yn,c.rev):"yes";const wt=(i===ti?2:1)+(i===2?.5:0);sc+=wt*(v==="yes"?1:v==="no"?-1:0);w+=wt;if(wt>dw){dw=wt;decider={c,v};}});
+    const r=sc/w;const label=r>.45?"Yes":r>.12?"Leaning yes":r>-.12?"Unclear for now":r>-.45?"Leaning no":"Not right now";
+    const others=cards.filter((c,i)=>i!==ti).map((c,i)=>{const l=L[cards.indexOf(c)];return l?lean(l.yn,c.rev):"yes";});
+    const against=others.filter(v=>(decider.v==="yes"&&v==="no")||(decider.v==="no"&&v==="yes")||v==="maybe").length;
+    const topicWord={love:"a love",work:"a work",money:"a money or home",family:"a people",self:"a personal",week:"a general"}[Q.topic];
+    const why=`${POS[ti][0]} counts most here. ${esc(decider.c.card.name)}${decider.c.rev?" reversed":""} says ${decider.v}`+(against===2?". The other two disagree.":against===1?". One card disagrees.":". The others agree.");
+    out.answer={label,why,decider:decider.c,against,soft:Q.anxious&&r<0?"Not what you wanted? It's one week. It can shift.":r>.45?"Good news. Still do your bit.":""};}
+
+  // 5b. tie it all back to the question
+  {const tone=cards.reduce((t,c,i)=>t+(L[i]?(c.rev?c.card.tr:c.card.tu):3),0);
+   const mood=tone>=4?"a good week":tone>=1?"a decent week":tone===0?"a mixed week":tone>=-3?"a bumpy week":"a rough week";
+   const under=out.hidden&&out.hidden.card?" Your hidden card, below, adds the last word.":"";
+   if(Q.q&&out.answer){const a=out.answer;out.synth=`So, "${esc(Q.q)}"? <b>${a.label}.</b> ${ref(a.decider)} decides it`+(a.against===2?", though the other two cards push back.":a.against===1?", with one card pushing back.":", and the other cards agree.")+under;}
+   else if(Q.q){const l=L[ti];out.synth=`So, "${esc(Q.q)}"? Start with ${ref(cards[ti])}. ${esc(l?(l[tkey]||l.self):"Enjoy the empty road.")}`+under;}
+   else out.synth=`Put together, ${esc(area)} is giving you ${mood}.`+under;}
+
+  // 6. close like a person would: one thing to do, one thing to think about
+  {const ai=Q.q?ti:2,c=cards[ai],A=c.card.kind==="rare"?null:ADV[c.card.scene];
+   const pre=out.answer?({"Yes":"Go for it.","Leaning yes":"Lean in.","Unclear for now":"Give it a week.","Leaning no":"Not yet.","Not right now":"Not right now."}[out.answer.label]+" "):"";
+   const tip=A?(c.rev?A.rev:(A[tkey]||A.self)):"Screenshot the empty road. Nobody will believe you.";
+   out.close.push(`<b>Do this:</b> ${esc(tip)}`);}
+  const prompts={love:"What would you do if nobody was watching?",work:"What would you ask for if you weren't scared?",money:"What are you paying for that you don't want?",self:"What would make this week lighter?",week:"What do you want true by Sunday?"};
+  const ask=Q.other?"What do you want, whatever they do?":Q.anxious?"What's one thing you know for sure?":Q.should?"What would you pick if nobody would ever find out?":(prompts[tkey]||prompts.week);
+  out.close.push(`<b>Ask yourself:</b> ${ask}`);
+  return {Q,out};
+}
+function interpretHTML(r){const o=r.out;let h=`<div class="interp">`;
+  if(o.open.length) h+=`<p class="lead">${o.open.join(" ")}</p>`;
+  if(o.answer&&o.answer.soft) h+=`<p class="softnote">${o.answer.soft}</p>`;
+  h+=`<h4>How your week reads</h4><div class="story">`+o.story.map((s,i)=>`<p${i?` data-cards="${i-1}"`:` class="intro"`}>${s}</p>`).join("")+`</div>`+(o.synth?`<p class="synth">${o.synth}</p>`:"");
+  if(o.patterns.length) h+=`<h4>What a reader would spot <span class="tip">tap a note to see its cards</span></h4><ul class="pats">`+o.patterns.map(p=>`<li tabindex="0" data-cards="${p.idx.join(",")}">${p.html}</li>`).join("")+`</ul>`;
+  if(o.hidden&&o.hidden.card) h+=`<div class="hidden-card closed"><button class="hc-art card" type="button" aria-label="Reveal your hidden card"><div class="inner"><div class="face back">${backSVG()}</div><div class="face front">${cardSVG(o.hidden.card)}</div></div></button><div class="hc-text"><p class="hc-cue">Tap to see the card under your spread.</p><div class="hc-body"><h4>Your hidden card: ${esc(o.hidden.card.name)}</h4>
+    <p class="meta">Your numbers add up to ${o.hidden.steps.join(" → ")}. That's <b>${esc(o.hidden.card.tarot)}</b>, the theme under it all.</p><p>${esc(o.hidden.line)}</p></div></div></div>`;
+  h+=`<div class="closing">${o.close.map(c=>`<p>${c}</p>`).join("")}</div></div>`;return h;}
+
+// reading
+const POS=[["The Commute","what's slowing you down"],["The Hustle","work and money"],["The Heart","love and your people"]];
+const spreadEl=document.getElementById("spread"),pickEl=document.getElementById("pick"),readingsEl=document.getElementById("readings"),verdictEl=document.getElementById("verdictBox"),hint=document.getElementById("tapHint");
+let current=[],picked=0,busy=false,order=[];
+function emptyReadings(){readingsEl.innerHTML=POS.map(p=>`<div class="reading empty"><div class="label">${p[0]}</div><h3>Not drawn yet</h3><p class="meta">${p[1]}</p></div>`).join("");}
+function renderSlots(){spreadEl.innerHTML="";POS.forEach((p,i)=>{const s=document.createElement("div");s.className="slot";
+  const b=document.createElement("div");b.className="card placeholder";b.setAttribute("role","img");b.setAttribute("aria-label",`${p[0]}: no card yet`);
+  b.innerHTML=`<div class="inner"><div class="face back">${backSVG()}</div><div class="face front"></div></div><span class="ph">${i+1}</span>`;
+  addTilt(b);s.innerHTML=`<div class="pos">${p[0]}</div>`;s.appendChild(b);spreadEl.appendChild(s);});}
+renderSlots();emptyReadings();
+
+// a resting stack in the pick zone, so the table never looks empty
+function restingStack(){pickEl.innerHTML="";for(let i=0;i<5;i++){const d=document.createElement("div");d.className="fcard rest";d.style.setProperty("--x","0px");d.style.setProperty("--y",(-i*2)+"px");d.style.setProperty("--r",((i-2)*2)+"deg");d.innerHTML=backSVG();pickEl.appendChild(d);}}
+restingStack();
+
+// hold to shuffle
+const sb=document.getElementById("shuffle"),HOLD=1100;let holdStart=0,raf=0;
+function setP(p){sb.style.setProperty("--p",p.toFixed(3));}
+function jitter(on){[...pickEl.children].forEach((c,i)=>c.classList.toggle("jit",on));}
+function startHold(){if(busy||holdStart)return;if(REDUCED){deal();return;}holdStart=performance.now();sb.classList.add("holding");jitter(true);hint.textContent="Keep holding.";
+  const tick=()=>{const p=(performance.now()-holdStart)/HOLD;setP(Math.min(1,p));if(p>=1){endHold(true);}else raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);}
+function endHold(done){if(!holdStart)return;cancelAnimationFrame(raf);holdStart=0;sb.classList.remove("holding");jitter(false);setP(0);
+  if(done)deal();else hint.textContent="Hold till the ring fills.";}
+sb.addEventListener("pointerdown",e=>{e.preventDefault();try{sb.setPointerCapture(e.pointerId);}catch(_){}startHold();});
+sb.addEventListener("contextmenu",e=>e.preventDefault());
+["pointerup","pointercancel","lostpointercapture"].forEach(ev=>sb.addEventListener(ev,()=>endHold(false)));
+sb.addEventListener("keydown",e=>{if((e.key===" "||e.key==="Enter")&&!e.repeat){e.preventDefault();startHold();}});
+sb.addEventListener("keyup",e=>{if(e.key===" "||e.key==="Enter")endHold(false);});
+sb.addEventListener("click",e=>e.preventDefault());
+
+function shuffled(){const a=DECK.slice();for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]];}if(Math.random()<.04)a.splice(rand(a.length),0,RARE);return a;}
+async function deal(){busy=true;sb.disabled=true;current=[];picked=0;order=shuffled();emptyReadings();verdictEl.hidden=true;verdictEl.innerHTML="";renderSlots();
+  const narrow=pickEl.clientWidth<520,N=Math.min(narrow?9:13,order.length);pickEl.innerHTML="";
+  const R=Math.min(pickEl.clientWidth/2-(narrow?34:50),narrow?150:300);
+  for(let i=0;i<N;i++){const t=(i/(N-1))*2-1,b=document.createElement("button");b.type="button";b.className="fcard";
+    b.style.setProperty("--x",(t*R).toFixed(1)+"px");b.style.setProperty("--y",(t*t*(narrow?22:34)).toFixed(1)+"px");b.style.setProperty("--r",(t*(narrow?24:28)).toFixed(1)+"deg");
+    b.style.zIndex=i;b.style.transitionDelay=REDUCED?"0s":(i*.03)+"s";b.setAttribute("aria-label",`Pick card ${i+1} of ${N}`);b.innerHTML=backSVG();b.dataset.i=i;
+    b.onclick=()=>pick(i,b);pickEl.appendChild(b);}
+  pickEl.classList.add("closed");void pickEl.offsetWidth;requestAnimationFrame(()=>pickEl.classList.remove("closed"));setTimeout(()=>[...pickEl.children].forEach(c=>c.style.transitionDelay=""),900);
+  hint.textContent="Pick three. Go with your gut.";document.body.classList.add("picking");sb.querySelector(".lbl").textContent="Hold to reshuffle";
+  setTimeout(()=>{sb.disabled=false;busy=false;},REDUCED?0:700);}
+
+function pick(i,el){if(picked>=3||el.dataset.used)return;el.dataset.used="1";const k=picked++;
+  const card=order[i],rev=card.kind!=="rare"&&Math.random()<.3;current[k]={card,rev};
+  const slot=spreadEl.children[k].querySelector(".card");const from=el.getBoundingClientRect(),to=slot.getBoundingClientRect();
+  el.classList.add("taken");
+  const land=()=>{slot.classList.remove("placeholder");const f=slot.querySelector(".front");f.innerHTML=cardSVG(card);if(rev)f.classList.add("rev");
+    slot.setAttribute("aria-label",`${POS[k][0]}: ${card.name}${rev?", reversed":""}`);slot.dataset.idx=k;
+    setTimeout(()=>{slot.classList.add("flipped");},REDUCED?0:140);
+    const r=readingsEl.children[k];r.className="reading";r.innerHTML=`<div class="label">${POS[k][0]}</div><h3>${esc(card.name)}</h3>
+      <p class="meta"><b>${esc(card.tarot)}</b> · ${card.kind==="rare"?"rare card":rev?`<span class="rev">reversed</span>`:"upright"} · ${esc(card.kw.toLowerCase())}</p>
+      <p>${esc(rev?card.rev:card.up)}</p><p class="tarot"><i>In the tarot.</i> ${esc(card.link)}</p>`;
+    if(picked===3)finish();};
+  if(REDUCED){land();return;}
+  const fly=document.createElement("div");fly.className="flyer";fly.innerHTML=backSVG();
+  Object.assign(fly.style,{left:from.left+"px",top:from.top+"px",width:from.width+"px",height:from.height+"px"});document.body.appendChild(fly);
+  const sx=to.width/from.width,dx=to.left-from.left,dy=to.top-from.top,rot=getComputedStyle(el).getPropertyValue("--r")||"0deg";
+  fly.animate([{transform:`rotate(${rot})`},{transform:`translate(${dx*.5}px,${dy*.5-60}px) rotate(0deg) scale(${(1+sx)/2})`,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(${sx})`}],
+    {duration:720,easing:"cubic-bezier(.3,.7,.2,1)",fill:"forwards"}).finished.then(()=>{fly.remove();land();});}
+
+function finish(){hint.textContent="";document.body.classList.remove("picking");[...pickEl.querySelectorAll(".fcard:not(.taken)")].forEach((c,i)=>{c.style.transitionDelay=(i*.02)+"s";c.classList.add("fold");});
+  setTimeout(()=>{restingStack();},REDUCED?0:700);setTimeout(showVerdict,REDUCED?0:900);}
+
+function verdictFor(cs){const tone=cs.reduce((s,c)=>s+(c.rev?c.card.tr:c.card.tu),0),rare=cs.some(c=>c.card.kind==="rare");
+  let sc=Math.round(cs.reduce((s,c)=>s+c.card.chaos,0)/3+cs.filter(c=>c.rev).length*.7);sc=Math.max(1,Math.min(10,rare?10:sc));
+  const line=rare?"An empty road showed up. Nobody will believe you.":tone>=4?"December energy. The city's on your side.":tone>=1?"Mostly green signals. A few auto refusals.":tone===0?"Classic Bengaluru. Sunny at nine, flooded by four.":tone>=-3?"Carry an umbrella. It gets better by Sunday.":"Silk Board energy. Stay in. Order dosa.";
+  const lab=sc<=3?"suspiciously calm":sc<=6?"a standard Tuesday":sc<=8?"very Peak Bengaluru":"maximum Peak Bengaluru";return {line,sc,lab};}
+function showVerdict(){const v=verdictFor(current),q=document.getElementById("q").value.trim();verdictEl.hidden=false;
+  const R=interpret(current,area,q),ans=R.out.answer,big=ans?ans.label+".":v.line,sub=ans?v.line:`${area}, ${AREAS[area]}.`;
+  verdictEl.innerHTML=`<div class="verdict"><div class="label">Your week in ${esc(area)}</div>${q?`<p class="sub qline">"${esc(q)}"</p>`:""}
+   <div class="line" aria-label="${esc(big)}">${big.split(" ").map((w,i)=>`<span class="w" aria-hidden="true" style="animation-delay:${(i*.05).toFixed(2)}s">${esc(w)}</span>`).join(" ")}</div><p class="sub">${esc(sub)}</p>
+   <div class="gauge" aria-label="Peak Bengaluru score ${v.sc} out of 10"><div class="bar2"><i style="width:${v.sc*10}%"></i></div><div class="lab">Peak Bengaluru score <b><span id="scoreN">${REDUCED?v.sc:0}</span>/10</b>, ${v.lab}</div></div>
+   ${interpretHTML(R)}
+   <div class="share"><button class="btn sharebtn" id="shareBtn" aria-expanded="false" aria-controls="sharePanel"><span aria-hidden="true">↗</span> Share my reading</button>
+   <div class="sharepanel" id="sharePanel" hidden><div id="shareOut"></div><div class="shareopts"><a class="sopt" id="sWa" target="_blank" rel="noopener">WhatsApp</a><a class="sopt" id="sX" target="_blank" rel="noopener">X</a><button class="sopt" id="cp" type="button">Copy text</button></div><p class="note" id="cpMsg" aria-live="polite"></p></div></div></div>`;
+  {const sb2=document.getElementById("shareBtn"),panel=document.getElementById("sharePanel");
+   const txt=`My Namma Arcana week in ${area}${q?` ("${q}")`:""}: `+current.map(c=>c.card.name).join(", ")+`. ${R.out.answer?R.out.answer.label+". ":""}Peak Bengaluru score ${v.sc}/10.`;
+   document.getElementById("sWa").href="https://wa.me/?text="+encodeURIComponent(txt);
+   document.getElementById("sX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(txt);
+   document.getElementById("cp").onclick=()=>copyText(v,q);
+   let made=false;
+   sb2.onclick=async()=>{if(navigator.share){try{await navigator.share({title:"Namma Arcana",text:txt});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+     const open=panel.hidden;panel.hidden=!open;sb2.setAttribute("aria-expanded",String(open));if(open&&!made){made=true;makeShare(v,q);}};}
+  verdictEl.querySelectorAll(".btn").forEach(addMagnet);
+  if(!REDUCED){const el=document.getElementById("scoreN");let n=0;const t=setInterval(()=>{n++;el.textContent=n;if(n>=v.sc)clearInterval(t);},90);}
+  // hovering a pattern lights up the cards it is about
+  const table=document.querySelector(".table");
+  verdictEl.querySelectorAll(".pats li,.story p[data-cards]").forEach(li=>{const idx=li.dataset.cards?li.dataset.cards.split(",").map(Number):[];
+    const on=()=>{if(!idx.length)return;table.classList.add("linking");spreadEl.querySelectorAll(".card").forEach((c,i)=>c.classList.toggle("lit",idx.includes(i)));li.classList.add("on");};
+    const off=()=>{table.classList.remove("linking");spreadEl.querySelectorAll(".card").forEach(c=>c.classList.remove("lit"));li.classList.remove("on");};
+    li.addEventListener("mouseenter",on);li.addEventListener("mouseleave",off);li.addEventListener("focus",on);li.addEventListener("blur",off);
+    li.addEventListener("click",()=>{on();spreadEl.scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"});setTimeout(off,2200);});});
+  const hc=verdictEl.querySelector(".hidden-card");if(hc){const b=hc.querySelector(".hc-art");addTilt(b);b.onclick=()=>{b.classList.add("flipped");hc.classList.remove("closed");b.setAttribute("aria-label","Your hidden card, revealed");};}
+  setTimeout(()=>verdictEl.scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"}),300);}
+function copyText(v,q){const t=`My Namma Arcana week in ${area}${q?` ("${q}")`:""}:\n`+current.map((c,i)=>`${POS[i][0]}: ${c.card.name} (${c.card.tarot})${c.rev?", reversed":""}`).join("\n")+`\n${v.line}\nPeak Bengaluru score: ${v.sc}/10`;
+  const m=document.getElementById("cpMsg");const fb=()=>{m.innerHTML="";const ta=document.createElement("textarea");ta.value=t;ta.rows=6;ta.style.cssText="width:100%;max-width:440px;border:1px solid #dcd7cb;border-radius:8px;padding:8px;font:15px var(--body)";m.appendChild(ta);ta.select();};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>m.textContent="Copied.",fb);else fb();}
+function svgImg(svg){return new Promise(res=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>res(null);
+  im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="400" height="680" '));});}
+function wrapT(x,t,cx,y,mw,lh){const ws=t.split(" ");let l="",ls=[];ws.forEach(w=>{const tt=l?l+" "+w:w;if(x.measureText(tt).width>mw&&l){ls.push(l);l=w;}else l=tt;});if(l)ls.push(l);ls.forEach((s,i)=>x.fillText(s,cx,y+i*lh));return ls.length;}
+async function makeShare(v,q){const out=document.getElementById("shareOut");out.innerHTML=`<p class="note">Preparing your card…</p>`;
+  try{await Promise.all([document.fonts.load('80px "Instrument Serif"'),document.fonts.load('500 30px Figtree'),document.fonts.load('40px "Noto Sans Kannada"','ನಮ್ಮ')]);}catch(e){}
+  const W=1080,H=1920,cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d");
+  x.fillStyle="#f7f5f0";x.fillRect(0,0,W,H);x.strokeStyle="#c9a35e";x.lineWidth=2;x.strokeRect(48,48,W-96,H-96);
+  x.textAlign="center";x.fillStyle="#7f9a82";x.font='36px "Noto Sans Kannada",sans-serif';x.fillText("ನಮ್ಮ ಆರ್ಕಾನ",W/2,190);
+  x.fillStyle="#2f2c3d";x.font='130px "Instrument Serif",Georgia,serif';x.fillText("Namma Arcana",W/2,330);
+  x.fillStyle="#76727f";x.font='500 30px Figtree,sans-serif';x.fillText(("My week in "+area).toUpperCase().split("").join(" "),W/2,410);
+  const ims=await Promise.all(current.map(c=>svgImg(cardSVG(c.card))));const cw=290,chh=493;
+  current.forEach((c,i)=>{const cx=W/2+(i-1)*318,cy=780;if(ims[i]){x.save();x.translate(cx,cy);if(c.rev)x.rotate(Math.PI);x.shadowColor="rgba(47,44,61,.18)";x.shadowBlur=40;x.shadowOffsetY=16;x.drawImage(ims[i],-cw/2,-chh/2,cw,chh);x.restore();}
+    x.fillStyle="#76727f";x.font='600 22px Figtree,sans-serif';x.fillText(POS[i][0].toUpperCase(),cx,cy+300);
+    x.fillStyle=c.rev?"#c98f8b":"#9a95a2";x.font='italic 30px "Instrument Serif",Georgia,serif';x.fillText(c.card.kind==="rare"?"rare card":c.rev?"reversed":"upright",cx,cy+340);});
+  x.fillStyle="#2f2c3d";x.font='70px "Instrument Serif",Georgia,serif';wrapT(x,v.line,W/2,1290,W-240,80);
+  x.fillStyle="#dcd7cb";x.fillRect(W/2-220,1620,440,6);x.fillStyle="#c98f8b";x.fillRect(W/2-220,1620,44*v.sc,6);
+  x.fillStyle="#76727f";x.font='500 30px Figtree,sans-serif';x.fillText(`Peak Bengaluru score ${v.sc}/10 · ${v.lab}`,W/2,1690);
+  let url;try{url=cv.toDataURL("image/png");}catch(e){url=null;}
+  out.innerHTML=url?`<img src="${url}" alt="Your Namma Arcana story card"><p class="note">Long-press or right-click the image to save it.</p>`:`<p class="note">This browser couldn't make the image. Use "Copy as text" instead.</p>`;}
+
+document.querySelectorAll(".btn").forEach(addMagnet);
+
+// ===== motionsites-inspired features =====
+// driver face with eyes that follow the cursor
+function driverFace(){return `<circle cx="0" cy="-48" r="8" fill="${SK2}" ${S1}/><path d="M-8.5 -53 Q0 -61 8.5 -53Z" fill="${K}"/>`+
+  `<g class="eye"><ellipse cx="-3.2" cy="-48.5" rx="2.4" ry="2.6" fill="#fff" ${S1}/><circle class="pupil" cx="-3.2" cy="-48.3" r="1.2" fill="${K}"/></g>`+
+  `<g class="eye"><ellipse cx="3.2" cy="-48.5" rx="2.4" ry="2.6" fill="#fff" ${S1}/><circle class="pupil" cx="3.2" cy="-48.3" r="1.2" fill="${K}"/></g>`+
+  `<path d="M-4 -43.5 Q0 -42 4 -43.5" stroke="${K}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;}
+(function(){if(REDUCED)return;let raf=0;
+  addEventListener("pointermove",e=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{document.querySelectorAll(".pupil").forEach(p=>{const r=p.getBoundingClientRect();if(!r.width)return;
+    const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy)||1,m=Math.min(1,d/160);
+    p.setAttribute("transform",`translate(${(dx/d*1.1*m).toFixed(2)} ${(dy/d*1.1*m).toFixed(2)})`);});});},{passive:true});
+  setInterval(()=>{document.querySelectorAll(".eye").forEach(g=>g.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}],{duration:180,transformOrigin:"center"}));},4200);})();
+
+// hidden city under the hero, revealed by an ink brush (after "Hover Ink")
+function citySVG(){const W=1000,H=420;
+  const towersL=[[20,120,40],[70,180,34],[112,140,38],[160,210,30]].map(([x,h,w])=>tower(x,330,w,h,"#b9a8e6","#fff7dc",true)).join("");
+  const towersR=[[740,170,36],[784,230,40],[832,150,34],[874,200,44],[926,130,40]].map(([x,h,w])=>tower(x,330,w,h,"#a99ce0","#fff7dc",true)).join("");
+  let pil="";for(let x=200;x<740;x+=60)pil+=`<rect x="${x}" y="300" width="10" height="80" fill="#d8ccb4" ${S1}/>`;
+  const sky=`<defs><linearGradient id="csky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c98e"/><stop offset="1" stop-color="#fdeedb"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#csky)"/>`;
+  const art=sky+sunFace(860,90,34)+cloud(150,70,1.4)+cloud(560,60,1.1)+kite(690,110,1.4)+
+    `<path d="M0 330 Q120 240 260 300 Q380 220 520 290 Q680 230 820 300 Q920 260 1000 290 L1000 420 L0 420Z" fill="#c9d6a8" ${S}/>`+
+    towersL+towersR+vidhana(470,330,1.7,"#fff3dc")+tree(300,330,1.2,"#5f9a52","#e2412f")+tree(640,330,1.1,"#5f9a52","#f2c14e")+
+    `<rect x="190" y="292" width="560" height="10" fill="#d8ccb4" ${S}/>`+pil+
+    `<rect x="300" y="262" width="250" height="28" rx="10" fill="${PUR}" ${S}/>`+[316,352,388,424,460,496].map(x=>`<rect x="${x}" y="268" width="24" height="10" rx="2" fill="#cfe8f2"/>`).join("")+`<rect x="300" y="282" width="250" height="4" fill="${GRN}"/>`+
+    `<rect x="0" y="380" width="${W}" height="40" fill="#6b6884" ${S}/><path d="M0 400 H1000" stroke="${YEL}" stroke-width="3" stroke-dasharray="26 18"/>`+
+    autoSide(180,410,.75)+bus(420,406,.9)+autoSide(640,410,.75,{},true)+scooter(820,410,.8,RED)+cow(80,380,.7,{horn:RED})+dog(950,380,.7,{pose:"sit"});
+  return mute(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">${art}</svg>`);}
+(function(){const hero=document.querySelector(".hero");if(!hero)return;
+  const layer=document.createElement("div");layer.className="reveal-layer";layer.setAttribute("aria-hidden","true");
+  layer.innerHTML=`<img alt="" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(citySVG())}"><canvas></canvas>`;hero.prepend(layer);
+  const hint=document.createElement("p");hint.className="ink-hint";hint.textContent=FINE?"Move your cursor around. The city is underneath.":"Drag a finger across. The city is underneath.";hero.appendChild(hint);
+  if(REDUCED){layer.classList.add("still");return;}
+  const cv=layer.querySelector("canvas"),ctx=cv.getContext("2d"),PAPER="#faf6ee";let W=0,H=0,d=1,active=false,idle=0,last=null;
+  function size(){const r=layer.getBoundingClientRect();d=Math.min(2,devicePixelRatio||1);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);ctx.globalCompositeOperation="source-over";ctx.fillStyle=PAPER;ctx.fillRect(0,0,W,H);}
+  size();addEventListener("resize",size);
+  function blob(x,y,r){ctx.globalCompositeOperation="destination-out";for(let i=0;i<6;i++){const a=Math.random()*6.283,rr=r*(.35+Math.random()*.55),ox=Math.cos(a)*r*.45,oy=Math.sin(a)*r*.45;
+      const g=ctx.createRadialGradient(x+ox,y+oy,0,x+ox,y+oy,rr);g.addColorStop(0,"rgba(0,0,0,1)");g.addColorStop(.7,"rgba(0,0,0,.85)");g.addColorStop(1,"rgba(0,0,0,0)");
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(x+ox,y+oy,rr,0,6.283);ctx.fill();}}
+  function paint(e){const r=layer.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;if(x<0||y<0||x>W||y>H)return;
+    const rad=W<600?58:84;if(last){const dx=x-last.x,dy=y-last.y,steps=Math.min(8,Math.ceil(Math.hypot(dx,dy)/24));for(let i=1;i<=steps;i++)blob(last.x+dx*i/steps,last.y+dy*i/steps,rad);}else blob(x,y,rad);
+    last={x,y};idle=0;hint.classList.add("gone");if(!active){active=true;requestAnimationFrame(regrow);}}
+  function regrow(){ctx.globalCompositeOperation="source-over";ctx.fillStyle="rgba(250,246,238,.035)";ctx.fillRect(0,0,W,H);idle++;
+    if(idle<260)requestAnimationFrame(regrow);else{ctx.fillStyle=PAPER;ctx.fillRect(0,0,W,H);active=false;}}
+  hero.addEventListener("pointermove",paint);hero.addEventListener("pointerdown",paint);hero.addEventListener("pointerleave",()=>{last=null;});hero.addEventListener("pointerup",()=>{last=null;});})();
+
+// neighbourhood picker in the style of "Space Voyage": list, window, big name, stats
+const AREA_X={
+ "Koramangala":{t:7,r:4,v:"Pitch decks",s:()=>tables(36,150,128)+laptop(80,150,1.4)+tumbler(130,150,1.2,true)+ch(60,150,.9,{top:RED,outfit:"hoodie",legs:"sit",hair:"short",armR:[60,40]})},
+ "Indiranagar":{t:6,r:5,v:"Craft beer",s:()=>`<path d="M20 70 Q100 100 180 70" stroke="${K}" stroke-width="1" fill="none"/>`+[40,70,100,130,160].map((x,i)=>`<circle cx="${x}" cy="${78+Math.sin(i)*6}" r="4" fill="${YEL}" ${S1}/>`).join("")+
+    [[70,170],[118,170]].map(([x,y])=>`<rect x="${x-14}" y="${y-44}" width="28" height="44" rx="4" fill="#f2b04e" ${S}/><path d="M${x-14} ${y-44} Q${x} ${y-56} ${x+14} ${y-44}" fill="#fff" ${S}/><path d="M${x+14} ${y-34} q12 0 12 12 q0 10 -12 10" stroke="${K}" stroke-width="2" fill="none"/>`).join("")+tree(170,190,.7)},
+ "Whitefield":{t:9,r:3,v:"Tech parks",s:()=>tower(20,170,40,120,"#a99ce0","#fff7dc",true)+tower(70,170,36,90,"#b9a8e6","#fff7dc",true)+tower(118,170,50,130,"#a99ce0","#fff7dc",true)+`<rect x="0" y="170" width="200" height="40" fill="#6b6884"/>`+bus(70,196,.9)+autoSide(160,198,.5)},
+ "HSR Layout":{t:6,r:4,v:"Startups",s:()=>tower(30,170,36,100,"#b9a8e6","#fff7dc",true)+tower(130,170,40,80,"#a99ce0","#fff7dc",true)+ground(170,"#c9d6a8")+scooter(90,196,.9,RED)+dog(160,196,.7,{pose:"sit"})},
+ "Jayanagar":{t:5,r:3,v:"Aunty network",s:()=>`<rect x="20" y="70" width="160" height="100" fill="#f3d9b0" ${S}/>`+[40,80,120,160].map(x=>`<rect x="${x-12}" y="90" width="24" height="26" fill="#fff" ${S1}/>`).join("")+T(100,84,"COMPLEX",9)+ground(170,"#c9d6a8")+ch(70,198,.95,{outfit:"saree",top:"#2f9e5b",border:YEL,hair:"bun",jasmine:true,bindi:true,armR:[30,20],holdR:`<rect x="-4" y="0" width="12" height="14" rx="2" fill="${RED}" ${S1}/>`})+ch(130,198,.95,{outfit:"saree",top:PUR,border:YEL,hair:"bun",bindi:true,face:"grin"})},
+ "Malleswaram":{t:4,r:3,v:"Filter coffee",s:()=>`<path d="M60 170 L60 110 L70 100 L70 80 L80 70 L80 55 L120 55 L120 70 L130 80 L130 100 L140 110 L140 170Z" fill="#f2d49a" ${S}/>`+[65,80,95].map(y=>`<path d="M${70-(y-65)/3} ${y+40} H${130+(y-65)/3}" stroke="${K}" stroke-width="1"/>`).join("")+`<circle cx="100" cy="50" r="4" fill="${YEL}" ${S1}/>`+ground(170,"#c9d6a8")+tumbler(40,196,1.5,true)+tumbler(160,196,1.5,true)},
+ "Electronic City":{t:8,r:2,v:"Campuses",s:()=>`<path d="M0 120 Q100 80 200 120 L200 132 Q100 92 0 132Z" fill="#d8ccb4" ${S}/>`+[40,100,160].map(x=>`<rect x="${x-5}" y="${x===100?96:110}" width="10" height="70" fill="#d8ccb4" ${S1}/>`).join("")+autoSide(70,112,.4)+bus(140,116,.45)+tower(20,180,60,50,"#b9a8e6","#fff7dc",true)+tower(120,180,64,60,"#a99ce0","#fff7dc",true)},
+ "Marathahalli":{t:10,r:3,v:"The bridge",s:()=>`<path d="M0 150 Q100 110 200 150" stroke="#cbbfa8" stroke-width="14" fill="none"/><path d="M0 150 Q100 110 200 150" stroke="${K}" stroke-width="1.5" fill="none"/>`+autoSide(30,148,.42)+bus(80,134,.42)+autoSide(124,130,.42,{},true)+scooter(170,146,.5,RED)+
+    [[40,80],[150,70]].map(([x,y])=>bubble(x-28,y-16,56,18,"Honk!",8)).join("")+ground(180,"#c9d6a8")}
+};
+(function(){const host=document.getElementById("areas");if(!host)return;
+  const wrap=document.createElement("div");wrap.className="voyage";host.parentNode.insertBefore(wrap,host);wrap.appendChild(host);host.classList.add("vlist");
+  const win=document.createElement("div");win.className="vwin";win.innerHTML=`<div class="vscene"></div><button type="button" class="vnext" aria-label="Next neighbourhood"><span>Next</span> <b></b></button>`;
+  const info=document.createElement("div");info.className="vinfo";info.innerHTML=`<div class="vname" aria-live="polite"></div><dl class="vstats"></dl>`;
+  wrap.appendChild(win);wrap.appendChild(info);
+  const names=Object.keys(AREAS);let cur=null;
+  function show(name){if(name===cur)return;cur=name;const x=AREA_X[name];const sc=win.querySelector(".vscene");
+    const svg=mute(`<svg viewBox="0 0 200 210" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="vs${names.indexOf(name)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3f2"/><stop offset="1" stop-color="#fdf1dc"/></linearGradient></defs><rect width="200" height="210" fill="url(#vs${names.indexOf(name)})"/>${x.s()}</svg>`);
+    const old=sc.firstElementChild,nw=document.createElement("div");nw.className="vimg in";nw.innerHTML=svg;sc.appendChild(nw);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{nw.classList.remove("in");if(old){old.classList.add("out");setTimeout(()=>old.remove(),600);}}));
+    const nm=info.querySelector(".vname");let k=0;nm.innerHTML=name.split(" ").map(w=>`<span class="vw">${[...w].map(c=>`<span style="animation-delay:${((k++)*.03).toFixed(2)}s">${esc(c)}</span>`).join("")}</span>`).join(" ");nm.setAttribute("aria-label",name);
+    info.querySelector(".vstats").innerHTML=`<div><dt>Traffic</dt><dd>${x.t}/10</dd></div><div><dt>Rent</dt><dd>${"₹".repeat(x.r)}</dd></div><div><dt>Known for</dt><dd>${esc(x.v)}</dd></div><div><dt>Fortune</dt><dd>${esc(AREAS[name])}</dd></div>`;
+    win.querySelector(".vnext b").textContent=names[(names.indexOf(name)+1)%names.length];}
+  host.addEventListener("click",e=>{requestAnimationFrame(()=>show(area));const c=e.target.closest(".chip");if(c&&host.scrollWidth>host.clientWidth)host.scrollTo({left:c.offsetLeft-host.clientWidth/2+c.offsetWidth/2,behavior:REDUCED?"auto":"smooth"});});
+  win.querySelector(".vnext").addEventListener("click",()=>{const n=names[(names.indexOf(area)+1)%names.length];const b=[...host.querySelectorAll(".chip")].find(c=>c.textContent===n);if(b)b.click();});
+  show(area);})();
+
+// auto anna greets you, and quick questions you can tap
+(function(){const body=document.querySelector(".oracle-body"),aq=document.getElementById("aq");if(!body)return;
+  const g=document.createElement("div");g.className="greet";g.innerHTML=`<p>Ello. Where to?</p><p>Ask me anything with a yes or a no.</p>`;
+  body.insertBefore(g,aq);
+  const qs=["Should I take the new job?","Should I text him back?","Will I get the flat?","Should I order biryani tonight?"];
+  const row=document.createElement("div");row.className="quick";row.innerHTML=qs.map(q=>`<button type="button" class="qchip">${esc(q)}</button>`).join("");
+  aq.insertAdjacentElement("afterend",row);
+  row.addEventListener("click",e=>{const b=e.target.closest(".qchip");if(!b)return;aq.value=b.textContent;document.getElementById("autoBtn").click();});
+  const op=document.getElementById("openAuto"),op2=document.getElementById("openAuto2");
+  [op,op2].forEach(b=>b&&b.addEventListener("click",()=>{g.classList.remove("play");void g.offsetWidth;g.classList.add("play");}));})();
+
+// ===== interaction layer =====
+(function(){
+  // scroll progress
+  const pr=document.getElementById("prog");let tk=false;
+  addEventListener("scroll",()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{const h=document.documentElement.scrollHeight-innerHeight;pr.style.transform=`scaleX(${h>0?Math.min(1,scrollY/h):0})`;tk=false;});},{passive:true});
+  // headline: letters lean toward the cursor, and a warm light follows it across the hero
+  const title=document.getElementById("title"),hero=document.querySelector(".hero");
+  title.querySelectorAll(".w").forEach(w=>{w.innerHTML=[...w.textContent].map((c,i)=>`<span class="l" style="--i:${i}">${c}</span>`).join("");});
+  const letters=[...title.querySelectorAll(".l")];
+  if(!REDUCED&&FINE){let raf=0;
+    hero.addEventListener("pointermove",e=>{const hr=hero.getBoundingClientRect();hero.style.setProperty("--mx",(e.clientX-hr.left)+"px");hero.style.setProperty("--my",(e.clientY-hr.top+40)+"px");hero.classList.add("lit");
+      cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>letters.forEach(l=>{const r=l.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy),f=Math.max(0,1-d/220);
+        l.style.transform=`translate(${(dx*.04*f).toFixed(1)}px,${(-14*f).toFixed(1)}px) rotate(${(dx*.03*f).toFixed(1)}deg)`;}));});
+    hero.addEventListener("pointerleave",()=>{hero.classList.remove("lit");letters.forEach(l=>l.style.transform="");});}
+  // neighbourhood chips: a marigold pill slides to the one you pick
+  const chipsEl=document.getElementById("areas"),ind=document.createElement("span");ind.className="ind";chipsEl.prepend(ind);chipsEl.classList.add("has-ind");
+  const moveInd=()=>{const c=chipsEl.querySelector('.chip[aria-pressed="true"]');if(!c)return;Object.assign(ind.style,{left:c.offsetLeft+"px",top:c.offsetTop+"px",width:c.offsetWidth+"px",height:c.offsetHeight+"px"});};
+  chipsEl.addEventListener("click",()=>requestAnimationFrame(moveInd));addEventListener("resize",moveInd);setTimeout(moveInd,60);document.fonts&&document.fonts.ready.then(moveInd);
+  // question box types example questions until you start typing
+  const qi=document.getElementById("q"),ex=["Should I take the new job?","Will I find a flat this month?","Should I text him back?","Is this startup idea any good?","Will the landlord return my deposit?"];
+  if(!REDUCED){let ei=0,ci=0,del=false,stop=false;const base=qi.placeholder;
+    qi.addEventListener("focus",()=>{stop=true;qi.placeholder=base;});
+    (function type(){if(stop||qi.value)return;const t=ex[ei];ci+=del?-1:1;qi.placeholder=t.slice(0,ci)+(ci<t.length||del?"|":"");
+      if(!del&&ci===t.length){del=true;return setTimeout(type,1800);}if(del&&ci===0){del=false;ei=(ei+1)%ex.length;}setTimeout(type,del?28:60);})();}
+  // fanned deck: cards swell as the cursor passes, like a dock
+  if(!REDUCED&&FINE){const pk=document.getElementById("pick");
+    pk.addEventListener("pointermove",e=>{pk.classList.add("docking");pk.querySelectorAll(".fcard:not(.rest):not(.taken)").forEach(c=>{const r=c.getBoundingClientRect(),d=Math.abs(e.clientX-(r.left+r.width/2)),f=Math.max(0,1-d/110);
+      c.style.setProperty("--lift",(f*26).toFixed(1)+"px");c.style.setProperty("--s",(1+f*.14).toFixed(3));c.style.zIndex=f>.85?60:c.dataset.i;});});
+    pk.addEventListener("pointerleave",()=>{pk.classList.remove("docking");pk.querySelectorAll(".fcard").forEach(c=>{c.style.removeProperty("--lift");c.style.removeProperty("--s");if(c.dataset.i)c.style.zIndex=c.dataset.i;});});}
+  // click ripple on buttons
+  document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.autocta");if(!b||REDUCED)return;const r=b.getBoundingClientRect(),sz=Math.max(r.width,r.height)*2;
+    const rp=document.createElement("span");rp.className="ripple";Object.assign(rp.style,{width:sz+"px",height:sz+"px",left:(e.clientX-r.left-sz/2)+"px",top:(e.clientY-r.top-sz/2)+"px"});
+    if(getComputedStyle(b).position==="static")b.style.position="relative";b.style.overflow="hidden";b.appendChild(rp);setTimeout(()=>rp.remove(),650);});
+  // a soft ring follows the cursor and grows over things you can press
+  if(!REDUCED&&FINE){const ring=document.createElement("div");ring.className="ringcur";ring.setAttribute("aria-hidden","true");document.body.appendChild(ring);
+    let x=0,y=0,tx=0,ty=0,run=false;const loop=()=>{x+=(tx-x)*.22;y+=(ty-y)*.22;ring.style.transform=`translate(${x}px,${y}px)`;if(Math.abs(tx-x)+Math.abs(ty-y)>.3)requestAnimationFrame(loop);else run=false;};
+    addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY;ring.classList.add("on");ring.classList.toggle("big",!!e.target.closest("button,a,.fcard,.card,.pats li,input"));if(!run){run=true;requestAnimationFrame(loop);}});
+    document.addEventListener("pointerleave",()=>ring.classList.remove("on"));addEventListener("pointerdown",()=>ring.classList.add("down"));addEventListener("pointerup",()=>ring.classList.remove("down"));}
+})();
+// ask-the-auto panel
+(function(){const sh=document.getElementById("oracle"),sc=document.getElementById("scrim"),op=document.getElementById("openAuto");let last=null;
+  function open(){last=document.activeElement;sh.hidden=false;sc.hidden=false;document.body.style.overflow="hidden";setTimeout(()=>document.getElementById("aq").focus(),50);}
+  function close(){sh.hidden=true;sc.hidden=true;document.body.style.overflow="";(last||op).focus();}
+  op.onclick=open;const op2=document.getElementById("openAuto2");op2.onclick=open;
+  const ic=mute(`<svg viewBox="-42 -76 84 80">${autoFront(0,0,1,{stars:true,driver:driverFace()})}</svg>`);
+  document.querySelectorAll(".aicon").forEach(e=>e.innerHTML=ic);
+  let topVisible=true;const busyEls=new Set();
+  const sync=()=>{op2.hidden=topVisible;op2.classList.toggle("dodge",busyEls.size>0);};
+  const io=new IntersectionObserver(([en])=>{topVisible=en.isIntersecting;sync();},{threshold:0});io.observe(op);
+  let band=null;const watchBand=()=>{if(band)band.disconnect();
+    band=new IntersectionObserver(es=>{es.forEach(e=>{e.isIntersecting?busyEls.add(e.target):busyEls.delete(e.target);});sync();},{rootMargin:`-${Math.max(0,innerHeight-150)}px 0px 0px 0px`,threshold:0});
+    ["#shuffle",".spread","#pick",".share",".qrow"].forEach(q=>{const el=document.querySelector(q);if(el)band.observe(el);});};
+  watchBand();addEventListener("resize",()=>{busyEls.clear();watchBand();});
+  new MutationObserver(()=>{const sh=document.querySelector(".share");if(sh&&band)band.observe(sh);}).observe(document.getElementById("verdictBox"),{childList:true});
+  if(!REDUCED)setTimeout(()=>op.classList.add("nudge"),1600);document.getElementById("closeAuto").onclick=close;sc.onclick=close;
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!sh.hidden)close();});})();
+// oracle
+const autoBtn=document.getElementById("autoBtn");
+autoBtn.innerHTML=mute(`<svg viewBox="-50 -78 100 82" aria-hidden="true">${autoFront(0,0,1,{stars:true,driver:driverFace()})}</svg>`);
+const ANS=[["ಬನ್ನಿ","Banni","Yes. Get in."],["ಬರೋಲ್ಲ","Barolla","No. Find another auto."],["ಮೀಟರ್ ಮೇಲೆ ಇಪ್ಪತ್ತು","Meter mele ippatthu","Yes, for a price."],
+ ["ಆಗಲ್ಲ, ಟ್ರಾಫಿಕ್","Aagalla, traffic","Not now. Try after eight."],["ಬನ್ನಿ","Banni","Yes. Shortcut through the cross road."],["ಬರೋಲ್ಲ","Barolla","No. Not even sorry."]];
+const ans=document.getElementById("answer");
+autoBtn.onclick=()=>{const raw=document.getElementById("aq").value.trim();
+  if(!raw){ans.innerHTML=`<span class="means">Ask a yes or no first. No small talk.</span>`;document.getElementById("aq").focus();return;}
+  autoBtn.classList.remove("shake");void autoBtn.offsetWidth;autoBtn.classList.add("shake");ans.innerHTML=`<span class="means">Thinking…</span>`;
+  const Q=readQuestion(raw),c=DECK[rand(DECK.length)],rev=Math.random()<.3,v=lean(LORE[c.scene].yn,rev);
+  const pick={yes:[["ಬನ್ನಿ","Banni","Yes. Get in."],["ಬನ್ನಿ","Banni","Yes. He knows a shortcut."]],
+    no:[["ಬರೋಲ್ಲ","Barolla","No. Find another auto."],["ಬರೋಲ್ಲ","Barolla","No. Not even sorry."]],
+    maybe:[["ಮೀಟರ್ ಮೇಲೆ ಇಪ್ಪತ್ತು","Meter mele ippatthu","Yes, for a price."],["ಆಗಲ್ಲ, ಟ್ರಾಫಿಕ್","Aagalla, traffic","Not now. Try after eight."]]}[v];
+  const a=pick[rand(pick.length)];
+  const note=Q.other?"He can't read their mind. Only your road.":Q.anxious?"Breathe. It's only a lean.":"";
+  const car=autoBtn.querySelector("svg");if(!REDUCED&&car)car.animate([{transform:"translateX(0)"},{transform:"translateX(-170%) rotate(-4deg)"}],{duration:420,easing:"cubic-bezier(.6,0,.9,.4)",fill:"forwards"});
+  setTimeout(()=>{if(!REDUCED&&car)car.animate([{transform:"translateX(170%) rotate(3deg)"},{transform:"translateX(-6%)",offset:.8},{transform:"translateX(0)"}],{duration:560,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"});ans.classList.remove("in");void ans.offsetWidth;ans.classList.add("in");ans.innerHTML=`<div class="kan" lang="kn">${a[0]}</div><div class="say">${a[1]}</div><div class="means">${a[2]}</div>
+    <p class="drew">He drew <b>${esc(c.name)}</b> (${esc(c.tarot)}${rev?", reversed":""}), which leans ${v}. ${esc(LORE[c.scene][Q.topic==="week"||Q.topic==="family"?"self":Q.topic])} ${note}</p>`;},650);};
+})();
+</script>
+</body>
+</html>
