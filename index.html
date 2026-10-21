@@ -421,6 +421,17 @@ h1#title em{font-weight:400;font-style:italic;letter-spacing:-.01em;padding-righ
 
 .autocta.float.dodge{opacity:0;pointer-events:none;transform:translateY(24px)}
 .autocta.float{transition:opacity .3s,transform .3s}
+
+.reading .cline{font-size:16.5px;line-height:1.45}
+.reading .tie{align-self:flex-start;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#8a5a1a;background:rgba(238,164,58,.18);border-radius:999px;padding:2px 10px}
+.reading .label{line-height:1.4}
+.tl summary{cursor:pointer;font-size:12.5px;color:var(--muted);list-style:none}
+.tl summary::-webkit-details-marker{display:none}
+.tl summary::before{content:"+ "}
+.tl[open] summary::before{content:"– "}
+.tl p{font-size:14px;color:var(--muted);margin-top:4px}
+.interp .lead{font-size:19px}
+.synth{font-size:24px!important}
 @media (max-width:720px){
   .readings{grid-template-columns:1fr;gap:28px}
   .oracle{grid-template-columns:1fr;justify-items:center;text-align:center}
@@ -1038,12 +1049,11 @@ function interpret(cards,area,raw){
     else if(Q.fed) out.open.push("You sound fed up. You probably know what has to change.");
     else if(Q.longing) out.open.push("Sounds like you miss someone. Read with that in mind.");
     if(Q.willq&&!Q.other) out.open.push("You get a lean. What you do can still change it.");
-    if(Q.should) out.open.push("Should you? The marked card answers it. The other two show what's around it.");
     if(Q.either) out.open.push("The cards won't pick. They'll show which way you lean.");
     if(Q.absolute) out.open.push("Never and always are big words. This is one week.");
   }
 
-  out.open=out.open.slice(0,2);
+  out.open=out.open.slice(0,1);
 
   // 2. one story: your neighbourhood, your question and the three cards, read together
   const PL=PLACES[area]||PLACES.Koramangala,ti=topicCardIndex(Q.topic);
@@ -1100,9 +1110,9 @@ function interpret(cards,area,raw){
   {const tone=cards.reduce((t,c,i)=>t+(L[i]?(c.rev?c.card.tr:c.card.tu):3),0);
    const mood=tone>=4?"a good week":tone>=1?"a decent week":tone===0?"a mixed week":tone>=-3?"a bumpy week":"a rough week";
    const under=out.hidden&&out.hidden.card?" Your hidden card, below, adds the last word.":"";
-   if(Q.q&&out.answer){const a=out.answer;out.synth=`So, "${esc(Q.q)}"? <b>${a.label}.</b> ${ref(a.decider)} decides it`+(a.against===2?", though the other two cards push back.":a.against===1?", with one card pushing back.":", and the other cards agree.")+under;}
-   else if(Q.q){const l=L[ti];out.synth=`So, "${esc(Q.q)}"? Start with ${ref(cards[ti])}. ${esc(l?(l[tkey]||l.self):"Enjoy the empty road.")}`+under;}
-   else out.synth=`Put together, ${esc(area)} is giving you ${mood}.`+under;}
+   if(Q.q&&out.answer){const a=out.answer;out.synth=`${ref(a.decider)} decides it`+(a.against===2?". The other two disagree.":a.against===1?". One card disagrees.":". The others agree.");}
+   else if(Q.q){out.synth=`Start with ${ref(cards[ti])}. It speaks to your question.`;}
+   else out.synth=`${esc(area)} is giving you ${mood}.`;}
 
   // 6. close like a person would: one thing to do, one thing to think about
   {const ai=Q.q?ti:2,c=cards[ai],A=c.card.kind==="rare"?null:ADV[c.card.scene];
@@ -1116,12 +1126,22 @@ function interpret(cards,area,raw){
 }
 function interpretHTML(r){const o=r.out;let h=`<div class="interp">`;
   if(o.open.length) h+=`<p class="lead">${o.open.join(" ")}</p>`;
-  if(o.answer&&o.answer.soft) h+=`<p class="softnote">${o.answer.soft}</p>`;
-  h+=`<h4>How your week reads</h4><div class="story">`+o.story.map((s,i)=>`<p${i?` data-cards="${i-1}"`:` class="intro"`}>${s}</p>`).join("")+`</div>`+(o.synth?`<p class="synth">${o.synth}</p>`:"");
+
+  if(o.synth) h+=`<p class="synth">${o.synth}</p>`;
+  o.patterns=o.patterns.slice(0,2);
   if(o.patterns.length) h+=`<h4>What a reader would spot <span class="tip">tap a note to see its cards</span></h4><ul class="pats">`+o.patterns.map(p=>`<li tabindex="0" data-cards="${p.idx.join(",")}">${p.html}</li>`).join("")+`</ul>`;
-  if(o.hidden&&o.hidden.card) h+=`<div class="hidden-card closed"><button class="hc-art card" type="button" aria-label="Reveal your hidden card"><div class="inner"><div class="face back">${backSVG()}</div><div class="face front">${cardSVG(o.hidden.card)}</div></div></button><div class="hc-text"><p class="hc-cue">Tap to see the card under your spread.</p><div class="hc-body"><h4>Your hidden card: ${esc(o.hidden.card.name)}</h4>
-    <p class="meta">Your numbers add up to ${o.hidden.steps.join(" → ")}. That's <b>${esc(o.hidden.card.tarot)}</b>, the theme under it all.</p><p>${esc(o.hidden.line)}</p></div></div></div>`;
+  if(o.hidden&&o.hidden.card) h+=`<div class="hidden-card closed"><button class="hc-art card" type="button" aria-label="Reveal your hidden card"><div class="inner"><div class="face back">${backSVG()}</div><div class="face front">${cardSVG(o.hidden.card)}</div></div></button><div class="hc-text"><p class="hc-cue">Tap to reveal your hidden card.</p><div class="hc-body"><h4>Your hidden card: ${esc(o.hidden.card.name)}</h4>
+    <p class="meta">Your card numbers add up to ${o.hidden.steps.join(", then ")}. That's <b>${esc(o.hidden.card.tarot)}</b>.</p><p>${esc(o.hidden.line)}</p></div></div></div>`;
   h+=`<div class="closing">${o.close.map(c=>`<p>${c}</p>`).join("")}</div></div>`;return h;}
+
+// one line per card, set in your neighbourhood; the card that matches your question speaks to it
+function cardLine(k,card,rev){const Q=readQuestion(document.getElementById("q").value),PL=PLACES[area]||PLACES.Koramangala;
+  const place=[PL.c,PL.h,PL.he][k],ti=topicCardIndex(Q.topic),answers=!!Q.q&&k===ti;
+  if(card.kind==="rare")return {place,text:card.up,answers};
+  const l=LORE[card.scene],tk=Q.topic==="week"||Q.topic==="family"?(Q.topic==="family"?"love":"self"):Q.topic;
+  let text=answers?(l[tk]||l.self):(rev?card.rev:card.up);
+  if(answers&&rev)text+=" Reversed: mostly in your head.";
+  return {place:place.charAt(0).toUpperCase()+place.slice(1),text,answers};}
 
 // reading
 const POS=[["The Commute","what's slowing you down"],["The Hustle","work and money"],["The Heart","love and your people"]];
@@ -1172,9 +1192,11 @@ function pick(i,el){if(picked>=3||el.dataset.used)return;el.dataset.used="1";con
   const land=()=>{slot.classList.remove("placeholder");const f=slot.querySelector(".front");f.innerHTML=cardSVG(card);if(rev)f.classList.add("rev");
     slot.setAttribute("aria-label",`${POS[k][0]}: ${card.name}${rev?", reversed":""}`);slot.dataset.idx=k;
     setTimeout(()=>{slot.classList.add("flipped");},REDUCED?0:140);
-    const r=readingsEl.children[k];r.className="reading";r.innerHTML=`<div class="label">${POS[k][0]}</div><h3>${esc(card.name)}</h3>
-      <p class="meta"><b>${esc(card.tarot)}</b> · ${card.kind==="rare"?"rare card":rev?`<span class="rev">reversed</span>`:"upright"} · ${esc(card.kw.toLowerCase())}</p>
-      <p>${esc(rev?card.rev:card.up)}</p><p class="tarot"><i>In the tarot.</i> ${esc(card.link)}</p>`;
+    const r=readingsEl.children[k];r.className="reading";const cl=cardLine(k,card,rev);r.dataset.idx=k;
+    r.innerHTML=`<div class="label">${POS[k][0]} · ${esc(cl.place)}</div><h3>${esc(card.name)}</h3>
+      <p class="meta"><b>${esc(card.tarot)}</b>${card.kind==="rare"?" · rare":rev?` · <span class="rev">reversed</span>`:""}</p>
+      <p class="cline">${esc(cl.text)}</p>${cl.answers?`<span class="tie">Answers your question</span>`:""}
+      <details class="tl"><summary>Tarot link</summary><p>${esc(card.link)}</p></details>`;
     if(picked===3)finish();};
   if(REDUCED){land();return;}
   const fly=document.createElement("div");fly.className="flyer";fly.innerHTML=backSVG();
