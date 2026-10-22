@@ -1731,7 +1731,7 @@ async function storyCard(v,q){const ans=v.hasAns;const key=permalink();if(shareC
   shareCache={key,cv};return cv;}
 const SHARE_HOST=/vercel\.app|localhost|127\.0\.0\.1/.test(location.host)?location.host:"namma-arcana.vercel.app";
 function canvasBlob(cv){return new Promise(r=>{try{cv.toBlob(b=>r(b),"image/png");}catch(e){r(null);}});}
-async function makeShare(v,q){const out=document.getElementById("shareOut");out.innerHTML=`<p class="note">Preparing your card…</p>`;
+async function makeShare(v,q){const out=document.getElementById("shareOut");out.innerHTML=`<p class="note">Making your card.</p>`;
   try{const cv=await storyCard(v,q);let url=null;try{url=cv.toDataURL("image/png");}catch(e){}
     out.innerHTML=url?`<img src="${url}" alt="Your Namma Arcana story card"><div class="shareopts"><a class="sopt" id="sSave" download="namma-arcana-${area.toLowerCase().replace(/\s+/g,"-")}.png" href="${url}">Save image</a></div><p class="note">Or long-press the picture to save it.</p>`:`<p class="note">This browser couldn't make the image. The link below still works.</p>`;}
   catch(e){out.innerHTML=`<p class="note">Couldn't draw the card here. The link below still works.</p>`;}}
@@ -2366,7 +2366,7 @@ const ANS=[["ಬನ್ನಿ","Banni","Yes. Get in."],["ಬರೋಲ್ಲ","Bar
 const ans=document.getElementById("answer");
 autoBtn.onclick=()=>{const raw=document.getElementById("aq").value.trim();
   if(!raw){ans.innerHTML=`<span class="means">Ask a yes or no first. No small talk.</span>`;document.getElementById("aq").focus();return;}
-  autoBtn.classList.remove("shake");void autoBtn.offsetWidth;autoBtn.classList.add("shake");ans.classList.add("thinking");ans.innerHTML=`<span class="means">Thinking…</span>`;
+  autoBtn.classList.remove("shake");void autoBtn.offsetWidth;autoBtn.classList.add("shake");ans.classList.add("thinking");ans.innerHTML=`<span class="means">Thinking.</span>`;
   const Q=readQuestion(raw),c=DECK[rand(DECK.length)],rev=Math.random()<.3,v=lean(LORE[c.scene].yn,rev);
   const pick={yes:[["ಬನ್ನಿ","Banni","Yes. Get in."],["ಬನ್ನಿ","Banni","Yes. He knows a shortcut."]],
     no:[["ಬರೋಲ್ಲ","Barolla","No. Find another auto."],["ಬರೋಲ್ಲ","Barolla","No. Not even sorry."]],
