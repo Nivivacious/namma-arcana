@@ -835,6 +835,7 @@ footer .now{font-variant-numeric:tabular-nums}
 .ab-txt p{font-size:14px;line-height:1.45}
 .ab-credit{margin-top:8px!important;font-size:14px!important;color:rgba(182,174,208,.7)!important}
 @media (max-width:640px){.sheet.about{max-height:92%}.ab-cards{grid-template-columns:1fr}.ab-in{padding-top:34px}}
+.signoff{margin:18px 0 0;font-family:var(--display);font-style:italic;font-size:20px;color:var(--muted)}
 
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
@@ -854,7 +855,7 @@ footer .now{font-variant-numeric:tabular-nums}
       <p class="lede stagger" style="animation-delay:.6s">22 cards of the classic tarot, reimagined in Bengaluru. Here, the Fool still walks off a cliff but the cliff is a pothole.</p>
       <div class="seal stagger" id="seal" style="animation-delay:.7s" aria-hidden="true"></div>
     </div>
-    <p class="label stagger" style="animation-delay:.85s;margin-top:10px">Pick your neighbourhood and draw your week</p>
+    <p class="label stagger" style="animation-delay:.85s;margin-top:10px">Pick your neighbourhood. Ask a question. Draw your week.</p>
   </header>
 
 
@@ -1438,17 +1439,17 @@ function interpret(cards,area,raw){
   const repeat=norm&&ASKED[norm];if(norm)ASKED[norm]=(ASKED[norm]||0)+1;
 
   // 1. meet the person where they are
-  if(!Q.q) out.open.push("No question, so this is a general read of your week.");
+  if(!Q.q) out.open.push("No question? Fine. I'll read the whole week.");
   else{
-    if(repeat) out.open.push("Asked this already? Go with the first answer.");
-    if(Q.other) out.open.push("The cards can't read their mind. This reading is about your side.");
-    if(Q.anxious) out.open.push("Breathe. The cards show a lean. That's all.");
+    if(repeat) out.open.push("You asked me this already. First answer stands.");
+    if(Q.other) out.open.push("I can't read their mind. Only your road.");
+    if(Q.anxious) out.open.push("Breathe. It's a lean, not a verdict.");
     else if(Q.fed) out.open.push("You sound fed up. You probably know what has to change.");
-    else if(Q.longing) out.open.push("Sounds like you miss someone. Read with that in mind.");
-    if(Q.negated&&Q.yn) out.open.push("Asked in the negative. Read the answer for the plain version of your question.");
-    if(Q.when) out.open.push("Cards are bad at dates. They're good at direction.");
+    else if(Q.longing) out.open.push("You miss someone. I'll read this gently.");
+    if(Q.negated&&Q.yn) out.open.push("You asked it backwards. I'm answering the plain version.");
+    if(Q.when) out.open.push("Cards are bad at dates. I'm good at direction.");
     if(Q.options) out.open.push("Two options. Yes-cards pick the first thing you said, no-cards the second.");
-    else if(Q.either) out.open.push("The cards won't pick. They'll show which way you lean.");
+    else if(Q.either) out.open.push("I won't pick for you. I'll show which way you lean.");
     if(Q.absolute) out.open.push("Never and always are big words. This is one week.");
   }
 
@@ -1518,8 +1519,8 @@ function interpret(cards,area,raw){
    const mood=tone>=4?"a good week":tone>=1?"a decent week":tone===0?"a mixed week":tone>=-3?"a bumpy week":"a rough week";
    const under=out.hidden&&out.hidden.card?" Your hidden card, below, adds the last word.":"";
    if(Q.q&&out.answer){const a=out.answer;out.synth=`${ref(a.decider)} decides it`+(a.against===2?". The other two disagree.":a.against===1?". One card disagrees.":". The others agree.");}
-   else if(Q.q){out.synth=`Start with ${ref(cards[ti])}. It speaks to your question.`;}
-   else out.synth=`${esc(area)} is giving you ${mood}.`;}
+   else if(Q.q){out.synth=`I'd start with ${ref(cards[ti])}. It speaks to your question.`;}
+   else out.synth=`${esc(area)} is giving you ${mood}. I've driven worse.`;}
 
   // 6. close like a person would: one thing to do, one thing to think about
   {let ai=Q.q?ti:2;const sign=out.answer?out.answer.sign:0;
@@ -1538,10 +1539,10 @@ function interpretHTML(r){const o=r.out;let h=`<div class="interp">`;
 
   if(o.synth) h+=`<p class="synth">${o.synth}</p>`;
   o.patterns=o.patterns.slice(0,2);
-  if(o.patterns.length) h+=`<h4>What a reader would spot <span class="tip">tap a note to see its cards</span></h4><ul class="pats">`+o.patterns.map(p=>`<li tabindex="0" data-cards="${p.idx.join(",")}">${p.html}</li>`).join("")+`</ul>`;
+  if(o.patterns.length) h+=`<h4>What I'd point out <span class="tip">tap a note to see its cards</span></h4><ul class="pats">`+o.patterns.map(p=>`<li tabindex="0" data-cards="${p.idx.join(",")}">${p.html}</li>`).join("")+`</ul>`;
   if(o.hidden&&o.hidden.card) h+=`<div class="hidden-card closed"><button class="hc-art card" type="button" aria-label="Reveal your hidden card"><div class="inner"><div class="face back">${backSVG()}</div><div class="face front">${cardSVG(o.hidden.card)}</div></div></button><div class="hc-text"><p class="hc-cue">Tap to reveal your hidden card.</p><div class="hc-body"><h4>Your hidden card: ${esc(o.hidden.card.name)}</h4>
-    <p class="meta">Your card numbers add up to ${o.hidden.steps.join(", then ")}. That's <b>${esc(o.hidden.card.tarot)}</b>.</p><p>${esc(o.hidden.line)}</p></div></div></div>`;
-  h+=`<div class="closing">${o.close.map(c=>`<p>${c}</p>`).join("")}</div></div>`;return h;}
+    <p class="meta">Your three numbers add up to ${o.hidden.steps.join(", then ")}. That's <b>${esc(o.hidden.card.tarot)}</b>. The shortcut, if you like.</p><p>${esc(o.hidden.line)}</p></div></div></div>`;
+  h+=`<div class="closing">${o.close.map(c=>`<p>${c}</p>`).join("")}</div><p class="signoff">Meter's off. Same road next week?</p></div>`;return h;}
 
 // one line per card, set in your neighbourhood; the card that matches your question speaks to it
 function cardLine(k,card,rev){const Q=readQuestion(document.getElementById("q").value),PL=PLACES[area]||PLACES.Koramangala;
@@ -2125,7 +2126,7 @@ const AREA_X={
 (function(){const host=document.getElementById("areas");if(!host)return;
   const wrap=document.createElement("div");wrap.className="voyage";host.parentNode.insertBefore(wrap,host);wrap.appendChild(host);host.classList.add("vlist");
   const win=document.createElement("div");win.className="vwin";win.innerHTML=`<div class="vscene"></div><button type="button" class="vnext" aria-label="Next neighbourhood"><span>Next</span> <b></b></button>`;
-  const info=document.createElement("div");info.className="vinfo";info.innerHTML=`<div class="vkick">Your reading happens in</div><div class="vname" aria-live="polite"></div><p class="vtag"></p><dl class="vstats"></dl><p class="vnote">Your three cards will play out on these streets. Pick another area to change the setting.</p>`;
+  const info=document.createElement("div");info.className="vinfo";info.innerHTML=`<div class="vkick">Your reading happens in</div><div class="vname" aria-live="polite"></div><p class="vtag"></p><dl class="vstats"></dl><p class="vnote">I'll read your three cards on these streets. Pick another area and I'll take you there.</p>`;
   wrap.appendChild(win);wrap.appendChild(info);
   const names=Object.keys(AREAS);let cur=null;
   function show(name){if(name===cur)return;cur=name;const x=AREA_X[name];const sc=win.querySelector(".vscene");
@@ -2389,7 +2390,7 @@ autoBtn.onclick=()=>{const raw=document.getElementById("aq").value.trim();
         <div class="label">About</div>
         <h2 id="abTitle">Namma Arcana</h2>
         <p class="ab-lede">Tarot's 22 major arcana tell one story. The Fool leaves home, meets everyone, and comes back changed. So does anyone who moves to Bengaluru.</p>
-        <p>This deck keeps every Rider-Waite composition and swaps the cast. The Fool steps off the airport bus into a pothole. The Hermit works from a terrace at 2am. The Moon is Bellandur foam. The Chariot is an auto with two cows in the way.</p>
+        <p>An auto anna reads the cards, because nobody else has seen every road in this city. This deck keeps every Rider-Waite composition and swaps the cast. The Fool steps off the airport bus into a pothole. The Hermit works from a terrace at 2am. The Moon is Bellandur foam. The Chariot is an auto with two cows in the way.</p>
         <h3>How a reading works</h3>
         <ul class="ab-list">
           <li><b>Three positions.</b> The Commute is what's slowing you down. The Hustle is work and money. The Heart is love and your people.</li>
